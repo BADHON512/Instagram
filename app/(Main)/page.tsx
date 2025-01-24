@@ -1,10 +1,11 @@
 import React from 'react'
+import Home from './_page'
 
 
 
 const RoutePage = () => {
   return (
-    <div></div>
+    <div><Home/></div>
   )
 }
 
