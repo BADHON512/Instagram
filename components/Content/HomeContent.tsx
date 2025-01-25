@@ -1,10 +1,13 @@
+"use client"
+import Link from 'next/link'
 import React from 'react'
 
 type Props = {}
 
 const HomeContent = (props: Props) => {
+
   return (
-    <div>HomeContent</div>
+    <div><Link href={'/badhon'}>badhon</Link></div>
   )
 }
 
