@@ -2,18 +2,19 @@
 import SideBar from '@/components/SideBar/SideBar'
 import React, {  useState } from 'react'
 
-import HomeContent from '@/components/Content/HomeContent'
+
 import {  motion } from "framer-motion";
 import Header from '@/components/SideBar/Header'
 import HeaderDown from '@/components/SideBar/ForMobile'
 
 import Search from '@/components/helper/Search';
 import NotificationSidebar from '@/components/helper/Notification';
+import ProfileContent from '@/components/Content/ProfileContent/ProfileContent';
 
 
 type Props = {}
 
-const Home = (props: Props) => {
+const Profile = (props: Props) => {
 
 
      const [active, setActive] = useState<number | null>(null);
@@ -21,7 +22,7 @@ const Home = (props: Props) => {
 
      return (
           <div className='md:flex '>
-               <div className=" w-[335px] fixed">
+               <div className=" w-[335px] fixed ">
                     <motion.div
                          initial={{ width: 0 }}
                          animate={{ width: active === 1 || active === 5 ? "79px" : "280px" }}
@@ -32,12 +33,10 @@ const Home = (props: Props) => {
                          <SideBar active={active} setActive={setActive} />
 
 
-
-                         <Search active={active} setActive={setActive} />
-
-                         <NotificationSidebar  active={active} setActive={setActive} />
+                   <Search active={active} setActive={setActive}/>
 
 
+                       <NotificationSidebar active={active} setActive={setActive}/>
 
 
                     </motion.div>
@@ -45,8 +44,8 @@ const Home = (props: Props) => {
                <div className=" sticky top-0 bg-black w-full block md:hidden">
                     <Header />
                </div>
-               <div className="w-full h-screen ">
-                    <HomeContent />
+               <div className="w-full  ">
+                    <ProfileContent />
                </div>
                <div className=" sticky bottom-0 bg-black w-full block md:hidden">
                     <HeaderDown />
@@ -56,4 +55,4 @@ const Home = (props: Props) => {
      )
 }
 
-export default Home
+export default Profile

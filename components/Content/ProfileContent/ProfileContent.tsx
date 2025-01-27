@@ -4,7 +4,9 @@ type Props = {}
 
 const ProfileContent = (props: Props) => {
   return (
-    <div>ProfileContent</div>
+    <div className='bg-white w-full h-screen'>
+      <h1 className='text-black'>badhon</h1>
+    </div>
   )
 }
 

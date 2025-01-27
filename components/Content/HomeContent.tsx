@@ -7,7 +7,7 @@ type Props = {}
 const HomeContent = (props: Props) => {
 
   return (
-    <div><Link href={'/badhon'}>badhon</Link></div>
+    <div><Link href={'/badhon'}>lsklddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</Link></div>
   )
 }
 

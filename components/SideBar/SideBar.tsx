@@ -31,16 +31,17 @@ type Props = {
 
 
 const menuItems = [
-  { id: 0, label: "Home", icon: <GoHomeFill size={27} /> },
-  { id: 1, label: "Search", icon: <IoSearch size={27} /> },
-  { id: 2, label: "Explore", icon: <MdExplore size={27} /> },
-  { id: 3, label: "Reels", icon: <PiFilmReel size={27} /> },
-  { id: 4, label: "Messages", icon: <LuSend size={27} /> },
-  { id: 5, label: "Notification", icon: <CiHeart size={27} /> },
-  { id: 6, label: "Create", icon: <FaRegPlusSquare size={27} /> },
+  { id: 0, label: "Home",  link:'/', icon: <GoHomeFill size={27} /> },
+  { id: 1, label: "Search",  link:'', icon: <IoSearch size={27} /> },
+  { id: 2, label: "Explore",  link:'/explore', icon: <MdExplore size={27} /> },
+  { id: 3, label: "Reels",  link:'/reels', icon: <PiFilmReel size={27} /> },
+  { id: 4, label: "Messages",  link:'/messages', icon: <LuSend size={27} /> },
+  { id: 5, label: "Notification",  link:'', icon: <CiHeart size={27} /> },
+  { id: 6, label: "Create",  link:'profile-page', icon: <FaRegPlusSquare size={27} /> },
   {
     id: 7,
     label: "Profile",
+    link:'profile-page',
     icon: (
       <div className='w-[27px] h-[27px] rounded-full'>
         <Image
@@ -73,7 +74,7 @@ const SideBar = ({ active, setActive }: Props) => {
     }
   };
   return (
-    <div className={`${(active === 1 || active === 5) ? "" : "border-r border-[#262626] xl:w-[280px] "}  h-screen p-5  w-[79px]  xl:h-full relative bg-black z-[999999]`}>
+    <div className={`${(active === 1 || active === 5) ? "" : "border-r border-[#262626] xl:w-[280px] "}  h-screen p-5  w-[79px]  xl:h-full relative bg-black z-[999999] `}>
       <div className='p-2 '>
 
         {
@@ -99,11 +100,11 @@ const SideBar = ({ active, setActive }: Props) => {
       <div className='w-full h-[90%]'>
 
         <div className="flex flex-col justify-between h-full">
-          <div className="">
+          <div className=" mt-8">
             {menuItems.map((item) => (
-              <div
+              <Link href={item.link}
                 key={item.id}
-                className={`w-full flex gap-x-4 p-2 mt-3 cursor-pointer rounded-md delay-75 transition items-center hover:bg-[#1A1A1A] z-[10] ${active === item.id ? "bg-[#1A1A1A]" : ""
+                className={`w-full flex gap-x-4 p-2 mt-3 cursor-pointer rounded-md delay-75 transition items-center hover:bg-[#1A1A1A] z-[10] 
                   }`}
                 onClick={() => handleClick(item.id)}
               >
@@ -121,7 +122,7 @@ const SideBar = ({ active, setActive }: Props) => {
                     {item.label}
                   </h4>
                 </div>
-              </div>
+              </Link>
             ))}
 
           </div>
