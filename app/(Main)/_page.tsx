@@ -1,9 +1,9 @@
 "use client"
 import SideBar from '@/components/SideBar/SideBar'
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 
 import HomeContent from '@/components/Content/HomeContent'
-import {  motion } from "framer-motion";
+import { motion } from "framer-motion";
 import Header from '@/components/SideBar/Header'
 import HeaderDown from '@/components/SideBar/ForMobile'
 
@@ -35,7 +35,7 @@ const Home = (props: Props) => {
 
                          <Search active={active} setActive={setActive} />
 
-                         <NotificationSidebar  active={active} setActive={setActive} />
+                         <NotificationSidebar active={active} setActive={setActive} />
 
 
 
@@ -45,7 +45,7 @@ const Home = (props: Props) => {
                <div className=" sticky top-0 bg-black w-full block md:hidden">
                     <Header />
                </div>
-               <div className="w-full h-screen ">
+               <div className="w-full h-screen ml-[335px] ">
                     <HomeContent />
                </div>
                <div className=" sticky bottom-0 bg-black w-full block md:hidden">

@@ -44,7 +44,7 @@ const Profile = (props: Props) => {
                <div className=" sticky top-0 bg-black w-full block md:hidden">
                     <Header />
                </div>
-               <div className="w-full  ">
+               <div className=" ml-[300px]  w-full h-screen ">
                     <ProfileContent />
                </div>
                <div className=" sticky bottom-0 bg-black w-full block md:hidden">

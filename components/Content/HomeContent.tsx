@@ -7,7 +7,12 @@ type Props = {}
 const HomeContent = (props: Props) => {
 
   return (
-    <div><Link href={'/badhon'}>lsklddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</Link></div>
+
+  <div className="flex justify-center items-center">
+    <h1 className='h-[50px] bg-gray-200 text-black'>badhon</h1>
+    <p>badhon</p>
+  </div>
+
   )
 }
 
