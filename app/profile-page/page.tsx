@@ -47,7 +47,7 @@ const Profile = (props: Props) => {
                <div className=" ml-[300px]  w-full h-screen ">
                     <ProfileContent />
                </div>
-               <div className=" sticky bottom-0 bg-black w-full block md:hidden">
+               <div className=" sticky  bottom-0 bg-black w-full block md:hidden">
                     <HeaderDown />
                </div>
 
