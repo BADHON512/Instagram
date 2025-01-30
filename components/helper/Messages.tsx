@@ -9,11 +9,11 @@ type Props = {
 
 }
 
-const Search = ({active,setActive}: Props) => {
+const Messages = ({active,setActive}: Props) => {
   return (
    
     <AnimatePresence>
-    {(active === 1) && (
+    {(active === 4) && (
          <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -26,7 +26,7 @@ const Search = ({active,setActive}: Props) => {
                    animate={{ width: "405px" }}
                    exit={{ width: "0px" }}
                    transition={{ duration: 0.5 }}
-                   className="border-[#262626] border-r fixed left-16 top-0 bottom-0 h-full z-[99999] p-5 bg-black "
+                   className="border-[#262626] border-x fixed left-20 top-0 bottom-0 h-full z-[99999] p-5 bg-black "
               >
                    <motion.div
                         initial={{ opacity: 0, y: -20 }}
@@ -37,22 +37,7 @@ const Search = ({active,setActive}: Props) => {
                    >
                         <h1 className="text-[30px]">Search</h1>
 
-                        <div className="relative w-full max-w-sm mt-7">
-                             <input
-                                  type="text"
-                                  placeholder="Search"
-                                  className="w-full pl-10 pr-4 py-[8px] rounded-lg border bg-[#363636] focus:outline-none outline-none border-none "
-                             />
-                             <IoSearchOutline
-                                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                                  size={20}
-                             />
-                             <RxCrossCircled
-                                  className="absolute right-3 cursor-pointer top-1/2 transform -translate-y-1/2 text-gray-400"
-                                  size={20}
-                                  onClick={() => setActive(null)} // Clear the active state
-                             />
-                        </div>
+                
                    </motion.div>
               </motion.div>
          </motion.div>
@@ -62,4 +47,4 @@ const Search = ({active,setActive}: Props) => {
   )
 }
 
-export default Search
+export default Messages
