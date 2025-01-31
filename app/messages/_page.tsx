@@ -2,7 +2,7 @@
 import SideBar from '@/components/SideBar/SideBar'
 import React, { useState } from 'react'
 
-import HomeContent from '@/components/Content/HomeContent'
+
 import { motion } from "framer-motion";
 import Header from '@/components/SideBar/Header'
 import HeaderDown from '@/components/SideBar/ForMobile'
@@ -11,6 +11,7 @@ import Search from '@/components/helper/Search';
 import Messages from '@/components/helper/Messages';
 import NotificationSidebar from '@/components/helper/Notification';
 import Create from '@/components/Create/Create';
+import MessageHomeBody from '@/components/Content/MessageHome/MessageHome';
 
 
 type Props = {}
@@ -52,7 +53,7 @@ const MessagesHome = (props: Props) => {
                     <Header />
                </div>
                <div className=" w-full md:ml-[79px] xl:ml-[300px]  h-screen  ">
-                    <HomeContent />
+                <MessageHomeBody/>
 
                </div>
                <div className=" sticky bottom-0 bg-black w-full block md:hidden">
