@@ -1,9 +1,5 @@
 import React from 'react'
-
-import { IoSearchOutline } from "react-icons/io5";
-import { CiHeart } from "react-icons/ci";
-import { GoHome, GoHomeFill } from "react-icons/go";
-import { IoSearch } from "react-icons/io5";
+import {  GoHomeFill } from "react-icons/go";
 import { MdExplore } from "react-icons/md";
 import { PiFilmReel } from "react-icons/pi";
 import { FaRegPlusSquare } from 'react-icons/fa';

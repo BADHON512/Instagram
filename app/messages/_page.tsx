@@ -20,7 +20,7 @@ const MessagesHome = (props: Props) => {
 
 
      const [active, setActive] = useState<number | null>(null);
-     console.log(active)
+
 
      return (
           <div className='md:flex '>
