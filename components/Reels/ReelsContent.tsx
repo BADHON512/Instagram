@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ReactPlayer from "react-player";
 import { HiSpeakerWave } from "react-icons/hi2";
+import { PiSpeakerSlashFill } from "react-icons/pi";
 
 import { FaRegHeart } from "react-icons/fa";
 import { FiMessageCircle } from "react-icons/fi";
@@ -10,6 +11,8 @@ import { LuSend } from "react-icons/lu";
 import { LiaBookmarkSolid } from "react-icons/lia";
 import { PiDotsThreeBold } from "react-icons/pi";
 import { FaMusic } from "react-icons/fa6";
+import { IoPlay } from "react-icons/io5";
+
 
 import Image from "next/image";
 
@@ -85,18 +88,23 @@ const ReelsContent = (props: Props) => {
       comments: 70,
     },
   ];
-  const text = 'my music is the dfg sdfg sdfg bg-[#5a443c] z-20 h-[30px] px-2  -ml-[5px] flex items-center justify-center '
-  const Words = text.split(" ");
-  const isLongText = Words.length > 5;
+  const text = 'my music is the my name is badhon best music hello'
+  const Words = text.split("");
+  const isLongText = Words.length > 50;
 
   const [currentReel, setCurrentReel] = useState(0);
-  const [play, setplay] = useState(false)
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
 
-  const fullText: [string] = ["Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio eaque ipsum porro eius consequuntur ut aliquam officiis molestiae non blanditiis!"]
+
+  const fullText: [string] = ["Lorem ipsum dolor sit molestiae non blanditiis! abad;asldkjf asdfoiasdjf asdfiasd foas[pdof asdopf  asdf asdf asdf asd fasdfasd fasdfasdf  asd fasdf adsf af a faf asf asdf"]
   const words = fullText[0].split(" ");
   const [showMore, setShowMore] = useState(false);
   const visibleText = showMore ? fullText : words.slice(0, 8).join(" ")
 
+  const togglePlayPause = () => {
+    setIsPlaying((prev) => !prev); // আগের স্টেটের উল্টো হবে
+  };
   return (
     <div className="h-screen  bg-black flex justify-center items-center relative overflow-y-auto">
       <motion.div
@@ -109,19 +117,38 @@ const ReelsContent = (props: Props) => {
       >
 
         <div className="flex w-full  gap-x-5 ">
-          <div className="flex relative h-full bg-yellow-200 w-[450px]">
+          <div className="flex relative h-full w-[350px] md:w-[450px]">
             <ReactPlayer
-              url={reelsData[currentReel].videoUrl}
-              playing
+              url={'https://res.cloudinary.com/dfng3w9jm/video/upload/v1738419061/reels%20video/One_of_the_greatest_skills_you_can_learn_is_how_to_be_alone..._lanatureshub_losangeles_usa_newyork_dallas_sanfrancisco_canada_california_chicago_sandiego_beach_ocean_florida_america_instadaily_uvrwhs.mp4'}
+              playing={isPlaying}
               loop
-              muted
+              muted={isMuted}
               width="100%"
               height="100%"
-              className="object-cover  "
-
+              className="object-cover cursor-pointer rounded-md"
+              onClick={togglePlayPause}
 
             />
-            < HiSpeakerWave className="absolute top-4 right-4 bg-[#262626] w-[30px] h-[30px] rounded-full p-1" size={25} />
+
+            {
+              isMuted ? (< PiSpeakerSlashFill className="absolute top-4 right-4 bg-[#262626] w-[30px] h-[30px] rounded-full p-1 cursor-pointer" size={25} onClick={() => setIsMuted(!isMuted)} />) : (< HiSpeakerWave className="absolute top-4 right-4 bg-[#262626] w-[30px] h-[30px] rounded-full p-1 cursor-pointer" size={25} onClick={() => setIsMuted(!isMuted)} />
+              )
+
+            }
+
+            <motion.div
+              initial={{ scale: 1, y: 0 }}
+              animate={{
+                scale: isPlaying ? 0 : 1.5,
+                y: isPlaying ? 0 : 1.5,
+              }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="absolute top-[45%] left-[45%] w-16 h-16 bg-[#3a2e2e] rounded-full flex items-center justify-center cursor-pointer"
+              onClick={togglePlayPause}
+            >
+              <IoPlay size={30} className="text-white" />
+            </motion.div>
+
 
             <div className="absolute bottom-2 left-1  w-full">
               <div className="flex  items-center gap-x-3 p-3">
@@ -139,11 +166,12 @@ const ReelsContent = (props: Props) => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <span className="text-sm">{visibleText}</span>
+                  <span className="text-sm cursor-pointer" onClick={() => setShowMore(!showMore)}>{visibleText}</span>
                 </motion.div>
 
                 {/* Animate "More" & "Show Less" Buttons */}
-                <AnimatePresence>
+
+                <div className="">
                   {!showMore ? (
                     <motion.span
 
@@ -159,17 +187,18 @@ const ReelsContent = (props: Props) => {
                   ) : (
                     <motion.span
 
-                      className="text-[12px] text-blue-500 cursor-pointer ml-1"
+                      className="text-[12px]cursor-pointer "
                       onClick={() => setShowMore(false)}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      Show less
+
                     </motion.span>
                   )}
-                </AnimatePresence>
+
+                </div>
 
 
               </div>
@@ -189,16 +218,16 @@ const ReelsContent = (props: Props) => {
                         // Animated Marquee Effect
                         <motion.div
                           className="whitespace-nowrap "
-                 
+
                           initial={{ x: 0 }} // ডান দিক থেকে শুরু হবে
-                          animate={{ x: "-100%" }} // সম্পূর্ণ বাঁ দিকে যাব
+                          animate={{ x: ["0%", "-100%"] }} // সম্পূর্ণ বাঁ দিকে যাব
                           transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
                         >
                           {text}
                         </motion.div>
                       ) : (
-                        // Static Text for Short Messages
-                        <span>{text}</span>
+
+                        <span className="whitespace-nowrap">{text}</span>
                       )}
                     </div>
                   </div>
