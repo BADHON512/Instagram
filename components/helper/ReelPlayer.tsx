@@ -1,0 +1,252 @@
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import ReactPlayer from "react-player";
+import { HiSpeakerWave } from "react-icons/hi2";
+import { PiSpeakerSlashFill } from "react-icons/pi";
+
+import { FaRegHeart } from "react-icons/fa";
+import { FiMessageCircle } from "react-icons/fi";
+import { LuSend } from "react-icons/lu";
+import { LiaBookmarkSolid } from "react-icons/lia";
+import { PiDotsThreeBold } from "react-icons/pi";
+import { FaMusic } from "react-icons/fa6";
+import { IoPlay, } from "react-icons/io5";
+import { FaHeart } from "react-icons/fa6";
+
+
+
+import Image from "next/image";
+
+type Props = {
+    videoUrl: string
+
+    isMuted: boolean;
+    setIsMuted: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
+
+    const text = 'my music is the my name is badhon best music hello'
+    const Words = text.split("");
+    const isLongText = Words.length > 50;
+
+    const [heartClick, setHeartClick] = useState(false);
+    const [pupUp, setPupUp] = useState({
+        message:false,
+        threeDots:false
+    })
+
+    const [isPlaying, setIsPlaying] = useState<boolean>(true);
+
+
+    const fullText: [string] = ["Lorem ipsum dolor sit molestiae non blanditiis! abad;asldkjf asdfoiasdjf asdfiasd foas[pdof asdopf  asdf asdf asdf asd fasdfasd fasdfasdf  asd fasdf adsf af a faf asf asdf"]
+    const words = fullText[0].split(" ");
+    const [showMore, setShowMore] = useState(false);
+    const visibleText = showMore ? fullText : words.slice(0, 8).join(" ")
+
+    const togglePlayPause = () => {
+        setIsPlaying((prev) => !prev); // আগের স্টেটের উল্টো হবে
+    };
+    const playerRef = useRef(null);
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsPlaying(entry.isIntersecting); // স্ক্রিনে এলে প্লে, চলে গেলে পজ
+            },
+            { threshold: 0.7 } // ৭০% ভিডিও স্ক্রিনে এলে প্লে হবে
+        );
+
+        if (playerRef.current) {
+            observer.observe(playerRef.current);
+        }
+
+        return () => {
+            if (playerRef.current) {
+                observer.unobserve(playerRef.current);
+            }
+        };
+    }, []);
+    return (
+        <div className="h-screen  bg-black flex justify-center items-center relative overflow-y-auto">
+            <motion.div
+
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -100, opacity: 0 }}
+                transition={{ duration: 0.5 }}
+
+            >
+
+                <div className="flex w-full  gap-x-5 ">
+                    <div className="flex relative h-full w-[350px] md:w-[450px]">
+                        <div ref={playerRef} className="h-full w-full border rounded-sm">
+                            <ReactPlayer
+                                url={videoUrl}
+                                playing={isPlaying}
+                                loop
+                                muted={isMuted}
+                                width="100%"
+                                height="100%"
+                                className="object-cover cursor-pointer rounded-md "
+                                onClick={togglePlayPause}
+
+                            />
+                        </div>
+
+                        {
+                            isMuted ? (< PiSpeakerSlashFill className="absolute top-4 right-4 bg-[#262626] w-[30px] h-[30px] rounded-full p-1 cursor-pointer" size={25} onClick={() => setIsMuted(!isMuted)} />) : (< HiSpeakerWave className="absolute top-4 right-4 bg-[#262626] w-[30px] h-[30px] rounded-full p-1 cursor-pointer" size={25} onClick={() => setIsMuted(!isMuted)} />
+                            )
+
+                        }
+
+                        <motion.div
+                            initial={{ scale: 1, y: 0 }}
+                            animate={{
+                                scale: isPlaying ? 0 : 1.5,
+                                y: isPlaying ? 0 : 1.5,
+                            }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="absolute top-[45%] left-[45%] w-16 h-16 bg-[#3a2e2e] rounded-full flex items-center justify-center cursor-pointer"
+                            onClick={togglePlayPause}
+                        >
+                            <IoPlay size={30} className="text-white" />
+                        </motion.div>
+
+
+                        <div className="absolute bottom-2 left-1  w-full">
+                            <div className="flex  items-center gap-x-3 p-3">
+                                <Image src="https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg" height={500} width={500} className='h-[30px] w-[30px]  rounded-full' alt="" />
+                                <span>badhon_9090 . </span>
+                                <button className="px-3 border border-[#91db6038] rounded-full bg-transparent">Follow</button>
+                            </div>
+
+
+                            <div className="px-3">
+                                {/* Animated Expandable Text */}
+                                <motion.div
+                                    layout
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <span className="text-sm cursor-pointer" onClick={() => setShowMore(!showMore)}>{visibleText}</span>
+                                </motion.div>
+
+                                {/* Animate "More" & "Show Less" Buttons */}
+
+                                <div className="">
+                                    {!showMore ? (
+                                        <motion.span
+
+                                            className="text-[12px] text-gray-200 cursor-pointer ml-1"
+                                            onClick={() => setShowMore(true)}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+                                            ... more
+                                        </motion.span>
+                                    ) : (
+                                        <motion.span
+
+                                            className="text-[12px]cursor-pointer "
+                                            onClick={() => setShowMore(false)}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.3 }}
+                                        >
+
+                                        </motion.span>
+                                    )}
+
+                                </div>
+
+
+                            </div>
+
+                            <div className="  w-full mx-auto py-1">
+                                <div className="h-[30px] rounded-3xl w-[90%] bg-[#5a443c96] mx-auto">
+
+                                    <div className=" relative flex items-center h-full px-1 overflow-hidden  ">
+                                        {/* 🎵 Static Music Icon (Does NOT Animate) */}
+                                        <div className="absolute top-0 left-0 bottom-0 badhon-left bg-[#5a443c] z-20 h-[30px] px-2  -ml-[5px] flex items-center justify-center">
+                                            <FaMusic className="" />
+                                        </div>
+
+
+                                        <div className="">
+                                            {isLongText ? (
+                                                // Animated Marquee Effect
+                                                <motion.div
+                                                    className="whitespace-nowrap "
+
+                                                    initial={{ x: 0 }} // ডান দিক থেকে শুরু হবে
+                                                    animate={{ x: ["0%", "-100%"] }} // সম্পূর্ণ বাঁ দিকে যাব
+                                                    transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+                                                >
+                                                    {text}
+                                                </motion.div>
+                                            ) : (
+
+                                                <span className="whitespace-nowrap">{text}</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div className=" flex gap-y-5 flex-col justify-end  py-3 relative">
+                        <div className=" flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a]" onClick={() => setHeartClick(!heartClick)}>
+                            {
+                                heartClick ? (<FaHeart size={30} className="text-red-500" />) : (<FaRegHeart size={30} />)
+                            }
+                            <span className="text-sm">33.2M</span>
+                        </div>
+                        <div className="flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a] relative" onClick={()=>setPupUp((pre)=>({...pre,message:!pupUp.message}))}>
+                            <FiMessageCircle size={30} className="scale-x-[-1]" />
+                            <span className="text-sm">10k</span>
+
+                            {/* <div className="absolute top-0 left-20 bg-gray-100 h-full w-full">
+                                badhon
+                            </div> */}
+                        </div>
+
+                        <div className="flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a]">
+                            <LuSend size={30} />
+
+                        </div>
+                        <div className="flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a]">
+                            <LiaBookmarkSolid size={30} />
+
+                        </div>
+                        <div className="flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a]">
+                            <PiDotsThreeBold size={30} />
+
+                        </div>
+
+                        <div className="flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a]">
+                            <Image src="https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg" height={500} width={500} className='h-[30px] w-[30px]  rounded-md border border-gray-300' alt="" />
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </motion.div>
+
+
+
+
+        </div>
+    )
+}
+
+export default ReelPlayer
