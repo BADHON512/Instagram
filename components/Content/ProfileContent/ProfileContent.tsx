@@ -107,7 +107,7 @@ const ProfileContent = (props: Props) => {
 
 
       <div className="mt-14">
-        <div className="relative border-t border-[#737373] mt-4 z-[-1]">
+        <div className="relative border-t border-[#737373] mt-4 z-[1]">
           <div className="flex justify-center gap-16 relative">
             {/* Animated Underline - Fixed */}
             <div
@@ -156,14 +156,14 @@ const ProfileContent = (props: Props) => {
 
       <div className="min-h-[30vh] flex w-full flex-wrap gap-2  justify-start p-3">
         {activeTab === 'posts' && (
-          <div className="h-[310px]  w-[288px] flex-shrink-0 relative group z-[-1]"> {/* Added 'group' here */}
+          <div className="h-[310px] cursor-pointer w-[288px] flex-shrink-0 relative group "> {/* Added 'group' here */}
             <Link href={'/'} className='h-full w-full block'> {/* Make sure Link is block-level */}
               <Image
                 src={'https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg'}
                 alt='img not found'
                 height={1000}
                 width={1000}
-                className='h-full w-full'
+                className='h-full w-full cursor-pointer'
               />
             </Link>
 

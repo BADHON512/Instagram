@@ -19,7 +19,7 @@ const Search = ({active,setActive}: Props) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="absolute w-[405px] h-full  top-0 left-0  bg-black"
+              className="absolute w-[405px] h-full z-[99999]  top-0 left-0  bg-black"
          >
               <motion.div
                    initial={{ width: "0px" }}

@@ -47,7 +47,7 @@ const Home = (props: Props) => {
 
                     </motion.div>
                </div>
-               <div className=" sticky top-0 bg-black w-full block md:hidden">
+               <div className=" sticky z-[9999] top-0 bg-black w-full block md:hidden">
                     <Header />
                </div>
                <div className=" w-full md:ml-[79px] xl:ml-[300px]  h-screen  ">

@@ -23,7 +23,7 @@ const Profile = (props: Props) => {
 
      return (
           <div className=' md:flex  '>
-               <div className=" w-[335px] fixed ">
+               <div className=" w-[335px] fixed z-[99999] ">
                     <motion.div
                          initial={{ width: 0 }}
                          animate={{ width: active === 1 || active === 5 ? "79px" : "280px" }}
@@ -42,7 +42,7 @@ const Profile = (props: Props) => {
 
                     </motion.div>
                </div>
-               <div className=" sticky top-0 bg-black w-full block md:hidden">
+               <div className=" fixed top-0 bg-black w-full block md:hidden z-[999999]">
                     <Header />
                </div>
                <div className=" w-full md:ml-[79px] xl:ml-[300px]  h-screen ">

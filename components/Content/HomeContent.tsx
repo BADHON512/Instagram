@@ -1,16 +1,17 @@
 "use client"
 import { motion } from 'motion/react';
 import Image from 'next/image';
-import { MdVerified } from "react-icons/md";
+import { MdOutlineEmojiEmotions, MdVerified } from "react-icons/md";
 import { PiDotsThreeBold } from "react-icons/pi";
 
 import React, { useState } from 'react'
-import { BiMessageRounded, BiSolidMessageRounded } from 'react-icons/bi';
-import { GoHeartFill } from 'react-icons/go';
-import { CiHeart } from 'react-icons/ci';
-import { FiBookmark, FiSend } from 'react-icons/fi';
+import { BiMessageRounded } from 'react-icons/bi';
+
+import { FiBookmark, } from 'react-icons/fi';
 import { LuSend } from 'react-icons/lu';
 import { FaRegHeart } from 'react-icons/fa';
+import EmojiPicker from 'emoji-picker-react';
+
 
 const stories = [
   { id: 1, name: "sohel_hoss...", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282233/sample.jpg" },
@@ -32,10 +33,21 @@ type Props = {}
 const HomeContent = (props: Props) => {
   const [selectedStory, setSelectedStory] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [text, setText] = useState("");
+  const [input, setInput] = useState('');
+  const [showPicker, setShowPicker] = useState(false);
 
-  const allText="You're very welcome! 🎉 I'm so glad to hear you had a wonderful birthday with your loved ones. Wishing you even more amazing moments ahead! 🥳🎂 How did you celebrate?"
-  const word=allText.split(" ")
-  const visibleText= isExpanded?allText: word.slice(0,20).join(" ")+"..."
+  const allText = "You're very welcome! 🎉 I'm so glad to hear you had a wonderful birthday with your loved ones. Wishing you even more amazing moments ahead! 🥳🎂 How did you celebrate?"
+  const word = allText.split(" ")
+  const visibleText = isExpanded ? allText : word.slice(0, 20).join(" ") + "..."
+  const handleChange = (event) => {
+    setText(event.target.value);
+    event.target.style.height = 'auto'; // Reset height to auto to calculate the new height
+    event.target.style.height = `${event.target.scrollHeight}px`; // Set the height to scrollHeight
+    setInput(event.target.value)
+  };
+
+
   return (
 
     <div className="max-w-[1100px] mx-auto ">
@@ -109,7 +121,34 @@ const HomeContent = (props: Props) => {
 
             <span className='text-sm text-gray-300 font-semibold block'>❤️ 10.032.119 likes</span>
 
-            <span className='text-sm text-gray-300 font-semibold   gap-x-2 my-1'>raja_5050 <MdVerified color='#0095F6' className='inline-block -mt-1' /> {visibleText} {!isExpanded&& "more "}</span>
+            <span className='text-sm text-gray-300 font-semibold   gap-x-2 my-1'>raja_5050 <MdVerified color='#0095F6' className='inline-block -mt-1' /> {visibleText} {!isExpanded && <span className='cursor-pointer'
+              onClick={() => setIsExpanded(!isExpanded)}> more</span>}</span>
+
+            <div className="border-b border-[#928c8c71] flex w-full items-center relative
+            ">
+              <textarea value={input}
+                onChange={(e) => handleChange(e)} name="" className='w-full bg-transparent outline-none  my-1 resize-none  e  h-auto overflow-hidden ' id="" placeholder='Add a comment...'></textarea>
+
+
+            
+            {
+               input&&(
+                <span className='text-[#33adff] hover:text-white cursor-pointer mr-3'>Post</span>
+               )
+            }
+              <button className='grayscale-[100%] rounded-full'  onClick={() => setShowPicker(!showPicker)}><MdOutlineEmojiEmotions /></button>
+
+              {showPicker && (
+                <div className="absolute bottom-10  -right-[340px]">
+                  <EmojiPicker
+                    onEmojiClick={(emoji) => setInput((prev) => prev + emoji.emoji)}
+
+                    theme='dark'
+                    skinTonesDisabled
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
