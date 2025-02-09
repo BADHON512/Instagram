@@ -24,7 +24,7 @@ const stories = [
   { id: 8, name: "mr_faisu_07", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg" },
 ];
 
-const Posts= [
+const Posts = [
   { name: "sohel_hoss...", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282233/sample.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282233/sample.jpg" },
   { name: "badhon .", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg" },
   { name: "sirazul_monir", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220719/profile/315100994_10209906491094779_654405519663392346_n_axklsy.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220719/profile/315100994_10209906491094779_654405519663392346_n_axklsy.jpg" },
@@ -53,13 +53,13 @@ const HomeContent = (props: Props) => {
 
   return (
 
-    <div className="max-w-[1100px] mx-auto ">
-      <div className="flex justify-center lg:justify-between">
+    <div className=" w-[90%] md:w-[1100px] mx-auto ">
+      <div className="flex justify-center  lg:justify-between">
         {/* leftSide */}
-        <div className="bg-black min-h-screen text-white flex flex-col items-center">
+        <div className="w-[80%] md:w-[60%] bg-black min-h-screen text-white flex flex-col items-center">
 
           {/* Story Section */}
-          <div className="flex space-x-4 overflow-x-auto p-4">
+          <div className="flex space-x-4 overflow-x-scroll w-[60%] md:w-full scrollNone p-4">
             {stories.map((story) => (
               <div className="" key={story.id}>
                 <motion.div
@@ -77,8 +77,8 @@ const HomeContent = (props: Props) => {
                 </div>
               </div>
             ))}
-             
-             
+
+
 
           </div>
 
@@ -101,11 +101,15 @@ const HomeContent = (props: Props) => {
             </motion.div>
           )}
 
-        {
-        Posts.map((item,index)=>(
-          <PostCard key={index} post={item}/>
-        ))
-        }
+          <div className=" ">
+
+            {
+              Posts.map((item, index) => (
+                <PostCard key={index} post={item} />
+              ))
+            }
+
+          </div>
         </div>
 
 
