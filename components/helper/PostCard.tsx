@@ -1,24 +1,38 @@
 "use client"
 import { motion } from 'motion/react';
 import Image from 'next/image';
-import { MdOutlineEmojiEmotions, MdVerified } from "react-icons/md";
-import { PiDotsThreeBold } from "react-icons/pi";
+import { MdOutlineEmojiEmotions, MdOutlineMail, MdVerified } from "react-icons/md";
+import { PiDotsThreeBold, PiMessengerLogoBold } from "react-icons/pi";
 
 import React, { useEffect, useState } from 'react'
-import { BiMessageRounded } from 'react-icons/bi';
+import { BiLinkAlt, BiMessageRounded } from 'react-icons/bi';
 
 import { FiBookmark, } from 'react-icons/fi';
 import { LuSend } from 'react-icons/lu';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaWhatsapp } from 'react-icons/fa';
 import EmojiPicker from 'emoji-picker-react';
 import { RxCross1 } from 'react-icons/rx';
-import { IoIosCheckmark, IoIosSearch } from 'react-icons/io';
+import { IoIosCheckmark, IoIosLink, IoIosSearch } from 'react-icons/io';
+import { CiFacebook } from 'react-icons/ci';
+import { FaThreads } from 'react-icons/fa6';
+import { TiSocialLinkedin } from 'react-icons/ti';
+import { LiaShareSolid } from 'react-icons/lia';
 
 
 type Props = {
     post: any
 }
 
+const ShareLink = [
+    { link: "Copy link", icon: <BiLinkAlt size={25} /> },
+    { link: "Facebook", icon: <CiFacebook size={25} /> },
+    { link: "Messenger", icon: <PiMessengerLogoBold size={25} /> },
+    { link: "Whatsapp", icon: <FaWhatsapp size={25} /> },
+    { link: "Email", icon: <MdOutlineMail size={25} /> },
+    { link: "Threads", icon: <FaThreads size={25} /> },
+    { link: "Linkedin", icon: <TiSocialLinkedin size={25} /> },
+    { link: "See all", icon: <LiaShareSolid size={25} /> },
+]
 
 const stories = [
     { id: 1, name: "sohel_hoss...", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282233/sample.jpg" },
@@ -28,6 +42,11 @@ const stories = [
     { id: 6, name: "sirazul_monir", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854193/profile/285636603_10209475645083898_8206659727678614489_n_kw8sbk.jpg" },
     { id: 7, name: "raja_5050", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220822/profile/473018861_954030496668402_2945812169270431767_n_drmzvb.jpg" },
     { id: 8, name: "mr_faisu_07", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg" },
+    { id: 6, name: "sirazul_monir", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854193/profile/285636603_10209475645083898_8206659727678614489_n_kw8sbk.jpg" },
+    { id: 5, name: "md_rahat", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854226/profile/476164061_1327580994932700_4948948658324637344_n_wwevz7.jpg" },
+    { id: 2, name: "badhon ", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg" },
+    { id: 7, name: "raja_5050", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220822/profile/473018861_954030496668402_2945812169270431767_n_drmzvb.jpg" },
+
 ];
 const PostCard = ({ post }: Props) => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -36,7 +55,7 @@ const PostCard = ({ post }: Props) => {
     const [showPicker, setShowPicker] = useState(false);
     const [showPicker2, setShowPicker2] = useState(false);
     const [inputClick, setInputClick] = useState(false)
-    const [selectedIndexes, setSelectedIndexes] = useState <number[]>([]); // Track multiple selections
+    const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]); // Track multiple selections
     const allText = "You're very welcome! 🎉 I'm so glad to hear you had a wonderful birthday with your loved ones. Wishing you even more amazing moments ahead! 🥳🎂 How did you celebrate?"
     const word = allText.split(" ")
     const visibleText = isExpanded ? allText : word.slice(0, 20).join(" ") + "..."
@@ -46,7 +65,9 @@ const PostCard = ({ post }: Props) => {
         likeCount: 10032119,
         message: false,
         share: false,
-        save: false
+        save: false,
+        postSetting: false
+
     })
 
 
@@ -86,7 +107,7 @@ const PostCard = ({ post }: Props) => {
 
                     <p className='flex items-center gap-x-1 font-semibold'>{post.name} <span><MdVerified color='#0095F6' /></span> <span className='text-[30px] -mt-5'>.</span> <span className='text-gray-500'>{Math.floor(Math.random() * 24) + 1}h</span></p>
                 </div>
-                <PiDotsThreeBold className='cursor-pointer ' size={20} />
+                <PiDotsThreeBold className='cursor-pointer ' size={20} onClick={() => setPupUp((pre) => ({ ...pre, postSetting: !pre.postSetting }))} />
             </div>
 
             <div className="w-full min-h-[20vh] border border-[#9e9a9a41] my-2 rounded-sm">
@@ -147,7 +168,9 @@ const PostCard = ({ post }: Props) => {
                         }}
                         className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-[99] p-4"
                     >
-                        <div
+                        <motion.div
+                            initial={{ opacity: 0, scale: 1.5, z: -500 }} // Starts from behind with reduced scale
+                            animate={{ opacity: 1, scale: 1, z: 0 }}
                             onClick={(e) => e.stopPropagation()}
                             className="relative flex flex-col md:flex-row bg-black max-w-[1200px] w-[70%] md:w-[80vw]  md:h-auto xl:h-[80vh] rounded-lg overflow-scroll scrollNone"
                         >
@@ -237,7 +260,7 @@ const PostCard = ({ post }: Props) => {
                                     <span className={`${input ? "text-[#33adff] hover:text-white cursor-pointer" : "text-gray-500 pointer-events-none opacity-50"}`}>Post</span>
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     </div>
                 )
             }
@@ -249,7 +272,14 @@ const PostCard = ({ post }: Props) => {
 
                     }} className="fixed inset-0  bg-black bg-opacity-80 flex justify-center items-center">
 
-                        <div onClick={(e) => e.stopPropagation()} className="h-[60vh] w-[30vw] bg-[#262626] rounded-md">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 1.5, z: -500 }} // Starts from behind with reduced scale
+                            animate={{ opacity: 1, scale: 1, z: 0 }}
+
+
+
+
+                            onClick={(e) => e.stopPropagation()} className="h-[65vh] w-[30vw] bg-[#262626] rounded-md">
                             <div className="p-5 flex w-full justify-between">
                                 <div className=""></div>
                                 <h1 className='font-bold cursor-pointer'>Share</h1>
@@ -275,7 +305,7 @@ const PostCard = ({ post }: Props) => {
                             </div>
 
                             <div className="mt-5 w-[90%] mx-auto flex justify-center flex-wrap
-                            items-center">
+                            items-center h-[35vh] overflow-y-scroll  ">
                                 {stories.map((item, index) => (
                                     <div key={index} onClick={() => handleSelect(index)} className="w-[110px] cursor-pointer  hover:bg-[#3C3C3C] h-[115px] rounded-lg flex-col gap-y-1 flex justify-center items-center p-2 ">
                                         <div className='relative'>
@@ -289,7 +319,59 @@ const PostCard = ({ post }: Props) => {
                                 ))}
 
                             </div>
-                        </div>
+
+                            <div className="border-t border-[#c2c0c073] mt-5">
+                                <div className="w-[90%] mx-auto">
+                                    <input type="text" className='bg-transparent outline-none mt-4 w-full' placeholder='Write a message' />
+                                    <button className='w-full bg-blue-400 p-1 mt-5 rounded-lg font-semibold'>{selectedIndexes.length > 1 ? 'Send separately' : "Send"}</button>
+                                </div>
+
+                                {/* 
+                                <div className="w-[90%] h-[13vh] flex items-center gap-x-3 mx-auto justify-center overflow-x-scroll scrollNone">
+
+                          {
+                            ShareLink.map((item,index)=>(
+                                <div key={index} className="w-[80px] h-[80px] flex-col gap-y-1  flex items-center justify-center">
+                                <div className="w-[60px] h-[60px] flex justify-center items-center rounded-full bg-black">{item.icon}
+
+                                </div>
+                                <span className='text-[12px] text-gray-300'>{item.link}</span>
+                            </div>
+                            ))
+                          }
+
+                                   
+                                </div> */}
+                            </div>
+                        </motion.div>
+                    </div>
+                )
+            }
+
+
+            {
+                PupUp.postSetting && (
+                    <div onClick={() => {
+                        setPupUp((prev) => ({ ...prev, postSetting: !prev.postSetting }))
+
+                    }} className="fixed inset-0  bg-black bg-opacity-80 flex justify-center items-center">
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 1.5, z: -500 }} // Starts from behind with reduced scale
+                            animate={{ opacity: 1, scale: 1, z: 0 }}
+
+
+
+
+                            onClick={(e) => e.stopPropagation()} className="min-h-[50vh] w-[20vw] bg-[#262626] rounded-md">
+                            {
+                                ["Report", "Unfollow", "Add to favorites", "Go to post", "Share to", "Copy link", "Embed", "About this account", "Cancel"].map((item, index) => (
+                                    <h1 key={index} className={`${index === 0 || index === 1 ? "text-red-600 " : "text-white"} ${index === 0 && "border-none"} text-center p-3  font-semibold border-t mt-1 border-[#c4bfbf17]`}>{item}</h1>
+                                ))
+                            }
+
+
+                        </motion.div>
                     </div>
                 )
             }
