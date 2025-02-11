@@ -1,5 +1,5 @@
 "use client"
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import Image from 'next/image';
 import { MdOutlineEmojiEmotions, MdOutlineMail, MdVerified } from "react-icons/md";
 import { PiDotsThreeBold, PiMessengerLogoBold } from "react-icons/pi";
@@ -99,6 +99,23 @@ const PostCard = ({ post }: Props) => {
         event.target.style.height = `${event.target.scrollHeight}px`; // Set the height to scrollHeight
         setInput(event.target.value)
     };
+
+
+
+    const [heartVisible, setHeartVisible] = useState(false);  // State to control heart visibility
+  
+  
+    // Function to handle double-tap
+    const handleDoubleTap = () => {
+    
+
+  
+      // Show the heart for a brief moment
+      setHeartVisible(true);
+  
+      // Hide the heart after animation completes
+      setTimeout(() => setHeartVisible(false), 600); // Duration should match heart animation duration
+    };
     return (
         <div className=" w-[95%]  md:w-[485px] mx-auto my-3 bg-black">
             <div className="flex justify-between w-full items-center ">
@@ -110,8 +127,31 @@ const PostCard = ({ post }: Props) => {
                 <PiDotsThreeBold className='cursor-pointer ' size={20} onClick={() => setPupUp((pre) => ({ ...pre, postSetting: !pre.postSetting }))} />
             </div>
 
-            <div className="w-full min-h-[20vh] border border-[#9e9a9a41] my-2 rounded-sm">
+            <div onDoubleClick={handleDoubleTap} className="w-full min-h-[20vh] border border-[#9e9a9a41] my-2 rounded-sm relative">
                 <Image src={post.image} height={1000} width={1000} alt='img not found' className='wf h-full rounded-sm' />
+                <AnimatePresence>
+                {heartVisible && (
+                <motion.div
+            
+                initial={{ scale: 0, opacity: 1 }}  // Start small and fully opaque
+                animate={{
+                  scale: 3,        // Grow the heart
+                  y: -100,         // Move it upwards (slowly)
+                  opacity: 1,      // Keep it fully opaque
+                }}
+                exit={{
+                    opacity: 0, 
+                  y: -200,         // Move further up as it disappears
+                }}
+                transition={{
+                  duration: 0.3,    // Duration for both the appearance and disappearance
+                  ease: "easeOut",  // Smooth easing
+                }}
+           
+                className="absolute top-0 left-0  w-full h-full flex  justify-center items-center">
+               <FaHeart size={30} color="red" />
+                </motion.div>)}
+                </AnimatePresence>
             </div>
             <div className="my-2 flex justify-between w-full items-center">
                 <div className="flex items-center gap-x-2">
@@ -279,7 +319,7 @@ const PostCard = ({ post }: Props) => {
 
 
 
-                            onClick={(e) => e.stopPropagation()} className="h-[65vh] w-[30vw] bg-[#262626] rounded-md">
+                            onClick={(e) => e.stopPropagation()} className="h-[65vh] w-[50vw] xl:w-[30vw] bg-[#262626] rounded-md">
                             <div className="p-5 flex w-full justify-between">
                                 <div className=""></div>
                                 <h1 className='font-bold cursor-pointer'>Share</h1>
@@ -363,7 +403,7 @@ const PostCard = ({ post }: Props) => {
 
 
 
-                            onClick={(e) => e.stopPropagation()} className="min-h-[50vh] w-[20vw] bg-[#262626] rounded-md">
+                            onClick={(e) => e.stopPropagation()} className="min-h-[50vh] w-[50vw] xl:w-[20vw] bg-[#262626] rounded-md">
                             {
                                 ["Report", "Unfollow", "Add to favorites", "Go to post", "Share to", "Copy link", "Embed", "About this account", "Cancel"].map((item, index) => (
                                     <h1 key={index} className={`${index === 0 || index === 1 ? "text-red-600 " : "text-white"} ${index === 0 && "border-none"} text-center p-3  font-semibold border-t mt-1 border-[#c4bfbf17]`}>{item}</h1>

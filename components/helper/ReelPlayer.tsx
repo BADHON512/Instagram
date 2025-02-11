@@ -33,11 +33,12 @@ const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
 
     const [heartClick, setHeartClick] = useState(false);
     const [pupUp, setPupUp] = useState({
-        message:false,
-        threeDots:false
+        message: false,
+        threeDots: false
     })
 
     const [isPlaying, setIsPlaying] = useState<boolean>(true);
+    const [ThreeDots, setThreeDots] = useState<boolean>(false)
 
 
     const fullText: [string] = ["Lorem ipsum dolor sit molestiae non blanditiis! abad;asldkjf asdfoiasdjf asdfiasd foas[pdof asdopf  asdf asdf asdf asd fasdfasd fasdfasdf  asd fasdf adsf af a faf asf asdf"]
@@ -80,7 +81,7 @@ const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
 
                 <div className="flex w-full  gap-x-5 ">
                     <div className="flex relative h-full w-[350px] md:w-[450px]">
-                        <div ref={playerRef} className="h-full w-full border rounded-sm">
+                        <div ref={playerRef} className="h-full w-full border border-[#80808081] rounded-sm">
                             <ReactPlayer
                                 url={videoUrl}
                                 playing={isPlaying}
@@ -208,7 +209,7 @@ const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
                             }
                             <span className="text-sm">33.2M</span>
                         </div>
-                        <div className="flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a] relative" onClick={()=>setPupUp((pre)=>({...pre,message:!pupUp.message}))}>
+                        <div className="flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a] relative" onClick={() => setPupUp((pre) => ({ ...pre, message: !pupUp.message }))}>
                             <FiMessageCircle size={30} className="scale-x-[-1]" />
                             <span className="text-sm">10k</span>
 
@@ -225,8 +226,29 @@ const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
                             <LiaBookmarkSolid size={30} />
 
                         </div>
-                        <div className="flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a]">
-                            <PiDotsThreeBold size={30} />
+                        <div className="flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a] ">
+                            <PiDotsThreeBold size={30} onClick={() => setThreeDots(!ThreeDots)} />
+
+                            {
+                                ThreeDots && (
+                                    <motion.div
+                                    initial={{scale:0}}
+                                    animate={{scale:1}}
+                                    transition={{ duration: 0.1 }}
+                                     className="absolute md:-left-10 md:bottom-32 xl:left-2 xl:bottom-24 bg-[#262626] min-h-[300px] md:w-[250px] bottom-32 w-[200px] rounded-lg">
+                                        <div className="flex flex-col gap-y-2 p-2 ">
+                                            {
+                                                ["Report", "Follow", "Go to post", "Share to...", "Copy link", "Embed", "About this account"].map((item, index) => (
+                                                    <span key={index} className={` ${index === 0 && "!text-red-500" } ${index === 1 && "text-green-500"} text-sm hover:bg-[#3C3C3C] text-white py-2 px-3 rounded-md font-semibold`}>{item}</span>
+                                                ))
+                                            }
+
+
+                                        </div>
+
+                                    </motion.div>
+                                )
+                            }
 
                         </div>
 

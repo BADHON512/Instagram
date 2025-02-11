@@ -146,7 +146,7 @@ const HomeContent = (props: Props) => {
                       <p className="text-xs text-gray-500">Muhammad badhon</p>
                     </div>
                   </div>
-                  <span className='text-[#33adff] hover:text-white cursor-pointer text-sm '>Switch</span>
+                  <span className='text-[#33adff] hover:text-white cursor-pointer text-sm '>Follow</span>
                 </div>
 
               ))
