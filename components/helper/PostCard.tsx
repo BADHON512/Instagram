@@ -17,6 +17,7 @@ import { CiFacebook } from 'react-icons/ci';
 import { FaThreads } from 'react-icons/fa6';
 import { TiSocialLinkedin } from 'react-icons/ti';
 import { LiaShareSolid } from 'react-icons/lia';
+import MessageModel from './MessageModle';
 
 
 type Props = {
@@ -51,9 +52,9 @@ const stories = [
 const PostCard = ({ post }: Props) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [text, setText] = useState("");
-    const [input, setInput] = useState('');
+    const [input, setInput] = useState<string>('');
     const [showPicker, setShowPicker] = useState(false);
-    const [showPicker2, setShowPicker2] = useState(false);
+
     const [inputClick, setInputClick] = useState(false)
     const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]); // Track multiple selections
     const allText = "You're very welcome! 🎉 I'm so glad to hear you had a wonderful birthday with your loved ones. Wishing you even more amazing moments ahead! 🥳🎂 How did you celebrate?"
@@ -103,18 +104,18 @@ const PostCard = ({ post }: Props) => {
 
 
     const [heartVisible, setHeartVisible] = useState(false);  // State to control heart visibility
-  
-  
+
+
     // Function to handle double-tap
     const handleDoubleTap = () => {
-    
 
-  
-      // Show the heart for a brief moment
-      setHeartVisible(true);
-  
-      // Hide the heart after animation completes
-      setTimeout(() => setHeartVisible(false), 600); // Duration should match heart animation duration
+
+
+        // Show the heart for a brief moment
+        setHeartVisible(true);
+
+        // Hide the heart after animation completes
+        setTimeout(() => setHeartVisible(false), 600); // Duration should match heart animation duration
     };
     return (
         <div className=" w-[95%]  md:w-[485px] mx-auto my-3 bg-black">
@@ -130,27 +131,27 @@ const PostCard = ({ post }: Props) => {
             <div onDoubleClick={handleDoubleTap} className="w-full min-h-[20vh] border border-[#9e9a9a41] my-2 rounded-sm relative">
                 <Image src={post.image} height={1000} width={1000} alt='img not found' className='wf h-full rounded-sm' />
                 <AnimatePresence>
-                {heartVisible && (
-                <motion.div
-            
-                initial={{ scale: 0, opacity: 1 }}  // Start small and fully opaque
-                animate={{
-                  scale: 3,        // Grow the heart
-                  y: -100,         // Move it upwards (slowly)
-                  opacity: 1,      // Keep it fully opaque
-                }}
-                exit={{
-                    opacity: 0, 
-                  y: -200,         // Move further up as it disappears
-                }}
-                transition={{
-                  duration: 0.3,    // Duration for both the appearance and disappearance
-                  ease: "easeOut",  // Smooth easing
-                }}
-           
-                className="absolute top-0 left-0  w-full h-full flex  justify-center items-center">
-               <FaHeart size={30} color="red" />
-                </motion.div>)}
+                    {heartVisible && (
+                        <motion.div
+
+                            initial={{ scale: 0, opacity: 1 }}  // Start small and fully opaque
+                            animate={{
+                                scale: 3,        // Grow the heart
+                                y: -100,         // Move it upwards (slowly)
+                                opacity: 1,      // Keep it fully opaque
+                            }}
+                            exit={{
+                                opacity: 0,
+                                y: -200,         // Move further up as it disappears
+                            }}
+                            transition={{
+                                duration: 0.3,    // Duration for both the appearance and disappearance
+                                ease: "easeOut",  // Smooth easing
+                            }}
+
+                            className="absolute top-0 left-0  w-full h-full flex  justify-center items-center">
+                            <FaHeart size={30} color="red" />
+                        </motion.div>)}
                 </AnimatePresence>
             </div>
             <div className="my-2 flex justify-between w-full items-center">
@@ -201,107 +202,7 @@ const PostCard = ({ post }: Props) => {
 
             {
                 PupUp.message && (
-                    <div
-                        onClick={() => {
-                            setPupUp((prev) => ({ ...prev, message: !prev.message }))
-                            setShowPicker2(!showPicker2)
-                        }}
-                        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-[99] p-4"
-                    >
-                        <motion.div
-                            initial={{ opacity: 0, scale: 1.5, z: -500 }} // Starts from behind with reduced scale
-                            animate={{ opacity: 1, scale: 1, z: 0 }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="relative flex flex-col md:flex-row bg-black max-w-[1200px] w-[70%] md:w-[80vw]  md:h-auto xl:h-[80vh] rounded-lg overflow-scroll scrollNone"
-                        >
-                            {/* Image Section */}
-                            <div className="w-full md:w-1/2 h-full ">
-                                <Image
-                                    src={post.image}
-                                    alt="Post Image"
-
-                                    width={800}
-                                    height={1000}
-                                    className="object-cover w-full h-full md:h-[500px] xl:h-[80vh]"
-                                />
-                            </div>
-
-                            {/* Content Section */}
-                            <div className="w-full md:w-1/2 bg-black flex flex-col">
-                                {/* Header */}
-                                <div className="flex justify-between items-center p-4 border-b border-gray-700">
-                                    <div className="flex items-center gap-3">
-                                        <Image
-                                            src={post.avatar}
-                                            height={40}
-                                            width={40}
-                                            alt="User Avatar"
-                                            className="rounded-full border p-[2px] bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500"
-                                        />
-                                        <p className="font-semibold flex items-center gap-x-1">
-                                            {post.name} <MdVerified color="#0095F6" />
-                                        </p>
-                                    </div>
-                                    <PiDotsThreeBold className="cursor-pointer" size={20} />
-                                </div>
-
-                                {/* Comments Section */}
-                                <div className="flex-grow overflow-auto p-4 space-y-4 hidden md:block">
-                                    {[...Array(3)].map((_, index) => (
-                                        <div key={index} className="flex gap-3">
-                                            <Image src={post.avatar} height={4000} width={4000} alt="User Avatar" className="rounded-full w-[40px] h-[40px]" />
-                                            <div>
-                                                <p className="font-semibold">
-                                                    {post.name} <MdVerified color="#0095F6" className="inline" />
-                                                    <span className="text-sm text-gray-300"> Lorem ipsum dolor sit amet...</span>
-                                                </p>
-                                                <div className="flex gap-x-4 text-xs text-gray-400 cursor-pointer">
-                                                    <p>18h</p>
-                                                    <p>Reply</p>
-                                                    <p>See translation</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {/* Actions */}
-                                <div className="border-t border-gray-700 p-4">
-                                    <div className="flex justify-between items-center">
-                                        <div className="flex items-center gap-4">
-                                            <motion.div whileTap={{ scale: 0.8 }} animate={{ scale: PupUp.like ? 1.2 : 1 }} transition={{ type: "spring", stiffness: 300, damping: 10 }} onClick={handelLike}>
-                                                {PupUp.like ? <FaHeart color="red" size={24} className="cursor-pointer" /> : <FaRegHeart color="white" size={24} className="cursor-pointer" />}
-                                            </motion.div>
-                                            <BiMessageRounded size={25} className="cursor-pointer" onClick={() => setPupUp((prev) => ({ ...prev, message: !prev.message }))} />
-                                            <LuSend size={23} className="cursor-pointer" />
-                                        </div>
-                                        <FiBookmark size={25} className="cursor-pointer" />
-                                    </div>
-                                    <p className="text-sm text-gray-300 mt-2 font-semibold">{PupUp.likeCount.toLocaleString()} likes</p>
-                                    <p className="text-xs text-gray-300">15 hours ago</p>
-                                </div>
-
-                                {/* Comment Input */}
-                                <div className="border-t border-gray-700 p-4 flex items-center gap-3">
-                                    <button onClick={() => setShowPicker2(!showPicker2)}>
-                                        <MdOutlineEmojiEmotions size={25} />
-                                    </button>
-                                    {showPicker2 && (
-                                        <div className="absolute bottom-14 right-60">
-                                            <EmojiPicker onEmojiClick={(emoji) => setInput((prev) => prev + emoji.emoji)} theme="dark" skinTonesDisabled />
-                                        </div>
-                                    )}
-                                    <textarea
-                                        value={input}
-                                        onChange={(e) => setInput(e.target.value)}
-                                        className="w-full bg-transparent outline-none resize-none h-[25px] overflow-hidden"
-                                        placeholder="Add a comment..."
-                                    />
-                                    <span className={`${input ? "text-[#33adff] hover:text-white cursor-pointer" : "text-gray-500 pointer-events-none opacity-50"}`}>Post</span>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
+                    <MessageModel PupUp={PupUp} setPupUp={setPupUp} post={post} input={input} setInput={setInput} handelLike={handelLike}/>
                 )
             }
 

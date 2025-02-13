@@ -1,11 +1,15 @@
+"use client"
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import { BiSolidMessageRounded } from 'react-icons/bi';
 import { GoHeartFill } from 'react-icons/go';
+import MessageModel from '../helper/MessageModle';
 
 type Props = {}
 
 const ExploreContent = (props: Props) => {
+
+
   const exploreData = [
     { id: 1, src: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282258/cld-sample-2.jpg", type: "image" },
     { id: 2, src: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282259/cld-sample-4.jpg", type: "image" },
@@ -22,12 +26,22 @@ const ExploreContent = (props: Props) => {
 
     { id: 12, src: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282258/cld-sample-3.jpg", type: "image" },
   ];
+  const [PupUp, setPupUp] = useState({
+    like: false,
+    likeCount: 10032119,
+    message: false,
+    share: false,
+    save: false,
+    postSetting: false
+
+  })
+
   return (
     <div className="grid grid-cols-3 gap-1 p-2 md:gap-2 max-w-[1170px] mx-auto">
-      {exploreData.map((item, index) => (
-        <div key={item.id} className={`relative `}>
+      {exploreData.map((post, index) => (
+        <div key={post.id} className={`relative `} onClick={(()=>setPupUp((pre)=>({...pre,message:!pre.message})))}>
           <Image
-            src={item.src}
+            src={post.src}
             alt="Instagram post"
             layout="responsive"
             width={200}
@@ -35,18 +49,28 @@ const ExploreContent = (props: Props) => {
             className="rounded-lg object-cover cursor-pointer hover:opacity-75 transition duration-300"
           />
 
-              <div className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100   flex justify-center items-center gap-x-4 cursor-pointer">
-                        <div className="flex gap-x-2">
-                          <GoHeartFill size={25} className="text-white" />
-                          <span className="text-white">15</span>
-                        </div>
-                        <div className="flex gap-x-2">
-                          <BiSolidMessageRounded size={25} className="scale-x-[-1] text-white" />
-                          <span className="text-white">10</span>
-                        </div>
-                      </div>
+          <div className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100   flex justify-center items-center gap-x-4 cursor-pointer">
+            <div className="flex gap-x-2">
+              <GoHeartFill size={25} className="text-white" />
+              <span className="text-white">15</span>
+            </div>
+            <div className="flex gap-x-2">
+              <BiSolidMessageRounded size={25} className="scale-x-[-1] text-white" />
+              <span className="text-white">10</span>
+            </div>
+          </div>
+          {/* {
+        PupUp.message && (
+          <MessageModel PupUp={PupUp} setPupUp={setPupUp} post={post} />
+        )
+      } */}
+
         </div>
+
+
       ))}
+
+  
     </div>
   )
 }

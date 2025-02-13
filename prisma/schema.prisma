@@ -1,7 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
@@ -11,4 +10,83 @@ generator client {
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+ 
+model User {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  username String   @unique
+  email    String   @unique
+  password String?
+  bio      String?
+  avatar   String?
+  posts    Post[]
+  comments Comment[]
+  likes    Like[]
+  stories  Story[]
+  messagesSent    Message[] @relation("MessageFrom")
+  messagesReceived Message[] @relation("MessageTo")
+  followers Follow[] @relation("Followee")
+  following Follow[] @relation("Follower")
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  image     String
+  caption   String?
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String  @db.ObjectId
+  comments  Comment[]
+  likes     Like[]
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String     @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String     @db.ObjectId
+  likes     Like[]
+  createdAt DateTime @default(now())
+}
+
+model Like {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String  @db.ObjectId
+  post      Post    @relation(fields: [postId], references: [id])
+  postId    String @db.ObjectId
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId String @db.ObjectId
+  createdAt DateTime @default(now())
+}
+
+model Follow {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  follower   User   @relation("Follower", fields: [followerId], references: [id])
+  followerId String  @db.ObjectId
+  followee   User   @relation("Followee", fields: [followeeId], references: [id])
+  followeeId String   @db.ObjectId
+  createdAt  DateTime @default(now())
+}
+
+model Story {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  image     String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String  @db.ObjectId
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  sender    User     @relation("MessageFrom", fields: [senderId], references: [id])
+  senderId  String    @db.ObjectId
+  receiver  User     @relation("MessageTo", fields: [receiverId], references: [id])
+  receiverId String   @db.ObjectId
+  createdAt DateTime @default(now())
 }

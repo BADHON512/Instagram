@@ -12,9 +12,11 @@ import NotificationSidebar from '@/components/helper/Notification';
 import Create from '@/components/Create/Create';
 
 
-type Props = {}
+type Props = {
+     user: any
+}
 
-const Home = (props: Props) => {
+const Home = ({user}: Props) => {
 
 
      const [active, setActive] = useState<number | null>(null);
