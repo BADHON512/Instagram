@@ -13,10 +13,10 @@ import Create from '@/components/Create/Create';
 
 
 type Props = {
-     user: any
+     
 }
 
-const Home = ({user}: Props) => {
+const Home = ({}: Props) => {
 
 
      const [active, setActive] = useState<number | null>(null);
