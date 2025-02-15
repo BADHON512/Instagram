@@ -12,6 +12,7 @@
     "@clerk/nextjs": "^6.9.15",
     "@prisma/client": "^6.3.1",
     "axios": "^1.7.9",
+    "bcryptjs": "^3.0.0",
     "emoji-picker-react": "^4.12.0",
     "motion": "^12.0.3",
     "next": "15.1.5",

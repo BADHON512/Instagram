@@ -12,15 +12,14 @@ import NotificationSidebar from '@/components/helper/Notification';
 import Create from '@/components/Create/Create';
 
 
-type Props = {
-     
-}
 
-const Home = ({}: Props) => {
+
+
+const Home = () => {
 
 
      const [active, setActive] = useState<number | null>(null);
-     console.log(active)
+     
 
      return (
           <div className='md:flex '>
@@ -49,15 +48,15 @@ const Home = ({}: Props) => {
 
                     </motion.div>
                </div>
-               <div className=" sticky z-[9999] top-0 right-0 bg-black w-full md:hidden">
+               <div className=" fixed md:min-h-[60px] lg:h-0  z-[9999] top-0 right-0 bg-black w-full md:hidden">
                     <Header />
                </div>
-               <div className=" w-full ml-0 md:ml-[79px] xl:ml-[300px]  h-screen  ">
+               <div className="mt-[60px] lg:mt-0 w-full ml-0 md:ml-[79px] xl:ml-[300px]  h-screen  ">
                     <HomeContent />
 
                </div>
                <div className=" fixed bottom-0 bg-black w-full block md:hidden">
-                    <HeaderDown />
+                    <HeaderDown active={active} setActive={setActive}  />
                </div>
 
                {

@@ -211,7 +211,7 @@ const PostCard = ({ post }: Props) => {
                     <div onClick={() => {
                         setPupUp((prev) => ({ ...prev, share: !prev.share }))
 
-                    }} className="fixed inset-0  bg-black bg-opacity-80 flex justify-center items-center">
+                    }} className="fixed inset-0 z-[9999999] bg-black bg-opacity-80 flex justify-center items-center">
 
                         <motion.div
                             initial={{ opacity: 0, scale: 1.5, z: -500 }} // Starts from behind with reduced scale

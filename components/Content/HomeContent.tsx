@@ -56,7 +56,7 @@ const HomeContent = (props: Props) => {
     <div className=" w-[90%] md:w-[1100px] mx-auto ">
       <div className="flex justify-center  lg:justify-between">
         {/* leftSide */}
-        <div className="w-[80%] md:w-[60%] bg-black min-h-screen text-white flex flex-col items-center">
+        <div className="w-[90%] md:w-[60%] bg-black min-h-screen text-white flex flex-col items-center">
 
           {/* Story Section */}
           <div className="flex space-x-4 overflow-x-scroll w-[60%] md:w-full scrollNone p-4">

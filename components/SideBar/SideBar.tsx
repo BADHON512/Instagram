@@ -21,6 +21,8 @@ import { GrInstagram } from "react-icons/gr";
 import { FaRegPlusSquare } from "react-icons/fa";
 import Image from 'next/image';
 import Link from 'next/link';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -58,7 +60,7 @@ const menuItems = [
 
 const SideBar = ({ active, setActive }: Props) => {
   const [MoreOpen, setMoreOpen] = useState<boolean>(false)
-
+const router=useRouter()
   const handleClose = (e: React.MouseEvent) => {
     const target = e.currentTarget as HTMLElement
     console.log(target)
@@ -73,6 +75,13 @@ const SideBar = ({ active, setActive }: Props) => {
       setActive(id); // Otherwise, set as active
     }
   };
+  const handleLogOut=async()=>{
+    await axios.get('/api/log-out').then((res)=>{
+      window.location.reload()
+    }).catch((err)=>{
+      alert(err)
+    })
+  }
   return (
     <div className={`${(active === 1 || active === 5 || active === 4) ? "" : "border-r border-[#262626] xl:w-[280px] "}  h-screen p-5  w-[79px]  xl:h-full relative bg-black z-[999999] `}>
       <div className='p-2 '>
@@ -134,7 +143,7 @@ const SideBar = ({ active, setActive }: Props) => {
               </div>
               <div className={`${active === 1 || active === 5 || active === 4 ? "hidden" : ""
                 }`}>
-                <h4 className={`${"font-semibold text-[17px]"} hidden xl:block`}>Threads</h4>
+                <Link href={"https://www.threads.net/"} target='_blank' className={`${"font-semibold text-[17px]"} hidden xl:block`}>Threads</Link>
               </div>
 
             </div>
@@ -212,7 +221,7 @@ const SideBar = ({ active, setActive }: Props) => {
                 <div className='flex gap-x-4 p-3  cursor-pointer rounded-md  items-center hover:bg-[#3C3C3C] '>
 
 
-                  <p className={`${"text-[] "}`}>Log out</p>
+                  <p onClick={handleLogOut} className={`${"text-[] "}`}>Log out</p>
                 </div>
               </div>
             </div>

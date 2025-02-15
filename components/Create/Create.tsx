@@ -8,7 +8,7 @@ type Props = {
 
 const Create = ({active,setActive}: Props) => {
   return (
-    <div onClick={()=>setActive(null)} className="absolute w-[100vw] h-[100vh] bg-[#00000086]  z-50 flex justify-center items-center p-5">
+    <div onClick={()=>setActive(null)} className="absolute w-[100vw] h-[100vh] bg-[#00000086] z-[999] flex justify-center items-center p-5">
     <div onClick={(e)=>e.stopPropagation()} className="bg-[#262626]  w-[663px] h-[696px]
           rounded-lg ">
          <h1 className='min-h-[20px] bg-black rounded-t-lg text-center py-2 border-b  border-[#26262626]'>Create new post</h1>

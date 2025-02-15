@@ -4,7 +4,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import axios from 'axios';
 
 const RoutePage = async () => {
-  
+
 
   return (
     <div>

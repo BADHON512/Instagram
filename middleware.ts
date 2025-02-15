@@ -1,18 +1,32 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-const isPublicRoute = createRouteMatcher(['/sign-in(.*)','/'])
+export function middleware(request: NextRequest) {
+  const { cookies } = request;
+  const authToken = cookies.get('session');
+  const { pathname } = new URL(request.url);
 
-export default clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect()
+  // ✅ Next.js স্ট্যাটিক ফাইল এবং API রিকোয়েস্ট middleware থেকে বাইপাস করো
+  if (
+    pathname.startsWith('/_next/') || 
+    pathname.startsWith('/static/') || 
+    pathname.startsWith('/api/')
+  ) {
+    return NextResponse.next();
   }
-})
+
+  // 🔹 লগিন না করা থাকলে শুধুমাত্র '/login' এবং '/sign-up' পেজে যেতে পারবে
+  if (!authToken) {
+    if (pathname.startsWith('/login') || pathname.startsWith('/sign-up')) {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL('/login', request.url));
+  }
+
+  // ✅ লগিন করা থাকলে সব রুট অ্যাক্সেস করতে পারবে
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
-}
+  matcher: '/:path*',
+};
