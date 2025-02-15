@@ -1,35 +1,226 @@
-import React from 'react'
+import Image from 'next/image'
+import React, { useEffect, useState, useCallback } from 'react'
 import { RxCross1 } from 'react-icons/rx'
 
+
+// import { Spinner } from './Spinner' // Create a separate spinner component
+
 type Props = {
-    active: number | null
-    setActive: (active:number|null)=>void| null
+  active: number | null
+  setActive: (active: number | null) => void
 }
 
-const Create = ({active,setActive}: Props) => {
+type Crop = {
+  unit: '%'
+  width: number
+  height: number
+  x: number
+  y: number
+}
+
+const Create = ({ active, setActive }: Props) => {
+  const [postData, setPostData] = useState({
+    image: "",
+    caption: ""
+  })
+console.log(postData)
+  const [isDragging, setIsDragging] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  
+
+  const validateFile = (file: File) => {
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif']
+    const maxSize = 5 * 1024 * 1024 // 5MB
+    
+    if (!validTypes.includes(file.type)) {
+      setError('Invalid file type. Please upload JPEG, PNG, or GIF.')
+      return false
+    }
+    
+    if (file.size > maxSize) {
+      setError('File size too large. Maximum 5MB allowed.')
+      return false
+    }
+    
+    return true
+  }
+
+  const handleFile = useCallback((file: File) => {
+    if (!validateFile(file)) return
+    
+    setIsLoading(true)
+    const reader = new FileReader()
+    
+    reader.onload = () => {
+     setPostData((pre)=>({...pre,image: reader.result as string}))
+      setIsLoading(false)
+    }
+    
+    reader.onerror = () => {
+      setError('Error reading file')
+      setIsLoading(false)
+    }
+    
+    reader.readAsDataURL(file)
+  }, [])
+
+  const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) handleFile(file)
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const file = e.dataTransfer.files?.[0]
+    if (file) handleFile(file)
+  }
+
+  const handlePostSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log(postData)
+  }
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActive(null)
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [setActive])
+
+  useEffect(() => {
+     
+
+     document.body.style.overflow = postData.image ? "hidden" : "auto";
+
+     return () => {
+         document.body.style.overflow = "auto"; // Cleanup on unmount
+     };
+ }, [postData.image]);
+
   return (
-    <div onClick={()=>setActive(null)} className="absolute w-[100vw] h-[100vh] bg-[#00000086] z-[999] flex justify-center items-center p-5">
-    <div onClick={(e)=>e.stopPropagation()} className="bg-[#262626]  w-[663px] h-[696px]
-          rounded-lg ">
-         <h1 className='min-h-[20px] bg-black rounded-t-lg text-center py-2 border-b  border-[#26262626]'>Create new post</h1>
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+      <div 
+        className="bg-[#262626] rounded-xl w-full max-w-4xl overflow-hidden shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Modal Header */}
+        <div className="flex items-center justify-between p-4 border-b border-white/10">
+          <h1 className="text-xl font-semibold text-white">Create New Post</h1>
+          <button 
+            onClick={() => setActive(null)}
+            className="p-2 hover:bg-white/10 rounded-full transition-colors"
+            aria-label="Close modal"
+          >
+            <RxCross1 className="w-6 h-6 text-white" />
+          </button>
+        </div>
 
-         <div className="w-full h-full flex justify-center items-center flex-col space-y-4">
+        {/* Content Area */}
+        <div className="flex flex-col md:flex-row min-h-[600px]">
+          {/* Image Preview Section */}
+          <div className="md:w-[60%] bg-blue-200 flex items-center justify-center relative">
+            {postData.image ? (
+              <div className="relative w-full h-full">
+         
+                  <Image
+                    src={postData.image}
+                    alt="Preview"
+                    width={800}
+                    height={800}
+                    className="object-contain "
+                  />
+                 <div className="w-full py-1 mb-2 text-center mt-3">
+                    <label htmlFor="change"  className='px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors'>
+                         Change image
+                         <input type="file" className='hidden' id='change' onChange={imageHandler} />
+                    </label>
+                 </div>
+              </div>
+            ) : (
+              <div 
+                className={`p-8 w-full h-full flex flex-col items-center justify-center transition-all 
+                  ${isDragging ? 'bg-white/5' : 'bg-transparent'}`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <div className="mb-6 text-gray-400">
+                  <svg className="w-24 h-24 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h2 className="text-xl font-medium text-white mb-4">
+                  {isDragging ? 'Drop to upload' : 'Drag photos here'}
+                </h2>
+                <label className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors">
+                  Select from computer
+                  <input 
+                    type="file" 
+                    className="hidden" 
+                    onChange={imageHandler}
+                    accept="image/*"
+                  />
+                </label>
+                <p className="mt-4 text-sm text-gray-400">Recommendation: Use high-quality JPG, PNG</p>
+              </div>
+            )}
+          </div>
 
-              <div className="">
-                   <svg aria-label="Icon to represent media such as images or videos" fill="currentColor" height="77" role="img" viewBox="0 0 97.6 77.3" width="96"><title>Icon to represent media such as images or videos</title><path d="M16.3 24h.3c2.8-.2 4.9-2.6 4.8-5.4-.2-2.8-2.6-4.9-5.4-4.8s-4.9 2.6-4.8 5.4c.1 2.7 2.4 4.8 5.1 4.8zm-2.4-7.2c.5-.6 1.3-1 2.1-1h.2c1.7 0 3.1 1.4 3.1 3.1 0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-.8.3-1.5.8-2.1z" fill="currentColor"></path><path d="M84.7 18.4 58 16.9l-.2-3c-.3-5.7-5.2-10.1-11-9.8L12.9 6c-5.7.3-10.1 5.3-9.8 11L5 51v.8c.7 5.2 5.1 9.1 10.3 9.1h.6l21.7-1.2v.6c-.3 5.7 4 10.7 9.8 11l34 2h.6c5.5 0 10.1-4.3 10.4-9.8l2-34c.4-5.8-4-10.7-9.7-11.1zM7.2 10.8C8.7 9.1 10.8 8.1 13 8l34-1.9c4.6-.3 8.6 3.3 8.9 7.9l.2 2.8-5.3-.3c-5.7-.3-10.7 4-11 9.8l-.6 9.5-9.5 10.7c-.2.3-.6.4-1 .5-.4 0-.7-.1-1-.4l-7.8-7c-1.4-1.3-3.5-1.1-4.8.3L7 49 5.2 17c-.2-2.3.6-4.5 2-6.2zm8.7 48c-4.3.2-8.1-2.8-8.8-7.1l9.4-10.5c.2-.3.6-.4 1-.5.4 0 .7.1 1 .4l7.8 7c.7.6 1.6.9 2.5.9.9 0 1.7-.5 2.3-1.1l7.8-8.8-1.1 18.6-21.9 1.1zm76.5-29.5-2 34c-.3 4.6-4.3 8.2-8.9 7.9l-34-2c-4.6-.3-8.2-4.3-7.9-8.9l2-34c.3-4.4 3.9-7.9 8.4-7.9h.5l34 2c4.7.3 8.2 4.3 7.9 8.9z" fill="currentColor"></path><path d="M78.2 41.6 61.3 30.5c-2.1-1.4-4.9-.8-6.2 1.3-.4.7-.7 1.4-.7 2.2l-1.2 20.1c-.1 2.5 1.7 4.6 4.2 4.8h.3c.7 0 1.4-.2 2-.5l18-9c2.2-1.1 3.1-3.8 2-6-.4-.7-.9-1.3-1.5-1.8zm-1.4 6-18 9c-.4.2-.8.3-1.3.3-.4 0-.9-.2-1.2-.4-.7-.5-1.2-1.3-1.1-2.2l1.2-20.1c.1-.9.6-1.7 1.4-2.1.8-.4 1.7-.3 2.5.1L77 43.3c1.2.8 1.5 2.3.7 3.4-.2.4-.5.7-.9.9z" fill="currentColor"></path></svg>
-                   
+          {/* Form Section */}
+          <div className="md:w-[40%] p-6 flex flex-col">
+            <form onSubmit={handlePostSubmit} className="flex-1 flex flex-col">
+              <div className="mb-6">
+                <textarea
+                  value={postData.caption}
+                  onChange={(e) => setPostData({...postData, caption: e.target.value})}
+                  placeholder="Write a caption..."
+                  className="w-full bg-transparent text-white placeholder-gray-400 resize-none 
+                    focus:outline-none border-b border-white/10 pb-2"
+                  rows={4}
+                />
               </div>
 
-              <h1 className='font-semibold'>Drag photos and videos here </h1>
+              <div className="mt-auto space-y-4">
+                {error && (
+                  <div className="text-red-500 text-sm">{error}</div>
+                )}
 
-              <button className='px-3 py-1 rounded-lg bg-[#3397f5] hover:bg-[#1877F2] font-semibold'>Select from computer</button>
-
-         </div>
-
+                <div className="flex items-center justify-between gap-4">
+                  <label className="flex items-center gap-2 text-gray-400 hover:text-white 
+                    transition-colors cursor-pointer text-sm">
+                    <input type="checkbox" className="accent-blue-500" />
+                    Advanced Settings
+                  </label>
+                  
+                  <button 
+                    type="submit" 
+                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg 
+                      disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    disabled={isLoading || !postData.image}
+                  >
+                    {isLoading ? "s" : 'Post'}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <RxCross1 size={30} className='absolute top-5 right-8 cursor-pointer   ' onClick={()=>setActive(null)}/>
-</div>
-
   )
 }
 
