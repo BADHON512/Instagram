@@ -5,6 +5,7 @@ import { BsPlusLg } from "react-icons/bs";
 import Link from 'next/link';
 import { BiSolidMessageRounded } from "react-icons/bi";
 import { GoHeartFill } from "react-icons/go";
+import axios, { all } from 'axios';
 
 
 type Props = {}
@@ -13,11 +14,20 @@ const ProfileContent = (props: Props) => {
   const text = "🎨 Front-End Developer 🚀 | Creating Engaging Web Experiences ✨ | HTML/CSS Wizard 🌟 | UI/UX Enthusiast 🌐 | Let's Build the Web of Tomorrow! 🌈";
   const [showMore, setShowMore] = useState(false);
   const [activeTab, setActiveTab] = useState<'posts' | 'saved' | 'tagged'>('posts');
-
+  const [EditProfileShow, setEditProfileShow] = useState(false)
+  const [updateProfile, setUpdataProfile] = useState({
+    image: "",
+    bio: `Front-End Developer | Creating Engaging Web Experiences HTML/CSS Wizard | UI/UX Enthusiast | Let's Build the Web of Team account`,
+    gender: "Male"
+  })
+  console.log(updateProfile.image)
   const words = text.split(" ");
   const visibleText = showMore ? text : words.slice(0, 10).join(" ");
   const tabsRef = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
+
+
+
   console.log(tabsRef)
   useEffect(() => {
     const activeButton = tabsRef.current[activeTab];
@@ -28,6 +38,34 @@ const ProfileContent = (props: Props) => {
       });
     }
   }, [activeTab]);
+
+  const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const fileReader = new FileReader()
+    fileReader.onload = () => {
+      if (fileReader.readyState === 2) {
+        setUpdataProfile((pre) => ({ ...pre, image: fileReader.result as string }))
+      }
+    }
+    fileReader.readAsDataURL(file)
+  }
+  const handleUpdataProfile = async (e:React.ChangeEvent<HTMLFormElement>) => {
+e.preventDefault()
+    const data = {
+      image: updateProfile.image,
+      bio: updateProfile.bio,
+      gender: updateProfile.gender
+    }
+
+    await axios.put("/api/profile-update",data).then((res)=>{
+      alert(res.data.message)
+      console.log(res)
+    }).catch((error )=>{
+      alert(error.response.data.error)
+    })
+    console.log(data)
+  }
   return (
     <div className='max-w-[940px] mx-auto pt-8 px-4'>
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
@@ -49,7 +87,7 @@ const ProfileContent = (props: Props) => {
           {/* Username and Actions */}
           <div className="flex items-center gap-4 mb-4">
             <h1 className="text-2xl font-light">badhon_9090</h1>
-            <button className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
+            <button onClick={() => setEditProfileShow(true)} className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
               Edit Profile
             </button>
             <button className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
@@ -210,7 +248,7 @@ const ProfileContent = (props: Props) => {
 
             <h1 className='text-[25px] font-bold'>Photos of you</h1>
 
-    <p>When people tag you in photos, they&#39;ll appear here.</p>
+            <p>When people tag you in photos, they&#39;ll appear here.</p>
           </div>
         )}
 
@@ -237,7 +275,97 @@ const ProfileContent = (props: Props) => {
         <p>&copy; 2025 Instagram from Meta</p>
       </div>
 
+      {
+        EditProfileShow && (
+          <div onClick={() => setEditProfileShow(false)} className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <form onClick={(e)=>e.stopPropagation()} onSubmit={handleUpdataProfile} className="max-w-2xl mx-auto p-4 bg-[#262626]  rounded-lg">
+              {/* Header */}
+              <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
 
+              {/* Profile Section */}
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
+                  {
+                    updateProfile.image ? (
+                      <Image src={updateProfile.image} alt='img not found' height={100} width={100} className='w-full h-full object-cover rounded-full' />
+                    ) : (
+
+                      <span className="text-gray-500">MB</span>
+
+                    )
+                  }
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold">badhon_9090</h2>
+                  <p className="text-gray-500">muhammad Badhon</p>
+                </div>
+
+                <label htmlFor="change" className="ml-auto cursor-pointer hover:bg-blue-700 bg-blue-600 text-white py-1 px-2 rounded-md font-medium">
+                  Change photo
+                  <input type="file" id='change' className='hidden' onChange={imageHandler} />
+                </label>
+              </div>
+
+              {/* Website Section */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2">Website</label>
+                <div className="space-y-2">
+                  <div className="p-2 cursor-not-allowed rounded bg-[#1A1A1A] border border-[#b9b4b45e]  outline-none">https://badhon/portfolio.com</div>
+
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Editing your links is only available on mobile. Visit the Instagram app and edit your profile to change the websites in your bio.
+                </p>
+              </div>
+
+              {/* Bio Section */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2">Bio</label>
+                <textarea
+                  value={updateProfile.bio}
+                  onChange={(e) => setUpdataProfile((pre) => ({ ...pre, bio: e.target.value }))}
+                  className="w-full p-2 rounded-md h-32 resize-none bg-[#1A1A1A] border border-[#b9b4b45e]  outline-none"
+                />
+                <div className="text-right text-sm text-gray-500 mt-1">144 / 150</div>
+              </div>
+
+              {/* Gender Section */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2">Gender</label>
+                <select
+                  value={updateProfile.gender}
+                  onChange={(e) => setUpdataProfile((pre) => ({ ...pre, gender: e.target.value }))}
+                  className="w-full p-2 bg-[#1A1A1A] border border-[#b9b4b45e] cursor-pointer outline-none rounded-md"
+                >
+                  <option className='cursor-pointer'>Male</option>
+                  <option className='cursor-pointer'>Female</option>
+                  <option className='cursor-pointer'>Other</option>
+                </select>
+                <p className="text-xs text-gray-500 mt-2">This won't be part of your public profile.</p>
+              </div>
+
+              {/* Account Suggestions */}
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="font-medium">Show account suggestions on profiles</p>
+                  <p className="text-sm text-gray-500">Choose whether people can see similar account suggestions...</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+              <button type='submit' className='ml-auto block hover:bg-blue-700 bg-blue-600 text-white py-1 px-2 rounded-md font-medium'>Update profile</button>
+
+            </form>
+          </div>
+
+        )
+      }
 
     </div >
   )

@@ -1,3 +1,4 @@
+import axios from 'axios'
 import Image from 'next/image'
 import React, { useEffect, useState, useCallback } from 'react'
 import { RxCross1 } from 'react-icons/rx'
@@ -10,13 +11,7 @@ type Props = {
   setActive: (active: number | null) => void
 }
 
-type Crop = {
-  unit: '%'
-  width: number
-  height: number
-  x: number
-  y: number
-}
+
 
 const Create = ({ active, setActive }: Props) => {
   const [postData, setPostData] = useState({
@@ -89,7 +84,26 @@ console.log(postData)
 
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log(postData)
+   const data={
+    caption:postData.caption,
+    image:postData.image,
+    
+   }
+    if(postData.caption==""|| postData.image==""){
+      alert("fill the all field")
+    }else{
+      await axios.post("/api/user-post", data)
+      .then((res) => {
+           alert(res.data.message)
+        setActive(null)
+      })
+      .catch((error) => {
+        console.error("API Error:", error); // Debugging-এর জন্য Console-এ Error দেখাবে
+        alert(error.response.data.error)
+      });
+    
+    
+    }
   }
 
   useEffect(() => {
