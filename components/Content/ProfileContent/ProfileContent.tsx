@@ -8,27 +8,35 @@ import { GoHeartFill } from "react-icons/go";
 import axios, { all } from 'axios';
 
 
-type Props = {}
+type Props = {
+  user: any
+}
 
-const ProfileContent = (props: Props) => {
-  const text = "🎨 Front-End Developer 🚀 | Creating Engaging Web Experiences ✨ | HTML/CSS Wizard 🌟 | UI/UX Enthusiast 🌐 | Let's Build the Web of Tomorrow! 🌈";
+const ProfileContent = ({ user }: Props) => {
+  console.log("user", user?.posts)
+
   const [showMore, setShowMore] = useState(false);
   const [activeTab, setActiveTab] = useState<'posts' | 'saved' | 'tagged'>('posts');
   const [EditProfileShow, setEditProfileShow] = useState(false)
   const [updateProfile, setUpdataProfile] = useState({
     image: "",
-    bio: `Front-End Developer | Creating Engaging Web Experiences HTML/CSS Wizard | UI/UX Enthusiast | Let's Build the Web of Team account`,
+    bio: "",
     gender: "Male"
   })
   console.log(updateProfile.image)
-  const words = text.split(" ");
-  const visibleText = showMore ? text : words.slice(0, 10).join(" ");
+  const words = user?.bio.split(" ");
+  const visibleText = showMore ? user?.bio : words.slice(0, 10).join(" ");
   const tabsRef = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
 
 
 
-  console.log(tabsRef)
+  useEffect(() => {
+    if (!updateProfile.image) {
+      setUpdataProfile((prev) => ({ ...prev, image: user?.avatar?.url || "" }));
+    }
+  }, [updateProfile.image, user?.avatar?.url, setUpdataProfile]);
+
   useEffect(() => {
     const activeButton = tabsRef.current[activeTab];
     if (activeButton) {
@@ -37,6 +45,7 @@ const ProfileContent = (props: Props) => {
         width: activeButton.offsetWidth
       });
     }
+
   }, [activeTab]);
 
   const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,21 +59,21 @@ const ProfileContent = (props: Props) => {
     }
     fileReader.readAsDataURL(file)
   }
-  const handleUpdataProfile = async (e:React.ChangeEvent<HTMLFormElement>) => {
-e.preventDefault()
+  const handleUpdataProfile = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault()
     const data = {
       image: updateProfile.image,
       bio: updateProfile.bio,
       gender: updateProfile.gender
     }
 
-    await axios.put("/api/profile-update",data).then((res)=>{
+    await axios.put("/api/profile-update", data).then((res) => {
       alert(res.data.message)
       console.log(res)
-    }).catch((error )=>{
+    }).catch((error) => {
       alert(error.response.data.error)
     })
-    console.log(data)
+   window.location.reload()
   }
   return (
     <div className='max-w-[940px] mx-auto pt-8 px-4'>
@@ -73,7 +82,7 @@ e.preventDefault()
         <div className="flex-shrink-0">
           <div className="relative h-[150px] w-[150px] rounded-full overflow-hidden border-2 border-gray-300 z-[-1]">
             <Image
-              src={'https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg'}
+              src={user?.avatar?.url || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1739805661/default-avatar-profile-icon-of-social-media-user-vector_ixtvqz.jpg"}
               layout="fill"
               objectFit="cover"
               alt='Profile picture'
@@ -86,7 +95,7 @@ e.preventDefault()
         <div className="flex-grow w-full">
           {/* Username and Actions */}
           <div className="flex items-center gap-4 mb-4">
-            <h1 className="text-2xl font-light">badhon_9090</h1>
+            <h1 className="text-2xl font-light">{user?.name}</h1>
             <button onClick={() => setEditProfileShow(true)} className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
               Edit Profile
             </button>
@@ -101,7 +110,7 @@ e.preventDefault()
           {/* Stats */}
           <div className="flex gap-10 mb-4">
             <div className="flex gap-1">
-              <span className="font-semibold">500</span> posts
+              <span className="font-semibold">{user?.posts?.length}</span> posts
             </div>
             <div className="flex gap-1">
               <span className="font-semibold">15k</span> followers
@@ -194,29 +203,32 @@ e.preventDefault()
 
       <div className="min-h-[30vh] flex w-full flex-wrap gap-2  justify-start p-3">
         {activeTab === 'posts' && (
-          <div className="h-[310px] cursor-pointer w-[288px] flex-shrink-0 relative group "> {/* Added 'group' here */}
-            <Link href={'/'} className='h-full w-full block'> {/* Make sure Link is block-level */}
-              <Image
-                src={'https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg'}
-                alt='img not found'
-                height={1000}
-                width={1000}
-                className='h-full w-full cursor-pointer'
-              />
-            </Link>
-
-            {/* Overlay & Icons */}
-            <div className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100   flex justify-center items-center gap-x-4 cursor-pointer">
-              <div className="flex gap-x-2">
-                <GoHeartFill size={25} className="text-white" />
-                <span className="text-white">15</span>
+          user?.posts?.map((item: any, index: number) => (
+            <div key={index} className="min-h-[310px] cursor-pointer w-[288px] flex-shrink-0 relative group "> {/* Added 'group' here */}
+              <div className='h-full w-full block'> {/* Make sure Link is block-level */}
+                <Image
+                  src={item?.image?.url}
+                  alt='img not found'
+                  layout='responsive'
+                  height={1000}
+                  width={1000}
+                  className='h-full w-full cursor-pointer'
+                />
               </div>
-              <div className="flex gap-x-2">
-                <BiSolidMessageRounded size={25} className="scale-x-[-1] text-white" />
-                <span className="text-white">10</span>
+
+              {/* Overlay & Icons */}
+              <div className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100   flex justify-center items-center gap-x-4 cursor-pointer">
+                <div className="flex gap-x-2">
+                  <GoHeartFill size={25} className="text-white" />
+                  <span className="text-white">15</span>
+                </div>
+                <div className="flex gap-x-2">
+                  <BiSolidMessageRounded size={25} className="scale-x-[-1] text-white" />
+                  <span className="text-white">10</span>
+                </div>
               </div>
             </div>
-          </div>
+          ))
         )}
 
         {activeTab === 'saved' && (
@@ -278,22 +290,30 @@ e.preventDefault()
       {
         EditProfileShow && (
           <div onClick={() => setEditProfileShow(false)} className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <form onClick={(e)=>e.stopPropagation()} onSubmit={handleUpdataProfile} className="max-w-2xl mx-auto p-4 bg-[#262626]  rounded-lg">
+            <form onClick={(e) => e.stopPropagation()} onSubmit={handleUpdataProfile} className="max-w-2xl mx-auto p-4 bg-[#262626]  rounded-lg">
               {/* Header */}
               <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
 
               {/* Profile Section */}
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
-                  {
-                    updateProfile.image ? (
-                      <Image src={updateProfile.image} alt='img not found' height={100} width={100} className='w-full h-full object-cover rounded-full' />
-                    ) : (
 
-                      <span className="text-gray-500">MB</span>
+                  {updateProfile.image ? (
+                    <Image
+                      src={updateProfile.image}
+                      alt="Profile Picture"
+                      height={100}
+                      width={100}
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                  ) : (
+                    <span className="text-gray-500">MB</span>
+                  )}
 
-                    )
-                  }
+
+
+
+
                 </div>
                 <div>
                   <h2 className="text-lg font-semibold">badhon_9090</h2>
