@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaFacebook } from "react-icons/fa";
 
 export default function LoginPage() {
@@ -22,13 +23,15 @@ export default function LoginPage() {
       
     }
     await axios.post('/api/login', signUpdata)  
-    .then((res) => {
+    .then(() => {
         router.push("/")
-      console.log(res.data);
+    
+      toast.success("Login Successfully")    
     })
     .catch((error) => {
       
-     alert(error.response.data.error)
+  
+     toast.error(error?.response?.data?.error)
     });
   };
 

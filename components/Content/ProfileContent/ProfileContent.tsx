@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { BiSolidMessageRounded } from "react-icons/bi";
 import { GoHeartFill } from "react-icons/go";
 import axios, { all } from 'axios';
+import toast from 'react-hot-toast';
+import { UpdateProfile } from '@/@actions/user/updataProfile';
 
 
 type Props = {
@@ -13,29 +15,26 @@ type Props = {
 }
 
 const ProfileContent = ({ user }: Props) => {
-  console.log("user", user?.posts)
+  console.log("user", user)
 
   const [showMore, setShowMore] = useState(false);
   const [activeTab, setActiveTab] = useState<'posts' | 'saved' | 'tagged'>('posts');
   const [EditProfileShow, setEditProfileShow] = useState(false)
+  const [avatar,setAvatar]=useState<string>(user?.avatar?.url)
   const [updateProfile, setUpdataProfile] = useState({
-    image: "",
+
     bio: "",
     gender: "Male"
   })
-  console.log(updateProfile.image)
-  const words = user?.bio.split(" ");
-  const visibleText = showMore ? user?.bio : words.slice(0, 10).join(" ");
+  console.log(avatar)
+  const words = user?.bio?.split(" ");
+  const visibleText = showMore ? user?.bio : words?.slice(0, 10).join(" ");
   const tabsRef = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
 
 
 
-  useEffect(() => {
-    if (!updateProfile.image) {
-      setUpdataProfile((prev) => ({ ...prev, image: user?.avatar?.url || "" }));
-    }
-  }, [updateProfile.image, user?.avatar?.url, setUpdataProfile]);
+
 
   useEffect(() => {
     const activeButton = tabsRef.current[activeTab];
@@ -48,32 +47,36 @@ const ProfileContent = ({ user }: Props) => {
 
   }, [activeTab]);
 
-  const imageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const imageHandler = async(e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     const fileReader = new FileReader()
-    fileReader.onload = () => {
+    fileReader.onload = async() => {
       if (fileReader.readyState === 2) {
-        setUpdataProfile((pre) => ({ ...pre, image: fileReader.result as string }))
+        const imageUrl = fileReader.result as string;
+      setAvatar(imageUrl);
+      await UpdateProfile(imageUrl); // নতুন avatar পাঠানো হচ্ছে
       }
     }
     fileReader.readAsDataURL(file)
+     
+
   }
   const handleUpdataProfile = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
     const data = {
-      image: updateProfile.image,
       bio: updateProfile.bio,
       gender: updateProfile.gender
     }
-
+console.log("updataData",data)
     await axios.put("/api/profile-update", data).then((res) => {
-      alert(res.data.message)
-      console.log(res)
+    
+      toast.success(res.data.message)
+      window.location.reload()
     }).catch((error) => {
-      alert(error.response.data.error)
+      toast.error("You can not update at a time")
     })
-   window.location.reload()
+   
   }
   return (
     <div className='max-w-[940px] mx-auto pt-8 px-4'>
@@ -124,8 +127,8 @@ const ProfileContent = ({ user }: Props) => {
           <div className="mb-4">
             <p className="break-words">
               {visibleText}
-              {!showMore && words.length > 10 && "..."}
-              {words.length > 10 && (
+              {!showMore && words?.length > 10 && "..."}
+              {words?.length > 10 && (
                 <button
                   onClick={() => setShowMore(!showMore)}
                   className="ml-1 text-blue-900 hover:text-blue-700 font-medium"
@@ -209,10 +212,10 @@ const ProfileContent = ({ user }: Props) => {
                 <Image
                   src={item?.image?.url}
                   alt='img not found'
-                  layout='responsive'
+                
                   height={1000}
                   width={1000}
-                  className='h-full w-full cursor-pointer'
+                  className='h-full w-full cursor-pointer object-cover'
                 />
               </div>
 
@@ -298,9 +301,9 @@ const ProfileContent = ({ user }: Props) => {
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
 
-                  {updateProfile.image ? (
+                  {avatar ? (
                     <Image
-                      src={updateProfile.image}
+                      src={avatar}
                       alt="Profile Picture"
                       height={100}
                       width={100}
@@ -345,6 +348,7 @@ const ProfileContent = ({ user }: Props) => {
                   value={updateProfile.bio}
                   onChange={(e) => setUpdataProfile((pre) => ({ ...pre, bio: e.target.value }))}
                   className="w-full p-2 rounded-md h-32 resize-none bg-[#1A1A1A] border border-[#b9b4b45e]  outline-none"
+                  required
                 />
                 <div className="text-right text-sm text-gray-500 mt-1">144 / 150</div>
               </div>
@@ -356,6 +360,7 @@ const ProfileContent = ({ user }: Props) => {
                   value={updateProfile.gender}
                   onChange={(e) => setUpdataProfile((pre) => ({ ...pre, gender: e.target.value }))}
                   className="w-full p-2 bg-[#1A1A1A] border border-[#b9b4b45e] cursor-pointer outline-none rounded-md"
+                  required
                 >
                   <option className='cursor-pointer'>Male</option>
                   <option className='cursor-pointer'>Female</option>

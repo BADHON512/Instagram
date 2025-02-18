@@ -29,7 +29,7 @@ export const GetUser = async () => {
         // Add other user fields you need here
       },
     });
-    return user;
+    return {user,statusCode:200};
   } catch (error) {
     return error;
   }

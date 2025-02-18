@@ -11,45 +11,56 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
- 
+
 model User {
-  id       String   @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
-  username String   @unique
-  email    String   @unique
-  password String?
-  bio      String?
-  gender   String?
-  avatar   Json?
-  posts    Post[]
-  comments Comment[]
-  likes    Like[]
-  stories  Story[]
-  messagesSent    Message[] @relation("MessageFrom")
-  messagesReceived Message[] @relation("MessageTo")
-  followers Follow[] @relation("Followee")
-  following Follow[] @relation("Follower")
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  username         String     @unique
+  email            String     @unique
+  password         String?
+  bio              String?
+  gender           String?
+  avatar           Json?
+  posts            Post[]
+  comments         Comment[]
+  likes            Like[]
+  stories          Story[]
+  savePost         SavePost[]
+  messagesSent     Message[]  @relation("MessageFrom")
+  messagesReceived Message[]  @relation("MessageTo")
+  followers        Follow[]   @relation("Followee")
+  following        Follow[]   @relation("Follower")
+  createdAt        DateTime   @default(now())
+}
+
+model SavePost {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String   @db.ObjectId
   createdAt DateTime @default(now())
 }
 
 model Post {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
   image     Json?
   caption   String?
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String  @db.ObjectId
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String     @db.ObjectId
   comments  Comment[]
   likes     Like[]
-  createdAt DateTime @default(now())
+  createdAt DateTime   @default(now())
+  SavePost  SavePost[]
 }
 
 model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   text      String
   user      User     @relation(fields: [userId], references: [id])
-  userId    String     @db.ObjectId
+  userId    String   @db.ObjectId
   post      Post     @relation(fields: [postId], references: [id])
-  postId    String     @db.ObjectId
+  postId    String   @db.ObjectId
   likes     Like[]
   createdAt DateTime @default(now())
 }
@@ -57,19 +68,19 @@ model Comment {
 model Like {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
-  userId    String  @db.ObjectId
-  post      Post    @relation(fields: [postId], references: [id])
-  postId    String @db.ObjectId
+  userId    String   @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String   @db.ObjectId
   comment   Comment? @relation(fields: [commentId], references: [id])
-  commentId String @db.ObjectId
+  commentId String   @db.ObjectId
   createdAt DateTime @default(now())
 }
 
 model Follow {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
-  follower   User   @relation("Follower", fields: [followerId], references: [id])
-  followerId String  @db.ObjectId
-  followee   User   @relation("Followee", fields: [followeeId], references: [id])
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  follower   User     @relation("Follower", fields: [followerId], references: [id])
+  followerId String   @db.ObjectId
+  followee   User     @relation("Followee", fields: [followeeId], references: [id])
   followeeId String   @db.ObjectId
   createdAt  DateTime @default(now())
 }
@@ -78,16 +89,16 @@ model Story {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   image     Json?
   user      User     @relation(fields: [userId], references: [id])
-  userId    String  @db.ObjectId
+  userId    String   @db.ObjectId
   createdAt DateTime @default(now())
 }
 
 model Message {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  text      String
-  sender    User     @relation("MessageFrom", fields: [senderId], references: [id])
-  senderId  String    @db.ObjectId
-  receiver  User     @relation("MessageTo", fields: [receiverId], references: [id])
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  text       String
+  sender     User     @relation("MessageFrom", fields: [senderId], references: [id])
+  senderId   String   @db.ObjectId
+  receiver   User     @relation("MessageTo", fields: [receiverId], references: [id])
   receiverId String   @db.ObjectId
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 }

@@ -7,11 +7,11 @@ type Props = {}
 
 const page = async(props: Props) => {
 
-     const user= await GetUser()
- 
+     const userData= await GetUser()
+
 
   return (
-    <RouteProfileHomePage user={user}/>
+    <RouteProfileHomePage userData={userData}/>
   )
 }
 

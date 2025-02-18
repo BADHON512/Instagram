@@ -1,6 +1,7 @@
 import axios from 'axios'
 import Image from 'next/image'
 import React, { useEffect, useState, useCallback } from 'react'
+import toast from 'react-hot-toast'
 import { RxCross1 } from 'react-icons/rx'
 
 
@@ -94,12 +95,12 @@ console.log(postData)
     }else{
       await axios.post("/api/user-post", data)
       .then((res) => {
-           alert(res.data.message)
+           toast.success(res.data.message)
         setActive(null)
       })
       .catch((error) => {
         console.error("API Error:", error); // Debugging-এর জন্য Console-এ Error দেখাবে
-        alert(error.response.data.error)
+        toast.error(error.response.data.error)
       });
     
     

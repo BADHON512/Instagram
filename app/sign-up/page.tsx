@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaFacebook } from "react-icons/fa";
 
 export default function SignupPage() {
@@ -29,7 +30,7 @@ export default function SignupPage() {
     })
     .catch((error) => {
       
-     alert(error.response.data.error)
+    toast.error(error.response.data.error)
     });
   };
 

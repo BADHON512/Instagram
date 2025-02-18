@@ -22,28 +22,6 @@ export async function PUT(req: NextRequest, res: NextResponse) {
     if (!userId) {
       return NextResponse.json({ error: "User ID not found" }, { status: 400 });
     }
-    const oldPicture = await prisma.user.findUnique({
-        where: {
-            id: userId,
-        },
-        select: {
-            avatar: true,
-        },
-    });
-    
-    // Parse the avatar JSON if necessary
-    const avatarData = oldPicture?.avatar && typeof oldPicture.avatar === "string" 
-    ? JSON.parse(oldPicture.avatar) 
-    : oldPicture?.avatar;
-
-    
-    if (avatarData?.public_id) {
-        await cloudinary.uploader.destroy(avatarData.public_id);
-    }
-    
-    const image = await cloudinary.uploader.upload(data?.image, {
-      folder: "instagram-clone-photos",
-    });
 
     // Update user data in the database
     const updataUser = await prisma.user.update({
@@ -51,10 +29,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
         id: userId,
       },
       data: {
-        avatar: {
-          public_id: image.public_id,
-          url: image.secure_url,
-        },
+ 
         bio: data?.bio,
         gender: data?.gender,
       },

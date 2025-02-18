@@ -17,30 +17,33 @@ import toast from 'react-hot-toast';
 
 
 type Props = {
-    user:any
+    userData:any
 }
 
-const RouteProfileHomePage = ({user}: Props) => {
+const RouteProfileHomePage = ({userData}: Props) => {
 
-    // const [user, setUser] = useState<any>()
-    // const [loader, setLoader] = useState<any>()
+    const [user, setUser] = useState<any>()
+    const [loader, setLoader] = useState<any>()
     
     const [active, setActive] = useState<number | null>(null);
-    // useEffect(() => {
-    //     const getUser = async () => {
-    //         await axios.get("/api/get-user-profile").then((res) => {
-    //             setLoader(res.statusText)
-    //             setUser(res.data)
-    //         }).catch((error) => {
-    //             alert(error.response.data.message)
-    //         })
-    //     }
-    //     getUser()
-    // }, [])
+    useEffect(() => {
 
-    toast.success("Welcome to Instagram")
+        setUser(userData.user)
+        setLoader(userData.statusCode)
+        // const getUser = async () => {
+        //     await axios.get("/api/get-user-profile").then((res) => {
+        //         setLoader(res.statusText)
+        //         setUser(res.data)
+        //     }).catch((error) => {
+        //         alert(error.response.data.message)
+        //     })
+        // }
+        // getUser()
+    }, [])
 
-  console.log(user?.status)
+   
+
+  console.log(loader)
     return (
         <div className=' md:flex  '>
             <div className=" w-[335px] fixed z-[99999] ">
@@ -67,7 +70,9 @@ const RouteProfileHomePage = ({user}: Props) => {
             </div>
             <div className="mt-[60px] lg:mt-0 w-full md:ml-[79px] xl:ml-[300px]  h-screen ">
              
-              <ProfileContent user={user} />
+             {
+                loader===200? <ProfileContent user={user} />:<Loader/>
+             }
              
             </div>
             <div className=" fixed  bottom-0 bg-black w-full block md:hidden">
