@@ -6,26 +6,30 @@ import Header from '@/components/SideBar/Header'
 import HeaderDown from '@/components/SideBar/ForMobile'
 import Search from '@/components/helper/Search';
 import NotificationSidebar from '@/components/helper/Notification';
-import ProfileContent from '@/components/Content/ProfileContent/ProfileContent';
+
 import Create from '@/components/Create/Create';
 import Loader from '@/components/Loader/Loader';
-import { GetUser } from '@/@actions/user/getUser';
 
+import { useParams } from 'next/navigation';
+import SingleProfile from '@/components/Content/SingleProfile/SingleProfile';
+import { GetSingleUser } from '@/@actions/user/GetSingleUser';
+type Props = {}
 
+const Page = (props: Props) => {
+    const { id } = useParams()
 
-
-const RouteProfileHomePage = () => {
 
     const [user, setUser] = useState<any>()
-    console.log(user, "++++++++++")
+   
     const [loader, setLoader] = useState<any>()
-    const [reFetcher, setReFetcher] = useState(false);
+
     const [active, setActive] = useState<number | null>(null);
     useEffect(() => {
+        if (!id) return
         const fetcher = async () => {
             try {
-                const userData: any = await GetUser();
-                setUser(userData.user); // state আপডেট হবে
+                const userData: any = await GetSingleUser(id[0]);
+                setUser(userData.user);
                 setLoader(userData.statusCode)
             } catch (error) {
                 console.error("Error fetching user:", error);
@@ -34,11 +38,7 @@ const RouteProfileHomePage = () => {
         };
 
         fetcher();
-    }, [reFetcher])
-
-
-
-    console.log(loader)
+    }, [])
     return (
         <div className=' md:flex  '>
             <div className=" w-[335px] fixed z-[99999] ">
@@ -66,7 +66,7 @@ const RouteProfileHomePage = () => {
             <div className="mt-[60px] lg:mt-0 w-full md:ml-[79px] xl:ml-[300px]  h-screen ">
 
                 {
-                    loader === 200 ? <ProfileContent user={user} reFetcher={reFetcher} setReFetcher={setReFetcher} /> : <Loader />
+                    loader === 200 ? <SingleProfile user={user} /> : <Loader />
                 }
 
             </div>
@@ -78,7 +78,7 @@ const RouteProfileHomePage = () => {
             {
                 active === 6 && (
                     <div className="fixed  w-[100vw] h-[100vh] top-0 left-0 z-[5]">
-                        <Create active={active} setActive={setActive} reFetcher={reFetcher} setReFetcher={setReFetcher} />
+                        <Create active={active} setActive={setActive} />
                     </div>
                 )
             }
@@ -87,4 +87,4 @@ const RouteProfileHomePage = () => {
     )
 }
 
-export default RouteProfileHomePage
+export default Page

@@ -16,8 +16,8 @@ export async function PUT(req: NextRequest, res: NextResponse) {
       );
     }
 
-    const user = JSON.parse(getUser);
-    const userId = user.id;
+  
+    const userId =getUser
 
     if (!userId) {
       return NextResponse.json({ error: "User ID not found" }, { status: 400 });

@@ -14,8 +14,8 @@ export async function UpdateProfile(avatar:string){
         if(!session){
             return {error:"User not authenticated"}
         }
-        const userData=JSON.parse(session)
-        const userId=userData.id
+     
+        const userId=session
         const oldPicture = await prisma.user.findUnique({
             where: {
                 id: userId,

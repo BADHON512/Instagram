@@ -18,9 +18,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
       );
     }
 
-    // JSON parse করে session ডাটা থেকে id বের করা
-    const userData = JSON.parse(sessionCookie);
-    const userId = userData.id;
+  
+    const userId = sessionCookie
 
     if (!userId) {
       return NextResponse.json({ error: "User ID not found" }, { status: 400 });

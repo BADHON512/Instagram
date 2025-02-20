@@ -5,29 +5,22 @@ import { BsPlusLg } from "react-icons/bs";
 import Link from 'next/link';
 import { BiSolidMessageRounded } from "react-icons/bi";
 import { GoHeartFill } from "react-icons/go";
-import axios, { all } from 'axios';
-import toast from 'react-hot-toast';
-import { UpdateProfile } from '@/@actions/user/updataProfile';
+
 
 
 type Props = {
   user: any
-  reFetcher: boolean
-  setReFetcher: (reFetcher: boolean) => void
+ 
 }
 
-const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
+const SingleProfile = ({ user, }: Props) => {
   console.log("user", user)
 
   const [showMore, setShowMore] = useState(false);
   const [activeTab, setActiveTab] = useState<'posts' | 'saved' | 'tagged'>('posts');
-  const [EditProfileShow, setEditProfileShow] = useState(false)
-  const [avatar, setAvatar] = useState<string>(user?.avatar?.url)
-  const [updateProfile, setUpdataProfile] = useState({
 
-    bio: "",
-    gender: "Male"
-  })
+  const [avatar, setAvatar] = useState<string>(user?.avatar?.url)
+
   console.log(avatar)
   const words = user?.bio?.split(" ");
   const visibleText = showMore ? user?.bio : words?.slice(0, 10).join(" ");
@@ -49,39 +42,8 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
 
   }, [activeTab]);
 
-  const imageHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const fileReader = new FileReader()
-    fileReader.onload = async () => {
-      if (fileReader.readyState === 2) {
-        const imageUrl = fileReader.result as string;
-        setAvatar(imageUrl);
-        await UpdateProfile(imageUrl); // নতুন avatar পাঠানো হচ্ছে
-        setReFetcher(!reFetcher)
-      }
-    }
-    fileReader.readAsDataURL(file)
 
 
-  }
-  const handleUpdataProfile = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const data = {
-      bio: updateProfile.bio,
-      gender: updateProfile.gender
-    }
-
-    await axios.put("/api/profile-update", data).then((res) => {
-
-      toast.success(res.data.message)
-      setReFetcher(!reFetcher)
-      setEditProfileShow(false)
-    }).catch((error) => {
-      toast.error("You can not update at a time")
-    })
-
-  }
   return (
     <div className='max-w-[940px] mx-auto pt-8 px-4'>
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
@@ -103,12 +65,12 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
           {/* Username and Actions */}
           <div className="flex items-center gap-4 mb-4">
             <h1 className="text-2xl font-light">{user?.name}</h1>
-            <button onClick={() => setEditProfileShow(true)} className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
-              Edit Profile
+            <button  className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
+              Following
             </button>
-            <button className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
-              View archive
-            </button>
+            <Link href={`/messages/${user?.id}`} className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
+              Message
+            </Link>
             <button className='p-2'>
               <FiSettings size={20} />
             </button>
@@ -294,110 +256,10 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
         <p>&copy; 2025 Instagram from Meta</p>
       </div>
 
-      {
-        EditProfileShow && (
-          <div onClick={() => setEditProfileShow(false)} className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <form onClick={(e) => e.stopPropagation()} onSubmit={handleUpdataProfile} className="max-w-2xl mx-auto p-4 bg-[#262626]  rounded-lg">
-              {/* Header */}
-              <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
-
-              {/* Profile Section */}
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
-
-                  {avatar ? (
-                    <Image
-                      src={avatar}
-                      alt="Profile Picture"
-                      height={100}
-                      width={100}
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  ) : (
-                    <span className="text-gray-500">MB</span>
-                  )}
-
-
-
-
-
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold">{user?.name}</h2>
-                  <p className="text-gray-500">{user?.username || "username"}</p>
-                </div>
-
-                <label htmlFor="change" className="ml-auto cursor-pointer hover:bg-blue-700 bg-blue-600 text-white py-1 px-2 rounded-md font-medium">
-                  Change photo
-                  <input type="file" id='change' className='hidden' onChange={imageHandler} />
-                </label>
-              </div>
-
-              {/* Website Section */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Website</label>
-                <div className="space-y-2">
-                  <div className="p-2 cursor-not-allowed rounded bg-[#1A1A1A] border border-[#b9b4b45e]  outline-none">https://badhon/portfolio.com</div>
-
-                </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  Editing your links is only available on mobile. Visit the Instagram app and edit your profile to change the websites in your bio.
-                </p>
-              </div>
-
-              {/* Bio Section */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Bio</label>
-                <textarea
-                  value={updateProfile.bio}
-                  onChange={(e) => setUpdataProfile((pre) => ({ ...pre, bio: e.target.value }))}
-                  className="w-full p-2 rounded-md h-32 resize-none bg-[#1A1A1A] border border-[#b9b4b45e]  outline-none"
-                  required
-                />
-                <div className="text-right text-sm text-gray-500 mt-1">144 / 150</div>
-              </div>
-
-              {/* Gender Section */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Gender</label>
-                <select
-                  value={updateProfile.gender}
-                  onChange={(e) => setUpdataProfile((pre) => ({ ...pre, gender: e.target.value }))}
-                  className="w-full p-2 bg-[#1A1A1A] border border-[#b9b4b45e] cursor-pointer outline-none rounded-md"
-                  required
-                >
-                  <option className='cursor-pointer'>Male</option>
-                  <option className='cursor-pointer'>Female</option>
-                  <option className='cursor-pointer'>Other</option>
-                </select>
-                <p className="text-xs text-gray-500 mt-2">This won't be part of your public profile.</p>
-              </div>
-
-              {/* Account Suggestions */}
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <p className="font-medium">Show account suggestions on profiles</p>
-                  <p className="text-sm text-gray-500">Choose whether people can see similar account suggestions...</p>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-
-                    className="sr-only peer"
-                  />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                </label>
-              </div>
-              <button type='submit' className='ml-auto block hover:bg-blue-700 bg-blue-600 text-white py-1 px-2 rounded-md font-medium'>Update profile</button>
-
-            </form>
-          </div>
-
-        )
-      }
+   
 
     </div >
   )
 }
 
-export default ProfileContent
+export default SingleProfile

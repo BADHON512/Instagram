@@ -12,10 +12,14 @@ import NotificationSidebar from '@/components/helper/Notification';
 import Create from '@/components/Create/Create';
 
 
+type Props = {
+     user:any
+     Posts:any
+}
 
 
 
-const Home = () => {
+const Home = ({user,Posts}:Props) => {
 
 
      const [active, setActive] = useState<number | null>(null);
@@ -52,7 +56,7 @@ const Home = () => {
                     <Header />
                </div>
                <div className="mt-[60px] lg:mt-0 w-full ml-0 md:ml-[79px] xl:ml-[300px]  h-screen  ">
-                    <HomeContent />
+                    <HomeContent user={user} Posts={Posts} />
 
                </div>
                <div className=" fixed bottom-0 bg-black w-full block md:hidden">

@@ -18,6 +18,8 @@ import { FaThreads } from 'react-icons/fa6';
 import { TiSocialLinkedin } from 'react-icons/ti';
 import { LiaShareSolid } from 'react-icons/lia';
 import MessageModel from './MessageModle';
+import{format} from "timeago.js"
+import Link from 'next/link';
 
 
 type Props = {
@@ -121,15 +123,15 @@ const PostCard = ({ post }: Props) => {
         <div className=" w-[95%]  md:w-[485px] mx-auto my-3 bg-black">
             <div className="flex justify-between w-full items-center ">
                 <div className="flex gap-x-3 items-center">
-                    <Image src={post.avatar} height={500} width={500} alt='img not found' className='h-[40px] w-[40px]  p-[2px] border-transparent rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500' />
+                    <Image src={post?.user?.avatar?.url} height={500} width={500} alt='img not found' className='h-[40px] w-[40px] object-cover  p-[2px] border-transparent rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500' />
 
-                    <p className='flex items-center gap-x-1 font-semibold'>{post.name} <span><MdVerified color='#0095F6' /></span> <span className='text-[30px] -mt-5'>.</span> <span className='text-gray-500'>{Math.floor(Math.random() * 24) + 1}h</span></p>
+                    <Link href={`/profile/${post?.user?.username}`} className='flex items-center gap-x-1 font-semibold '>{post?.user?.name} <span><MdVerified color='#0095F6' /></span> <span className='text-[30px] -mt-5'>.</span> <span className='text-gray-500'>{format(post?.createdAt)}</span></Link>
                 </div>
                 <PiDotsThreeBold className='cursor-pointer ' size={20} onClick={() => setPupUp((pre) => ({ ...pre, postSetting: !pre.postSetting }))} />
             </div>
 
             <div onDoubleClick={handleDoubleTap} className="w-full min-h-[20vh] border border-[#9e9a9a41] my-2 rounded-sm relative">
-                <Image src={post.image} height={1000} width={1000} alt='img not found' className='wf h-full rounded-sm' />
+                <Image src={post?.image?.url} height={1000} width={1000} alt='img not found' className='wf h-full rounded-sm' />
                 <AnimatePresence>
                     {heartVisible && (
                         <motion.div
@@ -202,7 +204,7 @@ const PostCard = ({ post }: Props) => {
 
             {
                 PupUp.message && (
-                    <MessageModel PupUp={PupUp} setPupUp={setPupUp} post={post} input={input} setInput={setInput} handelLike={handelLike}/>
+                    <MessageModel  PupUp={PupUp} setPupUp={setPupUp} post={post} input={input} setInput={setInput} handelLike={handelLike}/>
                 )
             }
 
@@ -307,7 +309,7 @@ const PostCard = ({ post }: Props) => {
                             onClick={(e) => e.stopPropagation()} className="min-h-[50vh] w-[50vw] xl:w-[20vw] bg-[#262626] rounded-md">
                             {
                                 ["Report", "Unfollow", "Add to favorites", "Go to post", "Share to", "Copy link", "Embed", "About this account", "Cancel"].map((item, index) => (
-                                    <h1 key={index} className={`${index === 0 || index === 1 ? "text-red-600 " : "text-white"} ${index === 0 && "border-none"} text-center p-3  font-semibold border-t mt-1 border-[#c4bfbf17]`}>{item}</h1>
+                                    <h1 key={index} className={`${index === 0 || index === 1 ? "text-red-600 " : "text-white"} ${index === 0 && "border-none"} text-center p-3  cursor-pointer font-semibold border-t mt-1 border-[#c4bfbf17]`}>{item}</h1>
                                 ))
                             }
 

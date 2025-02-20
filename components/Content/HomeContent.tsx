@@ -13,6 +13,10 @@ import { FaRegHeart } from 'react-icons/fa';
 import EmojiPicker from 'emoji-picker-react';
 import PostCard from '../helper/PostCard';
 
+type Props={
+user:any
+Posts:any
+}
 
 const stories = [
   { id: 1, name: "sohel_hoss...", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282233/sample.jpg" },
@@ -24,16 +28,16 @@ const stories = [
   { id: 8, name: "mr_faisu_07", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg" },
 ];
 
-const Posts = [
-  { name: "sohel_hoss...", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282233/sample.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282233/sample.jpg" },
-  { name: "badhon .", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg" },
-  { name: "sirazul_monir", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220719/profile/315100994_10209906491094779_654405519663392346_n_axklsy.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220719/profile/315100994_10209906491094779_654405519663392346_n_axklsy.jpg" },
-  { name: "raja_9090", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737221207/profile/d2a54a36-0025-4332-8339-c1eef1b5eb70.png", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737221207/profile/d2a54a36-0025-4332-8339-c1eef1b5eb70.png" },
-  { name: "md_rahat", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854226/profile/476164061_1327580994932700_4948948658324637344_n_wwevz7.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854226/profile/476164061_1327580994932700_4948948658324637344_n_wwevz7.jpg" },
-  { name: "sirazul_monir", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854193/profile/285636603_10209475645083898_8206659727678614489_n_kw8sbk.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854193/profile/285636603_10209475645083898_8206659727678614489_n_kw8sbk.jpg" },
-  { name: "raja_5050", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220822/profile/473018861_954030496668402_2945812169270431767_n_drmzvb.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220822/profile/473018861_954030496668402_2945812169270431767_n_drmzvb.jpg" },
-  { name: "mr_faisu_07", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg" },
-];
+// const Posts = [
+//   { name: "sohel_hoss...", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282233/sample.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282233/sample.jpg" },
+//   { name: "badhon .", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg" },
+//   { name: "sirazul_monir", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220719/profile/315100994_10209906491094779_654405519663392346_n_axklsy.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220719/profile/315100994_10209906491094779_654405519663392346_n_axklsy.jpg" },
+//   { name: "raja_9090", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737221207/profile/d2a54a36-0025-4332-8339-c1eef1b5eb70.png", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737221207/profile/d2a54a36-0025-4332-8339-c1eef1b5eb70.png" },
+//   { name: "md_rahat", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854226/profile/476164061_1327580994932700_4948948658324637344_n_wwevz7.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854226/profile/476164061_1327580994932700_4948948658324637344_n_wwevz7.jpg" },
+//   { name: "sirazul_monir", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854193/profile/285636603_10209475645083898_8206659727678614489_n_kw8sbk.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854193/profile/285636603_10209475645083898_8206659727678614489_n_kw8sbk.jpg" },
+//   { name: "raja_5050", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220822/profile/473018861_954030496668402_2945812169270431767_n_drmzvb.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220822/profile/473018861_954030496668402_2945812169270431767_n_drmzvb.jpg" },
+//   { name: "mr_faisu_07", avatar: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg", image: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg" },
+// ];
 
 
 
@@ -42,10 +46,11 @@ const SuggestedBy = [
   { id: 2, name: "ahmmed_r...", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg" },
   { id: 3, name: "cristiano", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220719/profile/315100994_10209906491094779_654405519663392346_n_axklsy.jpg" },
   { id: 4, name: "mr_faisu_07", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737221207/profile/d2a54a36-0025-4332-8339-c1eef1b5eb70.png" }, { id: 5, name: "mr_faisu_07", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854226/profile/476164061_1327580994932700_4948948658324637344_n_wwevz7.jpg" },]
-type Props = {}
 
-const HomeContent = (props: Props) => {
+const HomeContent = ({user,Posts}: Props) => {
   const [selectedStory, setSelectedStory] = useState(null);
+
+  console.log(Posts)
 
 
 
@@ -118,10 +123,10 @@ const HomeContent = (props: Props) => {
 
           <div className="flex justify-between items-center  gap-x-12">
             <div className="flex items-center w-full">
-              <Image src={"https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg"} height={500} width={500} alt='img not found' className='w-[60px] h-[60px] rounded-full' />
+              <Image src={user?.avatar?.url} height={500} width={500} alt='img not found' className='w-[60px] h-[60px] rounded-full' />
               <div className="ml-3">
-                <p className="text-sm font-semibold">badhon_9090</p>
-                <p className="text-xs text-gray-500">Muhammad badhon</p>
+                <p className="text-sm font-semibold">{user?.name}</p>
+                <p className="text-xs text-gray-500">{user.username||"username"}</p>
               </div>
             </div>
             <span className='text-[#33adff] hover:text-white cursor-pointer text-sm '>Switch</span>

@@ -10,11 +10,13 @@ import { RxCross1 } from 'react-icons/rx'
 type Props = {
   active: number | null
   setActive: (active: number | null) => void
+  reFetcher: boolean
+  setReFetcher: (reFetcher: boolean) => void
 }
 
 
 
-const Create = ({ active, setActive }: Props) => {
+const Create = ({ active ,reFetcher, setReFetcher, setActive }: Props) => {
   const [postData, setPostData] = useState({
     image: "",
     caption: ""
@@ -91,12 +93,13 @@ console.log(postData)
     
    }
     if(postData.caption==""|| postData.image==""){
-      alert("fill the all field")
+      toast.error("fill the all field")
     }else{
       await axios.post("/api/user-post", data)
       .then((res) => {
            toast.success(res.data.message)
         setActive(null)
+        setReFetcher(!reFetcher)
       })
       .catch((error) => {
         console.error("API Error:", error); // Debugging-এর জন্য Console-এ Error দেখাবে

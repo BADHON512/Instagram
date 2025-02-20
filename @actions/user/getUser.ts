@@ -1,3 +1,4 @@
+"use server"
 import prisma from "@/lib/prismaDb";
 import { cookies } from "next/headers";
 
@@ -8,8 +9,8 @@ export const GetUser = async () => {
     if (!session) {
       return { error: "User not authenticated" };
     }
-    const userData = JSON.parse(session);
-    const userId = userData.id;
+  
+    const userId = session;
 
     const user = await prisma.user.findUnique({
       where: {
