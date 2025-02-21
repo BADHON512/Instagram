@@ -13,22 +13,18 @@ export const GetUser = async () => {
     const userId = session;
 
     const user = await prisma.user.findUnique({
+      omit:{password:true},
       where: {
         id: userId,
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        username: true,
-        bio: true,
-        avatar: true,
-        createdAt: true,
-        posts: true,
-        followers: true,
-        following: true,
-        // Add other user fields you need here
-      },
+      include:{
+        posts:true,
+        followers:true,
+        following:true,
+        comments:true,
+        likes:true,
+        savePost:true
+      }
     });
     return {user,statusCode:200};
   } catch (error) {

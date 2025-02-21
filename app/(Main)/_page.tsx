@@ -27,7 +27,7 @@ const Home = ({user,Posts}:Props) => {
 
      return (
           <div className='md:flex '>
-               <div className=" w-[335px] fixed ">
+               <div className=" w-[335px] fixed z-[999] ">
                     <motion.div
                          initial={{ width: 0 }}
                          animate={{ width: active === 1 || active === 5 ? "79px" : "280px" }}

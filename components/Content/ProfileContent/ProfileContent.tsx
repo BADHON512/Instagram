@@ -5,9 +5,11 @@ import { BsPlusLg } from "react-icons/bs";
 import Link from 'next/link';
 import { BiSolidMessageRounded } from "react-icons/bi";
 import { GoHeartFill } from "react-icons/go";
-import axios, { all } from 'axios';
+import axios from 'axios';
 import toast from 'react-hot-toast';
 import { UpdateProfile } from '@/@actions/user/updataProfile';
+import MessageModel from '@/components/helper/MessageModle';
+import UserModel from '@/components/helper/UserModel';
 
 
 type Props = {
@@ -24,17 +26,27 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
   const [EditProfileShow, setEditProfileShow] = useState(false)
   const [avatar, setAvatar] = useState<string>(user?.avatar?.url)
   const [updateProfile, setUpdataProfile] = useState({
-
     bio: "",
     gender: "Male"
   })
-  console.log(avatar)
+ const [input, setInput] = useState()
   const words = user?.bio?.split(" ");
   const visibleText = showMore ? user?.bio : words?.slice(0, 10).join(" ");
   const tabsRef = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
+  const [PupUp, setPupUp] = useState({
+    like: false,
+    likeCount: 10032119,
+    message: false,
+    share: false,
+    save: false,
+    postSetting: false
 
+  })
 
+const handelLike=()=>{
+  setPupUp((pre)=>({...pre, like:!PupUp.like ,likeCount: pre.like?pre.likeCount+1:pre.likeCount-1 }))
+}
 
 
 
@@ -208,7 +220,7 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
         </div>
       </div>
 
-      <div className="min-h-[30vh] flex w-full flex-wrap gap-2  justify-start p-3">
+      <div className="min-h-[30vh] flex w-full flex-wrap gap-2  justify-center md:justify-start p-3">
         {activeTab === 'posts' && (
           user?.posts?.map((item: any, index: number) => (
             <div key={index} className="min-h-[310px] cursor-pointer w-[288px] flex-shrink-0 relative group "> {/* Added 'group' here */}
@@ -224,7 +236,7 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
               </div>
 
               {/* Overlay & Icons */}
-              <div className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100   flex justify-center items-center gap-x-4 cursor-pointer">
+              <div onClick={() => setPupUp((pre) => ({ ...pre, message: !pre.message }))} className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100   flex justify-center items-center gap-x-4 cursor-pointer">
                 <div className="flex gap-x-2">
                   <GoHeartFill size={25} className="text-white" />
                   <span className="text-white">15</span>
@@ -234,6 +246,12 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
                   <span className="text-white">10</span>
                 </div>
               </div>
+              {
+        PupUp.message && (
+          <UserModel PupUp={PupUp} setPupUp={setPupUp} post={item} user={user} input={input} setInput={setInput} handelLike={handelLike} />
+        )
+      }
+
             </div>
           ))
         )}
@@ -395,6 +413,8 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
 
         )
       }
+
+    
 
     </div >
   )

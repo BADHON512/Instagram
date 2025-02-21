@@ -170,7 +170,7 @@ const SingleProfile = ({ user, }: Props) => {
         </div>
       </div>
 
-      <div className="min-h-[30vh] flex w-full flex-wrap gap-2  justify-start p-3">
+      <div className="min-h-[30vh] flex w-full flex-wrap gap-2  justify-center md:justify-start p-3">
         {activeTab === 'posts' && (
           user?.posts?.map((item: any, index: number) => (
             <div key={index} className="min-h-[310px] cursor-pointer w-[288px] flex-shrink-0 relative group "> {/* Added 'group' here */}

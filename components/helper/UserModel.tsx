@@ -1,15 +1,17 @@
 "use client"
-import { motion } from 'motion/react';
+import {  motion } from 'motion/react';
 import Image from 'next/image';
 import { MdOutlineEmojiEmotions, MdVerified } from "react-icons/md";
 import { PiDotsThreeBold } from "react-icons/pi";
-import React, {useState } from 'react'
+
+import React, { useState } from 'react'
 import { BiMessageRounded } from 'react-icons/bi';
+
 import { FiBookmark, } from 'react-icons/fi';
 import { LuSend } from 'react-icons/lu';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import EmojiPicker from 'emoji-picker-react';
-import { RxCross1 } from 'react-icons/rx';
+
 
 
 type Props = {
@@ -33,12 +35,13 @@ type Props = {
     input?: string
     setInput?: ((input: string) => void)
     handelLike?: (() => void)
+    user:any
 
 }
 
-const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike }: Props) => {
+const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike ,user }: Props) => {
+   const badhon=0
     const [showPicker2, setShowPicker2] = useState(false);
-    console.log(post,"model")
     return (
         <div
             onClick={() => {
@@ -71,14 +74,14 @@ const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike }: Pr
                     <div className="flex justify-between items-center p-4 border-b border-gray-700">
                         <div className="flex items-center gap-3">
                             <Image
-                                src={post?.user?.avatar?.url}
+                                src={user?.avatar?.url}
                                 height={40}
                                 width={40}
                                 alt="User Avatar"
                                 className="rounded-full border p-[2px] bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 w-[50px] h-[50px] object-cover"
                             />
                             <p className="font-semibold  flex items-center gap-x-1 cursor-pointer">
-                                {post?.user?.name} <MdVerified color="#0095F6" />
+                                {user?.name} <MdVerified color="#0095F6" />
                             </p>
                         </div>
                         <PiDotsThreeBold className="cursor-pointer" size={20} />
@@ -86,7 +89,7 @@ const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike }: Pr
 
                     {/* Comments Section */}
                     <div className="flex-grow overflow-auto p-4 space-y-4 hidden md:block">
-                        {post?.comments?.length === 0 ? (
+                        {badhon === 0 ? (
                             <div className='h-full w-full flex justify-center items-center'>No Comments here</div>
                         ) : (
                             post?.comments?.map((comment: any, index: number) => (
@@ -151,8 +154,10 @@ const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike }: Pr
                     </div>
                 </div>
             </motion.div>
+
+          
         </div>
     )
 }
 
-export default MessageModel
+export default UserModel

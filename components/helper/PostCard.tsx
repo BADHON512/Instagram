@@ -188,7 +188,7 @@ const PostCard = ({ post }: Props) => {
                         <span className='text-[#33adff] hover:text-white cursor-pointer mr-3'>Post</span>
                     )
                 }
-                <button className='grayscale-[100%] rounded-full' onClick={() => setShowPicker(!showPicker)}><MdOutlineEmojiEmotions /></button>
+                <button className='grayscale-[100%] rounded-full' onClick={() => setShowPicker(!showPicker)}><MdOutlineEmojiEmotions size={20}/></button>
 
                 {showPicker && (
                     <div className="absolute bottom-10  -right-[340px]">
