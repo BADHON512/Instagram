@@ -125,7 +125,7 @@ const PostCard = ({ post }: Props) => {
                 <div className="flex gap-x-3 items-center">
                     <Image src={post?.user?.avatar?.url} height={500} width={500} alt='img not found' className='h-[40px] w-[40px] object-cover  p-[2px] border-transparent rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500' />
 
-                    <Link href={`/profile/${post?.user?.username}`} className='flex items-center gap-x-1 font-semibold '>{post?.user?.name} <span><MdVerified color='#0095F6' /></span> <span className='text-[30px] -mt-5'>.</span> <span className='text-gray-500'>{format(post?.createdAt)}</span></Link>
+                    <Link href={`/profile/${post?.user?.username}`} className='flex items-center gap-x-1 font-semibold '>{post?.user?.name} <span><MdVerified color='#0095F6' /></span> <span className='text-[30px] -mt-5 hidden md:block'>.</span> <span className='text-gray-500 hidden md:block'>{format(post?.createdAt)}</span></Link>
                 </div>
                 <PiDotsThreeBold className='cursor-pointer ' size={20} onClick={() => setPupUp((pre) => ({ ...pre, postSetting: !pre.postSetting }))} />
             </div>

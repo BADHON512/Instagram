@@ -12,14 +12,14 @@ export async function loginUser(email: string, password: string) {
         });
 
         if (!user) {
-            return { error: "User not found", status: 404 };
+            return { error: "User not found", status: 404,success:false };
         }
 
         console.log(user);
 
         const passwordMatch = await bcrypt.compare(password, user.password as string);
         if (!passwordMatch) {
-            return { error: "Invalid password", status: 401 };
+            return { error: "Invalid password", status: 401,success:false };
         }
 
         // ✅ `cookies()` কে await করা হয়েছে
@@ -38,6 +38,6 @@ export async function loginUser(email: string, password: string) {
 
     } catch (error) {
         console.log(error);
-        return { error: "Internal server error", status: 500 };
+        return { error: "Internal server error", status: 500,success:false };
     }
 }

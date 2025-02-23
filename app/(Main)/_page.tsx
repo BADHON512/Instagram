@@ -15,11 +15,12 @@ import Create from '@/components/Create/Create';
 type Props = {
      user:any
      Posts:any
+     users:any
 }
 
 
 
-const Home = ({user,Posts}:Props) => {
+const Home = ({user,Posts,users}:Props) => {
 
 
      const [active, setActive] = useState<number | null>(null);
@@ -56,7 +57,7 @@ const Home = ({user,Posts}:Props) => {
                     <Header />
                </div>
                <div className="mt-[60px] lg:mt-0 w-full ml-0 md:ml-[79px] xl:ml-[300px]  h-screen  ">
-                    <HomeContent user={user} Posts={Posts} />
+                    <HomeContent user={user} Posts={Posts} users={users}/>
 
                </div>
                <div className=" fixed bottom-0 bg-black w-full block md:hidden">

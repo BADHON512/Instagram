@@ -12,7 +12,7 @@ const RoutePage = async () => {
 
   return (
     <div>
-      <Home user={getUser?.user} Posts={Posts?.posts} users={users} />
+      <Home user={getUser?.user} Posts={Posts?.posts} users={users?.users} />
     </div>
   );
 };

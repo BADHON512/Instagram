@@ -1,6 +1,6 @@
 "use client"
 import { loginUser } from "@/@actions/user/loginUser";
-import axios from "axios";
+
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -24,20 +24,20 @@ export default function LoginPage() {
 
     }
 
-    await loginUser(signUpdata.email, signUpdata.password)
-    toast.success("Login successful")
-    router.push("/")
-    // await axios.post('/api/login', signUpdata)  
-    // .then(() => {
-    //     router.push("/")
+    try {
+      const loginResponse = await loginUser(signUpdata.email, signUpdata.password);
+  
+      if (loginResponse.success) {
+        toast.success("Login successful");
+        router.push("/");
+      } else {
+        toast.error(loginResponse.error || "Something went wrong");
 
-    //   toast.success("Login Successfully")    
-    // })
-    // .catch((error) => {
-
-
-    //  toast.error(error?.response?.data?.error)
-    // });
+      }
+    } catch (error) {
+     
+    }
+   
   };
 
   const links = [
