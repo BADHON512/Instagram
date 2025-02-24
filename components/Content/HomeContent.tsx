@@ -1,86 +1,188 @@
 "use client"
 import { motion } from 'motion/react';
 import Image from 'next/image';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PostCard from '../helper/PostCard';
 import Link from 'next/link';
 import { BsPlusLg } from 'react-icons/bs';
+
+import Slider from "react-slick";
+
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { StoriesCreate } from '@/@actions/Stories/StoriesCreate';
+import { GetAllStories } from '@/@actions/Stories/getAllStories';
+import toast from 'react-hot-toast';
 
 type Props = {
   user: any
   Posts: any
   users: any
+  stories: any
 }
 
-const stories = [
-  { id: 1, name: "sohel_hoss...", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282233/sample.jpg" },
-  { id: 2, name: "badhon ", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg" },
-  { id: 3, name: "sirazul_monir", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220719/profile/315100994_10209906491094779_654405519663392346_n_axklsy.jpg" },
-  { id: 4, name: "raja_9090", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737221207/profile/d2a54a36-0025-4332-8339-c1eef1b5eb70.png" }, { id: 5, name: "md_rahat", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854226/profile/476164061_1327580994932700_4948948658324637344_n_wwevz7.jpg" },
-  { id: 6, name: "sirazul_monir", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1738854193/profile/285636603_10209475645083898_8206659727678614489_n_kw8sbk.jpg" },
-  { id: 7, name: "raja_5050", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220822/profile/473018861_954030496668402_2945812169270431767_n_drmzvb.jpg" },
-  { id: 8, name: "mr_faisu_07", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg" },
-  { id: 9, name: "mr_faisu_07", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg" },
-  { id: 10, name: "mr_faisu_07", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg" },
-  { id: 11, name: "mr_faisu_07", img: "https://res.cloudinary.com/dfng3w9jm/image/upload/v1680282239/samples/people/smiling-man.jpg" },
-];
 
 
 
 
+const CustomPrevArrow = (props: any) => {
+  const { onClick } = props;
+  return (
+    <button
+      onClick={onClick}
+      className="absolute left-0 top-[40%] transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg z-10"
+    >
+      <IoIosArrowBack />
+    </button>
+  );
+};
+
+const CustomNextArrow = (props: any) => {
+  const { onClick } = props;
+  return (
+    <button
+      onClick={onClick}
+      className="absolute right-0 top-[40%] transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg z-10"
+    >
+      <IoIosArrowForward />
+    </button>
+  );
+};
 
 
-const HomeContent = ({ user, Posts, users }: Props) => {
+
+
+const HomeContent = ({ user, Posts, users, stories }: Props) => {
   const [selectedStory, setSelectedStory] = useState(null);
+ const [ReFetcher, setReFetcher] = useState()
+  const [Stories, setStories] = useState<[]>(stories)
 
-  console.log(users)
+  console.log(Posts)
+
+
+  const removeStories = (id: number) => {
+    // if(visibleStories.length>6){
+    //   setVisibleStories((pre)=>pre.filter((story)=>story.id!==id))
+    // }
+
+  }
+
+   useEffect(() => {
+    async function Fetcher() {
+      const stories:any=await GetAllStories()
+      setStories(stories.stories)
+      // console.log(stories.stories)
+    }
+    Fetcher()
+   }, [ReFetcher])
 
 
 
+  const settings = {
+
+    infinite: true,
+    speed: 500,
+    slidesToShow: 6,
+    slidesToScroll: 5,
+    nextArrow: <CustomNextArrow />,
+    prevArrow: <CustomPrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
+
+  const handelImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      if (reader.readyState === 2) {
+        const imageData = reader.result as string;
 
 
+        // Avatar স্টেট সেট হওয়ার পরেই API কল করো
+        try {
+          const stories = await StoriesCreate({ avatar: imageData });
+          if (stories.success) {
+            toast.success(stories.message)
+            setReFetcher(true)
+     
+
+          }
+
+        } catch (error) {
+          console.error("Error uploading story:", error);
+        }
+      }
+    };
+
+    reader.readAsDataURL(file);
+  };
   return (
 
     <div className=" w-[90%] md:w-[1100px] mx-auto ">
       <div className="flex justify-center  lg:justify-between">
         {/* leftSide */}
         <div className="w-[90%] md:w-[60%]  bg-black min-h-screen text-white flex flex-col items-center">
-      
+
           {/* Story Section */}
-          <div className="flex w-full items-center gap-x-2 ">
-          <label htmlFor='joiner' className="w-16 h-16 -mt-4">
-            <input type="file" id='joiner'  className='hidden' />
-            <div className=" h-14 w-14 border flex justify-center items-center border-[#737373] rounded-full cursor-pointer">
-              <BsPlusLg color="#737373" size={40} />
-            </div>
-            <p className='text-center mt-1 text-[12px] text-gray-400'>Create story</p>
-            </label>
-          <div className="flex space-x-4 overflow-hidden rounded-3xl w-[60%] md:w-full  p-4">
-        
-
-            {stories.map((story) => (
-              <div className="" key={story.id}>
-                <motion.div
-                  key={story.id}
-                  className="relative w-16 h-16 rounded-full border-2 border-pink-500 overflow-hidden cursor-pointer"
-                  whileTap={{ scale: 0.9 }}
-                  whileHover={{ scale: 1.1 }}
-                  onClick={() => setSelectedStory(story.img)}
-                >
-                  <Image height={500} width={500} src={story.img} alt={story.name} className="w-full h-full object-cover" />
-
-                </motion.div>
-                <div className="text-white text-xs text-center py-1">
-                  {story.name.length >= 8 ? story.name.slice(0, 8) + '...' : story.name}
-                </div>
+          <div className="flex w-full items-center gap-x-2  mt-2 ">
+            <label htmlFor='joiner' className="w-16 h-16 -mt-4">
+              <input type="file" id='joiner' className='hidden' onChange={(e) => handelImage(e)} />
+              <div className=" h-14 w-14 border flex justify-center items-center border-[#737373] rounded-full cursor-pointer">
+                <BsPlusLg color="#737373" size={40} />
               </div>
-            ))}
+              <p className='text-center mt-1 text-[12px] text-gray-400'>Create story</p>
+            </label>
+            <Slider {...settings} className="flex space-x-4 overflow-hidden w-[60%] md:w-full   p-5">
+
+
+              {Stories?.map((story: any, index: number) => (
+                <div onClick={() => removeStories(index)} className=" flex   flex-col justify-center items-center pt-2" key={index}>
+                  <motion.div
+                    key={story.id}
+                    className="relative w-16 h-16 rounded-full border-2 border-pink-500 overflow-hidden cursor-pointer"
+                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: 1.1 }}
+                    onClick={() => setSelectedStory(story?.image?.url)}
+                  >
+                    <Image height={500} width={500} src={story?.image?.url} alt={"img not found"} className="w-full h-full object-cover" />
+
+                  </motion.div>
+                  <div className="text-white text-xs py-1 text-center w-[70px] ">
+                    {story?.user?.name?.length >= 8 ? story?.user?.name.slice(0, 8) + '...' : story?.user?.name}
+                  </div>
+                </div>
+              ))}
 
 
 
+            </Slider>
           </div>
-          </div>
-       
+
 
           {/* Story Preview Animation */}
           {selectedStory && (
@@ -104,7 +206,7 @@ const HomeContent = ({ user, Posts, users }: Props) => {
           <div className=" ">
 
             {
-              Posts.map((item, index) => (
+              Posts?.map((item, index) => (
                 <PostCard key={index} post={item} />
               ))
             }
@@ -121,7 +223,7 @@ const HomeContent = ({ user, Posts, users }: Props) => {
               <Image src={user?.avatar?.url} height={500} width={500} alt='img not found' className='w-[60px] h-[60px] rounded-full' />
               <div className="ml-3">
                 <p className="text-sm font-semibold">{user?.name}</p>
-                <p className="text-xs text-gray-500">{user.username || "username"}</p>
+                <p className="text-xs text-gray-500">{user?.username || "username"}</p>
               </div>
             </div>
             <span className='text-[#33adff] hover:text-white cursor-pointer text-sm '>Switch</span>

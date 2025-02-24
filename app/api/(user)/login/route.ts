@@ -30,7 +30,7 @@ export async function POST(req:NextRequest,res:NextResponse){
         response.cookies.set("session", JSON.stringify(user), {
           httpOnly: true,       // Prevents JavaScript access to the cookie (security)
           sameSite: "lax",      // Cookies will be sent with cross-site requests
-          maxAge: 3600,         // 1 hour (set the expiration as needed)
+          maxAge: 3600*24*7,         // 1 hour (set the expiration as needed)
           path: "/",            // Cookie is available for the whole site
         });
     
