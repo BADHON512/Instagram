@@ -37,7 +37,7 @@ const Home = ({user,Posts,users,stories}:Props) => {
                          className="hidden md:block  h-screen relative "
 
                     >
-                         <SideBar active={active} setActive={setActive} />
+                         <SideBar active={active} setActive={setActive} currentUser={user} />
 
 
 
@@ -62,7 +62,7 @@ const Home = ({user,Posts,users,stories}:Props) => {
 
                </div>
                <div className=" fixed bottom-0 bg-black w-full block md:hidden">
-                    <HeaderDown active={active} setActive={setActive}  />
+                    <HeaderDown active={active} setActive={setActive} currentUser={user}  />
                </div>
 
                {

@@ -10,6 +10,7 @@ import { LuSend } from 'react-icons/lu';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import EmojiPicker from 'emoji-picker-react';
 import { RxCross1 } from 'react-icons/rx';
+import {format} from "timeago.js"
 
 
 type Props = {
@@ -119,7 +120,7 @@ const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike }: Pr
                     <div className="border-t border-gray-700 p-4">
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-4">
-                                <motion.div whileTap={{ scale: 0.8 }} animate={{ scale: PupUp.like ? 1.2 : 1 }} transition={{ type: "spring", stiffness: 300, damping: 10 }} onClick={handelLike}>
+                                <motion.div whileTap={{ scale: 0.8 }} animate={{ scale: PupUp.like ? 1.2 : 1 }} transition={{ type: "spring", stiffness: 300, damping: 10 }} onClick={()=>handelLike(post?.id)}>
                                     {PupUp.like ? <FaHeart color="red" size={24} className="cursor-pointer" /> : <FaRegHeart color="white" size={24} className="cursor-pointer" />}
                                 </motion.div>
                                 <BiMessageRounded size={25} className="cursor-pointer" onClick={() => setPupUp((prev) => ({ ...prev, message: !prev.message }))} />
@@ -127,8 +128,8 @@ const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike }: Pr
                             </div>
                             <FiBookmark size={25} className="cursor-pointer" />
                         </div>
-                        <p className="text-sm text-gray-300 mt-2 font-semibold">{PupUp.likeCount.toLocaleString()} likes</p>
-                        <p className="text-xs text-gray-300">15 hours ago</p>
+                        <p className="text-sm text-gray-300 mt-2 font-semibold">{PupUp.likeCount} likes</p>
+                        <p className="text-xs text-gray-300">{format(post.createdAt)}</p>
                     </div>
 
                     {/* Comment Input */}

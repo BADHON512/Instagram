@@ -12,6 +12,7 @@ import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { StoriesCreate } from '@/@actions/Stories/StoriesCreate';
 import { GetAllStories } from '@/@actions/Stories/getAllStories';
 import toast from 'react-hot-toast';
+import { CreateFollow } from '@/@actions/Follow/CreateFollow';
 
 type Props = {
   user: any
@@ -55,8 +56,9 @@ const HomeContent = ({ user, Posts, users, stories }: Props) => {
   const [selectedStory, setSelectedStory] = useState(null);
  const [ReFetcher, setReFetcher] = useState()
   const [Stories, setStories] = useState<[]>(stories)
+  const [Follow, setFollow] = useState<{[key:string]:string}>({})
 
-  console.log(Posts)
+  console.log(users,"usersfffffff")
 
 
   const removeStories = (id: number) => {
@@ -141,6 +143,13 @@ const HomeContent = ({ user, Posts, users, stories }: Props) => {
 
     reader.readAsDataURL(file);
   };
+
+  const handleFollow =async (followingId:string)=>{
+  
+    setFollow((pre)=>({...pre, [followingId]: pre[followingId]==="Following"?"Follow":"Following"}))
+    const follow=await CreateFollow(followingId)
+  
+  }
   return (
 
     <div className=" w-[90%] md:w-[1100px] mx-auto ">
@@ -222,7 +231,7 @@ const HomeContent = ({ user, Posts, users, stories }: Props) => {
             <div className="flex items-center w-full">
               <Image src={user?.avatar?.url} height={500} width={500} alt='img not found' className='w-[60px] h-[60px] rounded-full' />
               <div className="ml-3">
-                <p className="text-sm font-semibold">{user?.name}</p>
+                <p className="text-sm font-semibold cursor-pointer">{user?.name}</p>
                 <p className="text-xs text-gray-500">{user?.username || "username"}</p>
               </div>
             </div>
@@ -248,7 +257,7 @@ const HomeContent = ({ user, Posts, users, stories }: Props) => {
                       <p className="text-xs text-gray-500">{item?.username}</p>
                     </div>
                   </div>
-                  <span className='text-[#33adff] hover:text-white cursor-pointer text-sm '>NOtDynamicFollow</span>
+                  <span onClick={()=>handleFollow(item?.id)} className={`${Follow[item.id]?"text-white hover:text-[#e9e1e1] cursor-pointer text-sm":"text-[#33adff] hover:text-white cursor-pointer text-sm"}`}>  {Follow[item.id] || "Follow"}</span>
                 </div>
 
               ))

@@ -24,7 +24,7 @@ const Page = () => {
      const [active, setActive] = useState<number | null>(4);
      const [user, setUser] = useState<any>()
      const [LoginUser, setLoginUser] = useState()
-
+console.log(LoginUser,"xxxxxxxxxxxxxxxxxxxxxxxx")
      const [loader, setLoader] = useState<any>()
      const { id } = useParams()
   useEffect(() => {
@@ -67,7 +67,7 @@ const Page = () => {
                          className="hidden md:block  h-screen relative "
 
                     >
-                         <SideBar active={active} setActive={setActive} />
+                         <SideBar active={active} setActive={setActive} currentUser={LoginUser} />
 
 
 
@@ -92,7 +92,7 @@ const Page = () => {
                     {loader === 400 ? <MessageBodyById user={user} LoginUser={LoginUser} /> : <Loader />}
                </div>
                <div className="fixed bottom-0 bg-black w-full block md:hidden">
-                    <HeaderDown active={active} setActive={setActive} />
+                    <HeaderDown active={active} setActive={setActive} currentUser={LoginUser} />
                </div>
 
                {

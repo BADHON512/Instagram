@@ -11,10 +11,12 @@ import Create from '@/components/Create/Create';
 import Loader from '@/components/Loader/Loader';
 import { GetUser } from '@/@actions/user/getUser';
 
+type Props = {
+    currentUser: any
+}
 
 
-
-const RouteProfileHomePage = () => {
+const RouteProfileHomePage = ({currentUser}:Props) => {
 
     const [user, setUser] = useState<any>()
     console.log(user, "++++++++++")
@@ -49,7 +51,7 @@ const RouteProfileHomePage = () => {
                     className="hidden md:block  h-screen relative "
 
                 >
-                    <SideBar active={active} setActive={setActive} />
+                    <SideBar active={active} setActive={setActive} currentUser={currentUser} />
 
 
                     <Search active={active} setActive={setActive} />
@@ -71,7 +73,7 @@ const RouteProfileHomePage = () => {
 
             </div>
             <div className=" fixed  bottom-0 bg-black w-full block md:hidden">
-                <HeaderDown active={active} setActive={setActive} />
+                <HeaderDown active={active} setActive={setActive}  currentUser={currentUser}/>
 
             </div>
 

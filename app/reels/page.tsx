@@ -1,20 +1,14 @@
 import React from 'react'
 import HomeReels from './_page'
 import { getInstagramReels } from '@/@actions/getReels';
+import { GetUser } from '@/@actions/user/getUser';
 
 type Props = {}
 
 const Page = async(props: Props) => {
-  // const ACCESS_TOKEN='IGAASrP3jlqd9BZAE5yNEh1VUMzVXM4b2VTUVhpQ0lrVHV3Ql8yX2g1elBWR3lUcnBYUWtzbGhYMGZAjSGhjdGhKNnJ1Y1dMdmtTV1lFZA3J4T2pBOWlOa24zS2pOVVFrSVZAwT0ZAsUUJ2NUs5Y19uaXM1OVFJZAFBpY2lnV3NuMXBrMAZDZD'
-
-
-  //     const data = await getInstagramReels();
-  //     console.log(data)
-
-
-
+const currentUser:any = await GetUser()
   return (
-   <HomeReels/>
+   <HomeReels currentUser={currentUser?.user}/>
   )
 }
 

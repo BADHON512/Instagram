@@ -1,23 +1,20 @@
 "use client"
 import SideBar from '@/components/SideBar/SideBar'
 import React, { useState } from 'react'
-
-
 import { motion } from "framer-motion";
 import Header from '@/components/SideBar/Header'
 import HeaderDown from '@/components/SideBar/ForMobile'
-
 import Search from '@/components/helper/Search';
 import Messages from '@/components/helper/Messages';
 import NotificationSidebar from '@/components/helper/Notification';
 import Create from '@/components/Create/Create';
-
-import ReelsContent from '@/components/Reels/ReelsContent';
 import ExploreContent from '@/components/Explore/ExploreContent';
 
-type Props = {}
+type Props = {
+     currentUser: any
+}
 
-const HomeExplore = (props: Props) => {
+const HomeExplore = ({currentUser}: Props) => {
          const [active, setActive] = useState<number | null>(null);
   return (
     <div className='md:flex '>
@@ -29,7 +26,7 @@ const HomeExplore = (props: Props) => {
               className="hidden md:block  h-screen relative "
 
          >
-              <SideBar active={active} setActive={setActive} />
+              <SideBar active={active} setActive={setActive} currentUser={currentUser} />
 
 
 
@@ -54,7 +51,7 @@ const HomeExplore = (props: Props) => {
 
     </div>
     <div className=" fixed bottom-0 bg-black w-full block md:hidden">
-    <HeaderDown active={active} setActive={setActive}  />
+    <HeaderDown active={active} setActive={setActive} currentUser={currentUser} />
     </div>
 
     {

@@ -20,6 +20,8 @@ import { LiaShareSolid } from 'react-icons/lia';
 import MessageModel from './MessageModle';
 import{format} from "timeago.js"
 import Link from 'next/link';
+import { CreateLike } from '@/@actions/Like/CrateLike';
+import { GetLikeCount } from '@/@actions/Like/getLikeCount';
 
 
 type Props = {
@@ -62,61 +64,63 @@ const PostCard = ({ post }: Props) => {
     const allText = "You're very welcome! 🎉 I'm so glad to hear you had a wonderful birthday with your loved ones. Wishing you even more amazing moments ahead! 🥳🎂 How did you celebrate?"
     const word = allText.split(" ")
     const visibleText = isExpanded ? allText : word.slice(0, 20).join(" ") + "..."
+    const [Like, setLike] = useState()
 
     const [PupUp, setPupUp] = useState({
         like: false,
-        likeCount: 10032119,
+        likeCount: 0 ,
         message: false,
         share: false,
         save: false,
         postSetting: false
 
     })
-
+console.log(PupUp.like,PupUp.like)
+    useEffect(()=>{
+    
+     async function Fetcher (postId:string) {
+        
+      const likeCount= await GetLikeCount(postId)
+      const like=likeCount.likeCount
+     if(likeCount.likeCount){
+      setPupUp((pre )=>({...pre,like:true}))}
+      setPupUp((pre) => ({ ...pre, likeCount: likeCount.likeCount||0 }));
+     }
+     Fetcher(post?.id)
+    },[post?.id,PupUp.like])
 
     const handleSelect = (index: number) => {
         setSelectedIndexes((pre) =>
-            pre.includes(index) ? pre.filter((i) => i !== index) : [...pre, index]
-
+         pre.includes(index) ? pre.filter((i) => i !== index) : [...pre, index]
         )
     };
-    const handelLike = () => {
-        setPupUp((prev) => ({ ...prev, like: !prev.like, likeCount: prev.like ? prev.likeCount + 1 : prev.likeCount - 1 }))
+    const handelLike = async (postId: string) => {
+        setPupUp((prev) => ({ 
+          ...prev, 
+          like: !prev.like, 
+          likeCount: prev.like ? prev.likeCount - 1 : prev.likeCount + 1 
+        }))
+        await CreateLike({ postId })
     }
-
+    
     useEffect(() => {
         const shouldDisableScroll = PupUp.message || PupUp.share;
-
         document.body.style.overflow = shouldDisableScroll ? "hidden" : "auto";
-
         return () => {
-            document.body.style.overflow = "auto"; // Cleanup on unmount
+        document.body.style.overflow = "auto"; 
         };
     }, [PupUp.message, PupUp.share]);
 
-
     const handleChange = (event) => {
-
         setText(event.target.value);
-        event.target.style.height = 'auto'; // Reset height to auto to calculate the new height
-        event.target.style.height = `${event.target.scrollHeight}px`; // Set the height to scrollHeight
+        event.target.style.height = 'auto'; 
+        event.target.style.height = `${event.target.scrollHeight}px`; 
         setInput(event.target.value)
     };
 
-
-
-    const [heartVisible, setHeartVisible] = useState(false);  // State to control heart visibility
-
-
-    // Function to handle double-tap
+    const [heartVisible, setHeartVisible] = useState(false); 
     const handleDoubleTap = () => {
-
-
-
-        // Show the heart for a brief moment
         setHeartVisible(true);
-
-        // Hide the heart after animation completes
         setTimeout(() => setHeartVisible(false), 600); // Duration should match heart animation duration
     };
     return (
@@ -162,7 +166,7 @@ const PostCard = ({ post }: Props) => {
                         whileTap={{ scale: 0.8 }} // Adds a small pop effect
                         animate={{ scale: PupUp.like ? 1.2 : 1 }} // Increases size slightly when liked
                         transition={{ type: "spring", stiffness: 300, damping: 10 }} // Smooth animation
-                        className="" onClick={handelLike}>
+                        className="" onClick={()=>handelLike(post?.id)}>
                         {PupUp.like ? (<FaHeart title='Like' size={24} color='red' className="cursor-pointer" />) : (<FaRegHeart title='Like' size={24} color='white' className="cursor-pointer" />)}
                     </motion.div>
                     <BiMessageRounded onClick={() => setPupUp((pre) => ({ ...pre, message: !pre.message }))} color='white' title='Comment' size={25} className="scale-x-[-1] cursor-pointer text-[#cacaca]" />
@@ -171,7 +175,7 @@ const PostCard = ({ post }: Props) => {
                 <FiBookmark title='Save' color='white' size={25} className="cursor-pointer  " />
             </div>
 
-            <span className='text-sm text-gray-300 font-semibold block'>❤️ {PupUp.likeCount.toLocaleString()} likes</span>
+            <span className='text-sm text-gray-300 font-semibold block'>❤️ {PupUp.likeCount} likes</span>
 
             <span className='text-sm text-gray-300 font-semibold   gap-x-2 my-1'>{post.name} <MdVerified color='#0095F6' className='inline-block -mt-1' /> {visibleText} {!isExpanded && <span className='cursor-pointer'
                 onClick={() => setIsExpanded(!isExpanded)}> more</span>}</span>

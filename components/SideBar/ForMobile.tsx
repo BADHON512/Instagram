@@ -9,10 +9,11 @@ import Link from 'next/link';
 type Props = {
 active: number | null;
     setActive: (active: number | null) => void
+    currentUser:any
 }
 
 
-function HeaderDown({ active,setActive }: Props) {
+function HeaderDown({ active,setActive,currentUser }: Props) {
     console.log(active)
     return (
 
@@ -41,7 +42,7 @@ function HeaderDown({ active,setActive }: Props) {
                 }} size={30} className='cursor-pointer' />
                 <LuSend size={30} className='cursor-pointer' />
                 <Link href={"/profile-page"}>
-                    <Image src="https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg" height={500} width={500} className='h-[30px] w-[30px] rounded-full' alt="" /></Link>
+                    <Image src={currentUser?.avatar?.url||"https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"} height={500} width={500} className='h-[30px] w-[30px] rounded-full object-cover' alt="" /></Link>
             </div>
         </div>
 

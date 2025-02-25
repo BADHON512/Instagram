@@ -9,7 +9,7 @@ type Props = {
 
 export async function StoriesCreate( {avatar} : Props) {
   try {
-    console.log(avatar)
+
     const userCookie = await cookies()
     const userid=userCookie.get("session")?.value;
     if (!userid) {

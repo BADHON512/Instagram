@@ -1,12 +1,15 @@
 import React from 'react'
 import HomeExplore from './_page'
+import { GetUser } from '@/@actions/user/getUser'
 
 type Props = {}
 
-function page({}: Props) {
+const page = async (props: Props) => {
+
+  const currentUser:any = await GetUser()
   return (
     <div>
-         <HomeExplore/>
+       <HomeExplore currentUser={currentUser?.user}/>
     </div>
   )
 }

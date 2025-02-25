@@ -14,9 +14,11 @@ import Create from '@/components/Create/Create';
 import MessageHomeBody from '@/components/Content/MessageHome/MessageHome';
 
 
-type Props = {}
+type Props = {
+     currentUser: any
+}
 
-const MessagesHome = (props: Props) => {
+const MessagesHome = ({currentUser}: Props) => {
 
 
      const [active, setActive] = useState<number | null>(null);
@@ -32,7 +34,7 @@ const MessagesHome = (props: Props) => {
                          className="hidden md:block  h-screen relative "
 
                     >
-                         <SideBar active={active} setActive={setActive} />
+                         <SideBar active={active} setActive={setActive}  currentUser={currentUser}/>
 
 
 
@@ -57,7 +59,7 @@ const MessagesHome = (props: Props) => {
 
                </div>
                <div className="fixed bottom-0 bg-black w-full block md:hidden">
-               <HeaderDown active={active} setActive={setActive}  />
+               <HeaderDown active={active} setActive={setActive}  currentUser={currentUser} />
                </div>
 
                {

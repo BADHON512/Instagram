@@ -8,6 +8,9 @@ export async function GetSingleMessage(id: string) {
     }
 
     const user = await prisma.user.findUnique({
+      omit:{
+        password:false
+      },
       where: {
         id: id,
       },

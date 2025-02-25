@@ -25,37 +25,41 @@ import { useRouter } from 'next/navigation';
 type Props = {
   active?: number | null,
   setActive: (active: number) => void | undefined
+  currentUser: any
 }
 
 
-const menuItems = [
-  { id: 0, label: "Home", link: '/', icon: <GoHomeFill size={27} /> },
-  { id: 1, label: "Search", link: '', icon: <IoSearch size={27} /> },
-  { id: 2, label: "Explore", link: '/explore', icon: <MdExplore size={27} /> },
-  { id: 3, label: "Reels", link: '/reels', icon: <PiFilmReel size={27} /> },
-  { id: 4, label: "Messages", link: '/messages', icon: <LuSend size={27} /> },
-  { id: 5, label: "Notification", link: '', icon: <CiHeart size={27} /> },
-  { id: 6, label: "Create", link: '', icon: <FaRegPlusSquare size={27} /> },
-  {
-    id: 7,
-    label: "Profile",
-    link: '/profile-page',
-    icon: (
-      <div className='w-[27px] h-[27px] rounded-full'>
-        <Image
-          src="https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220875/profile/badhon.jpg"
-          height={500}
-          width={500}
-          className="h-[30px] w-[30px] rounded-full"
-          alt="Profile"
-        />
-      </div>
-    ),
-  },
-];
 
-const SideBar = ({ active, setActive }: Props) => {
+
+const SideBar = ({ active, setActive,currentUser }: Props) => {
+
+  const menuItems = [
+    { id: 0, label: "Home", link: '/', icon: <GoHomeFill size={27} /> },
+    { id: 1, label: "Search", link: '', icon: <IoSearch size={27} /> },
+    { id: 2, label: "Explore", link: '/explore', icon: <MdExplore size={27} /> },
+    { id: 3, label: "Reels", link: '/reels', icon: <PiFilmReel size={27} /> },
+    { id: 4, label: "Messages", link: '/messages', icon: <LuSend size={27} /> },
+    { id: 5, label: "Notification", link: '', icon: <CiHeart size={27} /> },
+    { id: 6, label: "Create", link: '', icon: <FaRegPlusSquare size={27} /> },
+    {
+      id: 7,
+      label: "Profile",
+      link: '/profile-page',
+      icon: (
+        <div className='w-[27px] h-[27px] rounded-full'>
+          <Image
+            src={currentUser?.avatar?.url || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
+            height={500}
+            width={500}
+            className="h-[30px] w-[30px] rounded-full "
+            alt="Profile"
+          />
+        </div>
+      ),
+    },
+  ];
   const [MoreOpen, setMoreOpen] = useState<boolean>(false)
+  console.log(currentUser,"bbbbbbbbbbb")
   const router = useRouter()
   const handleClose = (e: React.MouseEvent) => {
     const target = e.currentTarget as HTMLElement

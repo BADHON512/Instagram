@@ -132,10 +132,10 @@ const handelLike=()=>{
               <span className="font-semibold">{user?.posts?.length}</span> posts
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold">15k</span> followers
+              <span className="font-semibold">{user?.followers?.length}</span> followers
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold">90k</span> following
+              <span className="font-semibold">{user.following?.length}</span> following
             </div>
           </div>
 
