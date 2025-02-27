@@ -9,19 +9,23 @@ import { BiLinkAlt, BiMessageRounded } from 'react-icons/bi';
 
 import { FiBookmark, } from 'react-icons/fi';
 import { LuSend } from 'react-icons/lu';
-import { FaHeart, FaRegHeart, FaWhatsapp } from 'react-icons/fa';
+import { FaBookmark, FaHeart, FaRegHeart, FaWhatsapp } from 'react-icons/fa';
 import EmojiPicker from 'emoji-picker-react';
 import { RxCross1 } from 'react-icons/rx';
 import { IoIosCheckmark, IoIosLink, IoIosSearch } from 'react-icons/io';
-import { CiFacebook } from 'react-icons/ci';
+import { CiBookmarkCheck, CiFacebook } from 'react-icons/ci';
 import { FaThreads } from 'react-icons/fa6';
 import { TiSocialLinkedin } from 'react-icons/ti';
 import { LiaShareSolid } from 'react-icons/lia';
 import MessageModel from './MessageModle';
-import{format} from "timeago.js"
+import { format } from "timeago.js"
 import Link from 'next/link';
 import { CreateLike } from '@/@actions/Like/CrateLike';
 import { GetLikeCount } from '@/@actions/Like/getLikeCount';
+import { CreateComment } from '@/@actions/Comment/createComment';
+import { GetComment } from '@/@actions/Comment/getCommet';
+import { CreateSavePost } from '@/@actions/SavePost/createSavePost';
+import toast from 'react-hot-toast';
 
 
 type Props = {
@@ -58,67 +62,99 @@ const PostCard = ({ post }: Props) => {
     const [text, setText] = useState("");
     const [input, setInput] = useState<string>('');
     const [showPicker, setShowPicker] = useState(false);
-
+    const [ReFetcher, setReFetcher] = useState(false)
     const [inputClick, setInputClick] = useState(false)
     const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]); // Track multiple selections
     const allText = "You're very welcome! 🎉 I'm so glad to hear you had a wonderful birthday with your loved ones. Wishing you even more amazing moments ahead! 🥳🎂 How did you celebrate?"
     const word = allText.split(" ")
     const visibleText = isExpanded ? allText : word.slice(0, 20).join(" ") + "..."
-    const [Like, setLike] = useState()
+    const [comment, setComment] = useState<any>();
+
+
+
+    const handelSavePost=async(postId:string,UserId:string)=>{
+        setPupUp((pre)=>({...pre,save:!pre.save}))
+        const savePost=await CreateSavePost({postId,UserId})
+        if(savePost.success ){
+            toast.success(savePost?.message)
+        }
+        else{
+            toast.error(savePost?.message)
+        }
+    }
+
+    useEffect(() => {
+        async function Fetcher(postId: string) {
+         const Comments = await GetComment(postId)
+         setComment(Comments.comments)
+        }
+        Fetcher(post?.id)
+    }, [ReFetcher])
+
+    const handleComment = async (postId: string) => {
+      const comment= await CreateComment({ postId, content: input })
+        setReFetcher(!ReFetcher)
+        setShowPicker(!showPicker)
+        if(comment.success ){
+            setInput("")
+        }
+    };
+
 
     const [PupUp, setPupUp] = useState({
         like: false,
-        likeCount: 0 ,
+        likeCount: 0,
         message: false,
         share: false,
         save: false,
         postSetting: false
 
     })
-console.log(PupUp.like,PupUp.like)
-    useEffect(()=>{
-    
-     async function Fetcher (postId:string) {
-        
-      const likeCount= await GetLikeCount(postId)
-      const like=likeCount.likeCount
-     if(likeCount.likeCount){
-      setPupUp((pre )=>({...pre,like:true}))}
-      setPupUp((pre) => ({ ...pre, likeCount: likeCount.likeCount||0 }));
-     }
-     Fetcher(post?.id)
-    },[post?.id,PupUp.like])
+
+    useEffect(() => {
+
+        async function Fetcher(postId: string) {
+
+            const likeCount = await GetLikeCount(postId)
+           console.log(likeCount)
+            if (likeCount.likeExist) {
+             setPupUp((pre) => ({ ...pre, like: true }))
+            }
+            setPupUp((pre) => ({ ...pre, likeCount: likeCount.likeCount || 0 }));
+        }
+        Fetcher(post?.id)
+    }, [post?.id, PupUp.like])
 
     const handleSelect = (index: number) => {
         setSelectedIndexes((pre) =>
-         pre.includes(index) ? pre.filter((i) => i !== index) : [...pre, index]
+            pre.includes(index) ? pre.filter((i) => i !== index) : [...pre, index]
         )
     };
     const handelLike = async (postId: string) => {
-        setPupUp((prev) => ({ 
-          ...prev, 
-          like: !prev.like, 
-          likeCount: prev.like ? prev.likeCount - 1 : prev.likeCount + 1 
+        setPupUp((prev) => ({
+            ...prev,
+            like: !prev.like,
+            likeCount: prev.like ? prev.likeCount - 1 : prev.likeCount + 1
         }))
         await CreateLike({ postId })
     }
-    
+
     useEffect(() => {
         const shouldDisableScroll = PupUp.message || PupUp.share;
         document.body.style.overflow = shouldDisableScroll ? "hidden" : "auto";
         return () => {
-        document.body.style.overflow = "auto"; 
+            document.body.style.overflow = "auto";
         };
     }, [PupUp.message, PupUp.share]);
 
     const handleChange = (event) => {
         setText(event.target.value);
-        event.target.style.height = 'auto'; 
-        event.target.style.height = `${event.target.scrollHeight}px`; 
+        event.target.style.height = 'auto';
+        event.target.style.height = `${event.target.scrollHeight}px`;
         setInput(event.target.value)
     };
 
-    const [heartVisible, setHeartVisible] = useState(false); 
+    const [heartVisible, setHeartVisible] = useState(false);
     const handleDoubleTap = () => {
         setHeartVisible(true);
         setTimeout(() => setHeartVisible(false), 600); // Duration should match heart animation duration
@@ -166,13 +202,18 @@ console.log(PupUp.like,PupUp.like)
                         whileTap={{ scale: 0.8 }} // Adds a small pop effect
                         animate={{ scale: PupUp.like ? 1.2 : 1 }} // Increases size slightly when liked
                         transition={{ type: "spring", stiffness: 300, damping: 10 }} // Smooth animation
-                        className="" onClick={()=>handelLike(post?.id)}>
+                        className="" onClick={() => handelLike(post?.id)}>
                         {PupUp.like ? (<FaHeart title='Like' size={24} color='red' className="cursor-pointer" />) : (<FaRegHeart title='Like' size={24} color='white' className="cursor-pointer" />)}
                     </motion.div>
                     <BiMessageRounded onClick={() => setPupUp((pre) => ({ ...pre, message: !pre.message }))} color='white' title='Comment' size={25} className="scale-x-[-1] cursor-pointer text-[#cacaca]" />
                     <LuSend title='Share' size={23} className="cursor-pointer  " onClick={() => setPupUp((pre) => ({ ...pre, share: !pre.share }))} />
                 </div>
-                <FiBookmark title='Save' color='white' size={25} className="cursor-pointer  " />
+                <div onClick={()=>handelSavePost(post?.id,post?.user?.id)} className="cursor-pointer">
+                  {
+                    PupUp.save ? <FaBookmark  title='Unsave' color='white' size={25} className="cursor-pointer text-red-500" /> : <FiBookmark  title='Save' color='white' size={25} />
+                  }   
+                </div>
+               
             </div>
 
             <span className='text-sm text-gray-300 font-semibold block'>❤️ {PupUp.likeCount} likes</span>
@@ -189,13 +230,13 @@ console.log(PupUp.like,PupUp.like)
 
                 {
                     input && (
-                        <span className='text-[#33adff] hover:text-white cursor-pointer mr-3'>Post</span>
+                        <span onClick={() => handleComment(post?.id)} className='text-[#33adff] hover:text-white cursor-pointer mr-3'>Post</span>
                     )
                 }
-                <button className='grayscale-[100%] rounded-full' onClick={() => setShowPicker(!showPicker)}><MdOutlineEmojiEmotions size={20}/></button>
+                <button className='grayscale-[100%] rounded-full' onClick={() => setShowPicker(!showPicker)}><MdOutlineEmojiEmotions size={20} /></button>
 
                 {showPicker && (
-                    <div className="absolute bottom-10  -right-[340px]">
+                    <div className="absolute bottom-10  right-0 md:-right-[340px]">
                         <EmojiPicker
                             onEmojiClick={(emoji) => setInput((prev) => prev + emoji.emoji)}
 
@@ -208,7 +249,7 @@ console.log(PupUp.like,PupUp.like)
 
             {
                 PupUp.message && (
-                    <MessageModel  PupUp={PupUp} setPupUp={setPupUp} post={post} input={input} setInput={setInput} handelLike={handelLike}/>
+                    <MessageModel PupUp={PupUp} setPupUp={setPupUp} post={post} input={input} setInput={setInput} handelLike={handelLike} handleComment={handleComment} comment={comment} />
                 )
             }
 

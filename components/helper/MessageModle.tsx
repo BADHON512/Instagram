@@ -9,8 +9,9 @@ import { FiBookmark, } from 'react-icons/fi';
 import { LuSend } from 'react-icons/lu';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import EmojiPicker from 'emoji-picker-react';
-import { RxCross1 } from 'react-icons/rx';
+
 import {format} from "timeago.js"
+import toast from 'react-hot-toast';
 
 
 type Props = {
@@ -34,10 +35,12 @@ type Props = {
     input?: string
     setInput?: ((input: string) => void)
     handelLike?: (() => void)
+    comment:any
+    handleComment:((postId:string)=>void)
 
 }
 
-const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike }: Props) => {
+const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike,comment,handleComment }: Props) => {
     const [showPicker2, setShowPicker2] = useState(false);
     console.log(post,"model")
     return (
@@ -90,23 +93,23 @@ const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike }: Pr
                         {post?.comments?.length === 0 ? (
                             <div className='h-full w-full flex justify-center items-center'>No Comments here</div>
                         ) : (
-                            post?.comments?.map((comment: any, index: number) => (
+                            comment?.map((comment: any, index: number) => (
                                 <div key={index} className="flex gap-3">
                                     <Image
-                                        src={comment.avatar}
+                                        src={comment?.user?.avatar?.url}
                                         height={40}
                                         width={40}
                                         alt="User Avatar"
                                         className="rounded-full w-[40px] h-[40px]"
                                     />
                                     <div>
-                                        <p className="font-semibold">
-                                            {comment.name} <MdVerified color="#0095F6" className="inline" />
+                                        <p className="font-semibold text-sm">
+                                            {comment?.user?.name} <MdVerified color="#0095F6" className="inline" />
                                             <span className="text-sm text-gray-300"> {comment.text}</span>
                                         </p>
                                         <div className="flex gap-x-4 text-xs text-gray-400 cursor-pointer">
-                                            <p>18h</p>
-                                            <p>Reply</p>
+                                            <p>{format(comment.createdAt)}</p>
+                                            <p onClick={()=>toast.error('Currently not available ')}>Reply</p>
                                             <p>See translation</p>
                                         </div>
                                     </div>
@@ -148,7 +151,7 @@ const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike }: Pr
                             className="w-full bg-transparent outline-none resize-none h-[25px] overflow-hidden"
                             placeholder="Add a comment..."
                         />
-                        <span className={`${input ? "text-[#33adff] hover:text-white cursor-pointer" : "text-gray-500 pointer-events-none opacity-50"}`}>Post</span>
+                        <span onClick={()=>handleComment(post?.id)} className={`${input ? "text-[#33adff] hover:text-white cursor-pointer" : "text-gray-500 pointer-events-none opacity-50"}`}>Post</span>
                     </div>
                 </div>
             </motion.div>

@@ -13,6 +13,7 @@ import Loader from '@/components/Loader/Loader';
 import { useParams } from 'next/navigation';
 import SingleProfile from '@/components/Content/SingleProfile/SingleProfile';
 import { GetSingleUser } from '@/@actions/user/GetSingleUser';
+import { GetUser } from '@/@actions/user/getUser';
 type Props = {}
 
 const Page = (props: Props) => {
@@ -20,6 +21,7 @@ const Page = (props: Props) => {
 
 
     const [user, setUser] = useState<any>()
+    const [currentUser , setCurrentUser] = useState<any>()
    
     const [loader, setLoader] = useState<any>()
 
@@ -28,6 +30,8 @@ const Page = (props: Props) => {
         if (!id) return
         const fetcher = async () => {
             try {
+                const currentUser:any=await GetUser()
+                setCurrentUser(currentUser.user)
                 const userData: any = await GetSingleUser(id[0]);
                 setUser(userData.user);
                 setLoader(userData.statusCode)
@@ -49,7 +53,7 @@ const Page = (props: Props) => {
                     className="hidden md:block  h-screen relative "
 
                 >
-                    <SideBar active={active} setActive={setActive} />
+                    <SideBar active={active} setActive={setActive} currentUser={currentUser} />
 
 
                     <Search active={active} setActive={setActive} />
@@ -71,7 +75,7 @@ const Page = (props: Props) => {
 
             </div>
             <div className=" fixed  bottom-0 bg-black w-full block md:hidden">
-                <HeaderDown active={active} setActive={setActive} />
+                <HeaderDown active={active} setActive={setActive}  currentUser={currentUser}/>
 
             </div>
 

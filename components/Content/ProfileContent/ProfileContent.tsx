@@ -29,7 +29,7 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
     bio: "",
     gender: "Male"
   })
- const [input, setInput] = useState()
+  const [input, setInput] = useState()
   const words = user?.bio?.split(" ");
   const visibleText = showMore ? user?.bio : words?.slice(0, 10).join(" ");
   const tabsRef = useRef<{ [key: string]: HTMLButtonElement | null }>({});
@@ -44,9 +44,9 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
 
   })
 
-const handelLike=()=>{
-  setPupUp((pre)=>({...pre, like:!PupUp.like ,likeCount: pre.like?pre.likeCount+1:pre.likeCount-1 }))
-}
+  const handelLike = () => {
+    setPupUp((pre) => ({ ...pre, like: !PupUp.like, likeCount: pre.like ? pre.likeCount + 1 : pre.likeCount - 1 }))
+  }
 
 
 
@@ -247,33 +247,43 @@ const handelLike=()=>{
                 </div>
               </div>
               {
-        PupUp.message && (
-          <UserModel PupUp={PupUp} setPupUp={setPupUp} post={item} user={user} input={input} setInput={setInput} handelLike={handelLike} />
-        )
-      }
+                PupUp.message && (
+                  <UserModel PupUp={PupUp} setPupUp={setPupUp} post={item} user={user} input={input} setInput={setInput} handelLike={handelLike} />
+                )
+              }
 
             </div>
           ))
         )}
 
         {activeTab === 'saved' && (
-          <div className="h-[310px]  w-[288px] flex-shrink-0 relative group"> {/* Added 'group' here */}
-            <Link href={'/'} className='h-full w-full block'> {/* Make sure Link is block-level */}
-              <Image
-                src={'https://res.cloudinary.com/dfng3w9jm/image/upload/v1737221207/profile/d2a54a36-0025-4332-8339-c1eef1b5eb70.png'}
-                alt='img not found'
-                height={1000}
-                width={1000}
-                className='h-full w-full'
-              />
-            </Link>
-
-            {/* Overlay & Icons */}
-            <div className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100   flex  items-end gap-x-4 cursor-pointer">
-
-              <span className='font-semibold p-5 text-[18px]'>All post</span>
+          user?.savePost.length === 0 ? (
+            <div className="w-full h-full flex justify-center items-center flex-col  mt-8 space-y-2 p-5">
+              <svg aria-label="Saved" fill="currentColor" height="62" role="img" viewBox="0 0 96 96" width="62"><title>Saved</title><path d="M80 48a16 16 0 1 1-32 0 16 16 0 0 1 32 0ZM48 80a16 16 0 1 1 0-32 16 16 0 0 1 0 32Z"></path><path d="M64 64a16 16 0 1 1-32 0 16 16 0 0 1 32 0Z"></path></svg>
+              <h1 className='text-2xl font-semibold'>Save</h1>
+              <p className='text-gray-400'>Save photos and videos that you want to see again. No one is notified, and only you can see what you've saved.</p>
             </div>
-          </div>
+          ) : (  
+          user?.savePost.map((item: any, index: number) => (
+            <div key={index} className="h-[310px]  w-[288px] flex-shrink-0 relative group"> {/* Added 'group' here */}
+              <div  className='h-full w-full '> {/* Make sure Link is block-level */}
+                <Image
+                  src={item?.post?.image?.url}
+                  alt='img not found'
+                  height={1000}
+                  width={1000}
+                  className='h-full w-full'
+                />
+              </div>
+
+              {/* Overlay & Icons */}
+              <Link href={`/profile/${item?.post?.user?.username}`} className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100   flex  items-end gap-x-4 cursor-pointer">
+
+                <span className='font-semibold p-5 text-[18px]'>All post</span>
+              </Link>
+            </div>
+          )))
+
         )}
 
 
@@ -414,7 +424,7 @@ const handelLike=()=>{
         )
       }
 
-    
+
 
     </div >
   )

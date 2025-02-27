@@ -20,13 +20,13 @@ type Props = {
 
 const MessagesHome = ({currentUser}: Props) => {
 
-
+     const [TargetUser, setTargetUser] = useState(0)
      const [active, setActive] = useState<number | null>(null);
 
 
      return (
           <div className='md:flex '>
-               <div className=" w-[335px] fixed ">
+               <div className=" w-[335px] fixed z-50 ">
                     <motion.div
                          initial={{ width: 0 }}
                          animate={{ width: active === 1 || active === 4 ? "79px" : "280px" }}
@@ -55,7 +55,7 @@ const MessagesHome = ({currentUser}: Props) => {
                     <Header />
                </div>
                <div className="mt-[60px] lg:mt-0 w-full md:ml-[79px] xl:ml-[300px]  h-screen  ">
-                <MessageHomeBody/>
+                <MessageHomeBody TargetUser={TargetUser}/>
 
                </div>
                <div className="fixed bottom-0 bg-black w-full block md:hidden">
