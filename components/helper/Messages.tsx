@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image';
+import { format } from 'timeago.js';
 import React from 'react'
 import { FaRegEdit } from "react-icons/fa";
 
@@ -7,10 +8,14 @@ import { FaRegEdit } from "react-icons/fa";
 type Props = {
      active: number | null
      setActive: (active: number | null) => void | null
+     follower: any
+     currentUser: any
+     setUniqueUser:(uniqueUser:string)=>void
 
 }
 
-const Messages = ({ active, setActive }: Props) => {
+const Messages = ({ active, setActive,setUniqueUser, follower, currentUser }: Props) => {
+     console.log(follower)
      return (
 
           <AnimatePresence>
@@ -37,14 +42,14 @@ const Messages = ({ active, setActive }: Props) => {
                                    className="ml-3"
                               >
                                    <div className="mt-5 w-full flex justify-between items-center">
-                                        <h1 className='font-semibold text-[19px]'>badhon_9090</h1>
+                                        <h1 className='font-semibold text-[19px]'>{currentUser?.name}</h1>
                                         <FaRegEdit size={27} className='cursor-pointer' />
                                    </div>
 
                                    <div className="mt-10 flex flex-col w-[70px] items-center">
 
                                         <Image
-                                             src={'https://res.cloudinary.com/dfng3w9jm/image/upload/v1737221207/profile/d2a54a36-0025-4332-8339-c1eef1b5eb70.png'}
+                                             src={currentUser?.avatar?.url || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
                                              alt='img not found'
                                              height={1000}
                                              width={1000}
@@ -58,66 +63,28 @@ const Messages = ({ active, setActive }: Props) => {
                                         <h1 className='text-gray-400 text-sm'>Requests</h1>
                                    </div>
 
+                                   {
+                                     follower.length===0?(<div className='h-[40vh] w-full flex justify-center items-center'>You have no followers yet </div>):(
+                                        follower.map((item:any, index:any) => (
 
-                                   <div className="mt-5 flex gap-x-3 items-center hover:bg-[#cfb8b817] p-1 cursor-pointer">
+                                             <div onClick={()=>setUniqueUser(item.id)} key={index} className="mt-5 flex gap-x-3 items-center hover:bg-[#cfb8b817] p-1 cursor-pointer">
 
-                                        <Image
-                                             src={'https://res.cloudinary.com/dfng3w9jm/image/upload/v1737221207/profile/d2a54a36-0025-4332-8339-c1eef1b5eb70.png'}
-                                             alt='img not found'
-                                             height={1000}
-                                             width={1000}
-                                             className='h-[50px] w-[50px] rounded-full '
-                                        />
-                                        <div className="text-sm">
-                                             <p>Raja</p>
-                                             <p className='text-gray-400 text-[12px]'>Active 1m ago</p>
-                                        </div>
-                                   </div>
-
-                                   <div className="mt-5 flex gap-x-3 items-center hover:bg-[#cfb8b817] p-1 cursor-pointer">
-
-                                        <Image
-                                             src={'https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220719/profile/315100994_10209906491094779_654405519663392346_n_axklsy.jpg'}
-                                             alt='img not found'
-                                             height={1000}
-                                             width={1000}
-                                             className='h-[50px] w-[50px] rounded-full object-cover object-center'
-                                        />
-                                        <div className="text-sm">
-                                             <p>Sirazul monir</p>
-                                             <p className='text-gray-400 text-[12px]'>you: kakka upni akhon kothai Active 2h ago</p>
-                                        </div>
-                                   </div>
-
-                                   <div className="mt-5 flex gap-x-3 items-center hover:bg-[#cfb8b817] p-1 cursor-pointer">
-
-                                        <Image
-                                             src={'https://res.cloudinary.com/dfng3w9jm/image/upload/v1738331986/profile/415495503_374353825139621_6742367646166593496_n_y9ubj3.jpg'}
-                                             alt='img not found'
-                                             height={1000}
-                                             width={1000}
-                                             className='h-[50px] w-[50px] rounded-full object-cover object-center'
-                                        />
-                                        <div className="text-sm">
-                                             <p>Abdul khalek</p>
-                                             <p className='text-gray-400 text-[12px]'>ami akhon barit te Active 2h ago</p>
-                                        </div>
-                                   </div>
-
-                                   <div className="mt-5 flex gap-x-3 items-center hover:bg-[#cfb8b817] p-1 rounded-md cursor-pointer">
-
-                                        <Image
-                                             src={'https://res.cloudinary.com/dfng3w9jm/image/upload/v1737220822/profile/473018861_954030496668402_2945812169270431767_n_drmzvb.jpg'}
-                                             alt='img not found'
-                                             height={1000}
-                                             width={1000}
-                                             className='h-[50px] w-[50px] rounded-full '
-                                        />
-                                        <div className="text-sm">
-                                             <p>Muhammad raja</p>
-                                             <p className='text-gray-400 text-[12px]'>Active 2h ago</p>
-                                        </div>
-                                   </div>
+                                                  <Image
+                                                       src={item?.followee?.avatar?.url || 'https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png'}
+                                                       alt='img not found'
+                                                       height={1000}
+                                                       width={1000}
+                                                       className='h-[50px] w-[50px] rounded-full '
+                                                  />
+                                                  <div className="text-sm">
+                                                       <p>{item?.followee?.name}</p>
+                                                       <p className='text-gray-400 text-[12px]'>{format(item.createdAt
+                                                       )}</p>
+                                                  </div>
+                                             </div>
+                                        ))
+                                     )
+                                   }
 
 
 

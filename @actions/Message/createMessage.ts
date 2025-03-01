@@ -11,7 +11,7 @@ import prisma from "@/lib/prismaDb";
 export async function CreateMessage({ text, receiverId }: Props) {
   try {
     const getCookie = await cookies();
-    const userId = getCookie.get("userId")?.value;
+    const userId = getCookie.get("session")?.value;
     if (!userId) {
       return { message: "User ID not found", statusCode: 400 };
     }
@@ -26,6 +26,7 @@ export async function CreateMessage({ text, receiverId }: Props) {
 
     return {
       createMessage,
+      success:true,
       message: "Message created successfully",
       statusCode: 200,
     };

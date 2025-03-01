@@ -1,9 +1,9 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { RxCross1 } from 'react-icons/rx'
 import Image from 'next/image'
 import Link from 'next/link'
-import {  FaRegHeart, FaRegImage } from 'react-icons/fa'
+import { FaRegHeart, FaRegImage } from 'react-icons/fa'
 import { IoMdInformationCircleOutline } from 'react-icons/io'
 import { LuSticker } from 'react-icons/lu'
 import { MdCall, MdVerified } from 'react-icons/md'
@@ -11,28 +11,189 @@ import { HiOutlineEmojiHappy } from "react-icons/hi";
 import { TbVideo } from 'react-icons/tb'
 import { TiMicrophoneOutline } from 'react-icons/ti'
 import EmojiPicker from 'emoji-picker-react'
+import { useRef } from "react";
+import { motion } from "framer-motion";
+import { CreateMessage } from '@/@actions/Message/createMessage'
+import { GetMessage } from '@/@actions/Message/getMessage'
 
 type Props = {
     TargetUser: any
+    UserToMessage: any
+    currentUser: any
 }
 
-const MessageHomeBody = ({ TargetUser }: Props) => {
-    const messages = [
-        { id: 1, text: "Hey, what's up?", senderId: "user1" },
-        { id: 2, text: "All good! You?", senderId: "me" },
-        { id: 3, text: "Same here!", senderId: "user1" },
-      ];
-
-      const user=[{name:"badhon" ,username:"raja",}]
-
+const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
+    const [message, setMessage] = useState([{ id: 1, text: "Hey, what's up?", senderId: "user1" }])
     const [open, setOpen] = useState(false)
-
     const [showPicker, setShowPicker] = useState(false);
     const [input, setInput] = useState<string>('');
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const [Refetcher, setRefetcher] = useState(false)
+
+    const handleSend = async () => {
+        if (input.trim() === '') return;
+        const message = await CreateMessage({ text: input, receiverId: UserToMessage?.id })
+        console.log(message)
+        if (message.success) {
+            setShowPicker(false)
+            setInput('')
+        }
+    }
+
+
+
+
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+    useEffect(() => {
+        scrollToBottom();
+    }, [message]);
+
+    const messageVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, },
+    };
+    const handelEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter")
+            e.preventDefault()
+    }
+    useEffect(() => {
+       const getMessageFunction=async()=>{
+        const Message=await GetMessage(UserToMessage?.id)
+        console.log(Message.getMessage)
+       }
+       getMessageFunction()
+    }, [Refetcher])
+
     return (
         <div>
             {
-                TargetUser === 0 ? (<div>
+                TargetUser ? (
+
+                    <div>
+                        {/* Right Chat Area */}
+                        <div className="flex-1 flex flex-col  ">
+                            {/* Chat Header */}
+                            <div className="flex justify-between items-center p-4 border-b border-[#262626]">
+                                <div className="flex items-center gap-3">
+                                    <Image
+                                        src={currentUser?.avatar?.url || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
+                                        alt="Profile"
+                                        width={405}
+                                        height={405}
+                                        className="rounded-full object-cover h-[50px] w-[50px]"
+                                    />
+                                    <div>
+                                        <h2 className="flex items-center gap-1 font-semibold">
+                                            {currentUser?.name}
+                                            <MdVerified className="text-blue-500" />
+                                        </h2>
+                                        <p className="text-sm text-gray-400">@{currentUser?.username}</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-4 text-gray-400">
+                                    <MdCall size={24} className="hover:text-white cursor-pointer" />
+                                    <TbVideo size={24} className="hover:text-white cursor-pointer" />
+                                    <IoMdInformationCircleOutline size={24} className="hover:text-white cursor-pointer" />
+                                </div>
+                            </div>
+
+                            <div className=" h-[82vh] flex flex-col justify-end overflow-y-scroll">
+                                {/* Chat Content */}
+                                <div className="flex-1 overflow-y-scroll scrollNone p-4">
+                                    <div className="max-w-2xl mx-auto text-center">
+                                        <div className="mb-6">
+                                            <Image
+                                                src={UserToMessage?.avatar?.url || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
+                                                alt="Profile"
+                                                width={100}
+                                                height={100}
+                                                className="rounded-full object-cover mx-auto mb-4 h-[100px] w-[100px]"
+                                            />
+                                            <h1 className="text-2xl font-semibold mb-1">{UserToMessage?.name}</h1>
+                                            <p className="text-gray-400 mb-4">@{UserToMessage?.username} <span className='text-[20px] font-bold -mt-[30px]'>.</span> Instagram</p>
+                                            <Link
+                                                href={`/profile/${UserToMessage?.username}`}
+                                                className="inline-block px-6 py-2 text-sm bg-[#262626] rounded-lg hover:bg-[#333] transition-colors"
+                                            >
+                                                View Profile
+                                            </Link>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                                <div className="w-[95%] mx-auto max-h-[50vh] ">
+                                    {message.map((message) => (
+                                        <motion.div
+                                            key={message.id}
+                                            variants={messageVariants}
+                                            initial="hidden"
+                                            animate="visible"
+                                            className={`flex ${message.senderId === "me" ? "justify-end" : "justify-start"} mb-4 `}
+                                        >
+                                            <div
+                                                className={`p-3 rounded-lg ${message.senderId === "me" ? "bg-blue-500 text-white" : "bg-[#262626] text-white mb-3"}`}
+                                            >
+                                                {message.text}
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                    <div className='' ref={messagesEndRef} />
+                                </div>
+
+                            </div>
+
+
+                            {/* Message Input */}
+                            <div className="p-4 border-t border-[#262626] relative">
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                        onKeyDown={(e) => handelEnter(e)}
+                                        placeholder="Message..."
+                                        className="w-full pl-12 pr-24 py-3 bg-[#1a1a1a] rounded-full focus:outline-none  bg-transparent focus:ring-2 focus:ring-[#1a1a52c5]"
+                                    />
+                                    <HiOutlineEmojiHappy
+                                        onClick={() => setShowPicker(!showPicker)}
+                                        className="absolute left-4 top-3.5 text-gray-400 hover:text-white cursor-pointer"
+                                        size={24}
+                                    />
+                                    <div className="absolute right-4 top-2.5 flex gap-3 z-20">
+                                        <button disabled={input === ""} onClick={handleSend} className=' bg-blue-500 text-white p-1 px-2 rounded-md text-sm cursor-pointer'>Send</button>
+                                        <TiMicrophoneOutline className="text-gray-400 hover:text-white cursor-pointer" size={24} />
+                                        <FaRegImage className="text-gray-400 hover:text-white cursor-pointer" size={24} />
+                                        <LuSticker className="text-gray-400 hover:text-white cursor-pointer" size={24} />
+                                        <FaRegHeart className="text-gray-400 hover:text-white cursor-pointer" size={24} />
+                                    </div>
+                                </div>
+
+                                {showPicker && (
+                                    <div className="absolute bottom-20 left-4 z-50">
+                                        <EmojiPicker
+                                            onEmojiClick={(emoji) => setInput(prev => prev + emoji.emoji)}
+                                            theme="dark"
+                                            skinTonesDisabled
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        {
+                            showPicker && (
+                                <div className="absolute w-[100vw] h-[100vh] inset-0 " onClick={() => setShowPicker(!setShowPicker)}></div>
+                            )
+                        }
+                    </div>
+
+
+                ) : (<div>
                     <div className='w-full h-screen flex
                justify-center  items-center flex-col gap-y-3'>
 
@@ -44,15 +205,6 @@ const MessageHomeBody = ({ TargetUser }: Props) => {
                         <button onClick={() => setOpen(!open)} className='px-3 py-1 rounded-lg bg-[#3397f5] hover:bg-[#1877F2] font-semibold'>Send message</button>
 
                     </div>
-
-
-
-
-
-
-
-
-
                     {open && (
                         <div className=" absolute flex justify-center items-center top-0 left-0  w-[100vw] h-[100vh] bg-[#00000046]">
 
@@ -94,120 +246,7 @@ const MessageHomeBody = ({ TargetUser }: Props) => {
                             </div>
                         </div>
                     )}
-                </div>) : (
-
-                    <div>
-                        {/* Right Chat Area */}
-                        <div className="flex-1 flex flex-col">
-                            {/* Chat Header */}
-                            <div className="flex justify-between items-center p-4 border-b border-[#262626]">
-                                <div className="flex items-center gap-3">
-                                    <Image
-                                        src={"https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
-                                        alt="Profile"
-                                        width={405}
-                                        height={405}
-                                        className="rounded-full object-cover h-[50px] w-[50px]"
-                                    />
-                                    <div>
-                                        <h2 className="flex items-center gap-1 font-semibold">
-                                            {user[0]?.name}
-                                            <MdVerified className="text-blue-500" />
-                                        </h2>
-                                        <p className="text-sm text-gray-400">@{user[0]?.username}</p>
-                                    </div>
-                                </div>
-                                <div className="flex gap-4 text-gray-400">
-                                    <MdCall size={24} className="hover:text-white cursor-pointer" />
-                                    <TbVideo size={24} className="hover:text-white cursor-pointer" />
-                                    <IoMdInformationCircleOutline size={24} className="hover:text-white cursor-pointer" />
-                                </div>
-                            </div>
-
-                            {/* Chat Content */}
-                            <div className="flex-1 overflow-y-scroll scrollNone p-4">
-                                <div className="max-w-2xl mx-auto text-center">
-                                    <div className="mb-6">
-                                        <Image
-                                            src={"https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
-                                            alt="Profile"
-                                            width={100}
-                                            height={100}
-                                            className="rounded-full object-cover mx-auto mb-4 h-[100px] w-[100px]"
-                                        />
-                                        <h1 className="text-2xl font-semibold mb-1">{user[0]?.name}</h1>
-                                        <p className="text-gray-400 mb-4">@{user[0]?.username} <span className='text-[20px] font-bold -mt-[30px]'>.</span> Instagram</p>
-                                        <Link
-                                            href={`/profile/${user[0]?.username}`}
-                                            className="inline-block px-6 py-2 text-sm bg-[#262626] rounded-lg hover:bg-[#333] transition-colors"
-                                        >
-                                            View Profile
-                                        </Link>
-                                    </div>
-                                </div>
-
-
-                            </div>
-
-                            <div className="w-[95%] mx-auto">
-                                {messages.map((message) => (
-                                    <div
-                                        key={message.id}
-                                        className={`flex ${message.senderId === "me" ? "justify-end" : "justify-start"} mb-4`}
-                                    >
-                                        <div
-                                            className={`p-3 rounded-lg ${message.senderId === "me" ? "bg-blue-500 text-white" : "bg-[#262626] text-white"}`}
-                                        >
-                                            {message.text}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-
-                            {/* Message Input */}
-                            <div className="p-4 border-t border-[#262626] relative">
-                                <div className="relative">
-                                    <input
-                                        type="text"
-                                        value={input}
-                                        onChange={(e) => setInput(e.target.value)}
-                                        placeholder="Message..."
-                                        className="w-full pl-12 pr-24 py-3 bg-[#1a1a1a] rounded-full focus:outline-none  bg-transparent focus:ring-2 focus:ring-[#1a1a52c5]"
-                                    />
-                                    <HiOutlineEmojiHappy
-                                        onClick={() => setShowPicker(!showPicker)}
-                                        className="absolute left-4 top-3.5 text-gray-400 hover:text-white cursor-pointer"
-                                        size={24}
-                                    />
-                                    <div className="absolute right-4 top-2.5 flex gap-3">
-                                        <TiMicrophoneOutline className="text-gray-400 hover:text-white cursor-pointer" size={24} />
-                                        <FaRegImage className="text-gray-400 hover:text-white cursor-pointer" size={24} />
-                                        <LuSticker className="text-gray-400 hover:text-white cursor-pointer" size={24} />
-                                        <FaRegHeart className="text-gray-400 hover:text-white cursor-pointer" size={24} />
-                                    </div>
-                                </div>
-
-                                {showPicker && (
-                                    <div className="absolute bottom-20 left-4 z-50">
-                                        <EmojiPicker
-                                            onEmojiClick={(emoji) => setInput(prev => prev + emoji.emoji)}
-                                            theme="dark"
-                                            skinTonesDisabled
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        {
-                            showPicker && (
-                                <div className="absolute w-[100vw] h-[100vh] inset-0 " onClick={() => setShowPicker(!setShowPicker)}></div>
-                            )
-                        }
-                    </div>
-
-
-                )
+                </div>)
             }
 
         </div>

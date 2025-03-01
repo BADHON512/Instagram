@@ -59,7 +59,7 @@ const SideBar = ({ active, setActive,currentUser }: Props) => {
     },
   ];
   const [MoreOpen, setMoreOpen] = useState<boolean>(false)
-  console.log(currentUser,"bbbbbbbbbbb")
+
   const router = useRouter()
   const handleClose = (e: React.MouseEvent) => {
     const target = e.currentTarget as HTMLElement

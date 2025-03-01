@@ -1,6 +1,6 @@
 "use client"
 import SideBar from '@/components/SideBar/SideBar'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 
 import { motion } from "framer-motion";
@@ -16,13 +16,29 @@ import MessageHomeBody from '@/components/Content/MessageHome/MessageHome';
 
 type Props = {
      currentUser: any
+     follower:any
 }
 
-const MessagesHome = ({currentUser}: Props) => {
+const MessagesHome = ({currentUser ,follower}: Props) => {
 
-     const [TargetUser, setTargetUser] = useState(0)
-     const [active, setActive] = useState<number | null>(null);
+    
+     const [active, setActive] = useState<number | null>(4);
+     const [uniqueUser, setUniqueUser] = useState<string>();
+     const [UserToMessage, setUserToMessage] = useState()
+     const [TargetUser, setTargetUser] = useState<string>()
+     console.log(TargetUser,uniqueUser)
 
+     useEffect(() => {
+          
+
+
+       const user= follower?.find((item,index)=>item?.id===uniqueUser)
+       
+       setUserToMessage(user?.followee)
+       setTargetUser(uniqueUser)
+       setActive(null)
+     }, [uniqueUser])
+     
 
      return (
           <div className='md:flex '>
@@ -45,7 +61,7 @@ const MessagesHome = ({currentUser}: Props) => {
 
                          <NotificationSidebar active={active} setActive={setActive} />
 
-                         <Messages active={active} setActive={setActive} />
+                         <Messages active={active} setActive={setActive} follower={follower} currentUser={currentUser} setUniqueUser={setUniqueUser} setTargetUser={setTargetUser}/>
 
 
 
@@ -55,7 +71,7 @@ const MessagesHome = ({currentUser}: Props) => {
                     <Header />
                </div>
                <div className="mt-[60px] lg:mt-0 w-full md:ml-[79px] xl:ml-[300px]  h-screen  ">
-                <MessageHomeBody TargetUser={TargetUser}/>
+                <MessageHomeBody TargetUser={TargetUser} UserToMessage={UserToMessage} currentUser={currentUser} />
 
                </div>
                <div className="fixed bottom-0 bg-black w-full block md:hidden">
