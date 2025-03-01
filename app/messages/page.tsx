@@ -8,10 +8,10 @@ type Props = {}
 const page = async(props: Props) => {
   const currentUser:any=await GetUser()
   const Follower:any=await GetFollower()
-  console.log(Follower)
+
   return (
     <div>
-        <MessagesHome currentUser={currentUser.user} follower={Follower.follower}/>
+        <MessagesHome currentUser={currentUser.user} follower={Follower.follower?.followers}/>
     </div>
   )
 }

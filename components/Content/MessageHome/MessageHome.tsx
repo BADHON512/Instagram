@@ -23,7 +23,9 @@ type Props = {
 }
 
 const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
-    const [message, setMessage] = useState([{ id: 1, text: "Hey, what's up?", senderId: "user1" }])
+    console.log(UserToMessage?.id)
+    const [message, setMessage] = useState <any>([])
+    console.log(message)
     const [open, setOpen] = useState(false)
     const [showPicker, setShowPicker] = useState(false);
     const [input, setInput] = useState<string>('');
@@ -35,6 +37,7 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
         const message = await CreateMessage({ text: input, receiverId: UserToMessage?.id })
         console.log(message)
         if (message.success) {
+            setRefetcher(!Refetcher)
             setShowPicker(false)
             setInput('')
         }
@@ -62,11 +65,11 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
     }
     useEffect(() => {
        const getMessageFunction=async()=>{
-        const Message=await GetMessage(UserToMessage?.id)
-        console.log(Message.getMessage)
+        const Message:any=await GetMessage(UserToMessage?.id)
+        setMessage(Message.getMessage)
        }
        getMessageFunction()
-    }, [Refetcher])
+    }, [Refetcher,UserToMessage])
 
     return (
         <div>
@@ -128,18 +131,18 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
                                 </div>
 
                                 <div className="w-[95%] mx-auto max-h-[50vh] ">
-                                    {message.map((message) => (
+                                    {message?.map((item,index:number) => (
                                         <motion.div
-                                            key={message.id}
+                                            key={item.id}
                                             variants={messageVariants}
                                             initial="hidden"
                                             animate="visible"
-                                            className={`flex ${message.senderId === "me" ? "justify-end" : "justify-start"} mb-4 `}
+                                            className={`flex ${item.senderId === currentUser?.id ? "justify-end" : "justify-start"} mb-4 `}
                                         >
                                             <div
-                                                className={`p-3 rounded-lg ${message.senderId === "me" ? "bg-blue-500 text-white" : "bg-[#262626] text-white mb-3"}`}
+                                                className={`p-3 rounded-lg ${item.senderId === currentUser?.id ? "bg-blue-500 text-white" : "bg-[#262626] text-white mb-3"}`}
                                             >
-                                                {message.text}
+                                                {item?.text}
                                             </div>
                                         </motion.div>
                                     ))}

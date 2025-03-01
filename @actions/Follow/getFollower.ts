@@ -13,11 +13,19 @@ export async function GetFollower() {
 
           }
 
-          const  follower = await prisma.user.findMany({
-           include:{
-            followers:true
-           }
-          })
+          const follower = await prisma.user.findUnique({
+            where: {
+              id: userId, // id ইউনিক, তাই findUnique() ব্যবহার করো
+            },
+            select: {
+              followers: {
+                include: {
+                  follower: true, // ফলোয়ার ইনফরমেশনও নিয়ে আসবে
+                },
+              },
+            },
+          });
+          
 
         return {follower, message: "Follower fetched successfully", statusCode: 200}
   } catch (error: any) {
