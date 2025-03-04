@@ -18,13 +18,13 @@ export async function GetMessage(receiverId: string) {
         const getMessage = await prisma.message.findMany({
             where: {
                 OR: [
-                    { senderId: userId, receiverId: receiverId }, // তুমি সেন্ডার, সে রিসিভার
-                    { senderId: receiverId, receiverId: userId }  // সে সেন্ডার, তুমি রিসিভার
+                    { senderId: userId, receiverId: receiverId }, 
+                    { senderId: receiverId, receiverId: userId }  
                 ]
                
             },
             orderBy: {
-                createdAt: "asc" // পুরাতন মেসেজ আগে দেখাবে
+                createdAt: "asc" 
             }
         });
 

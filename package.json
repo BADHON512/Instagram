@@ -26,6 +26,7 @@
     "react-player": "^2.16.0",
     "react-slick": "^0.30.3",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.8.1",
     "swiper": "^11.2.2",
     "timeago.js": "^4.0.2"
   },

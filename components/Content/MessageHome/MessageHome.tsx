@@ -15,6 +15,7 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import { CreateMessage } from '@/@actions/Message/createMessage'
 import { GetMessage } from '@/@actions/Message/getMessage'
+import { io } from 'socket.io-client'
 
 type Props = {
     TargetUser: any
@@ -23,10 +24,10 @@ type Props = {
 }
 
 const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
-    console.log(UserToMessage?.id)
-    const [message, setMessage] = useState <any>([])
-    console.log(message)
-    const [open, setOpen] = useState(false)
+    const socket = io('http://localhost:5000')
+    
+     const [message, setMessage] = useState<any>([])
+     const [open, setOpen] = useState(false)
     const [showPicker, setShowPicker] = useState(false);
     const [input, setInput] = useState<string>('');
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -36,12 +37,41 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
         if (input.trim() === '') return;
         const message = await CreateMessage({ text: input, receiverId: UserToMessage?.id })
         console.log(message)
-        if (message.success) {
+        if (message?.success) {
             setRefetcher(!Refetcher)
             setShowPicker(false)
+            socket.emit("private_message", {
+                senderId: currentUser?.id,
+                receiverId: UserToMessage?.id,
+                message: input,
+            });
             setInput('')
         }
     }
+
+    useEffect(() => {
+        socket.on("connect", () => {
+            console.log("Connected to server:", socket.id);
+            socket.emit("register", currentUser.id); // 🔥 ইউজার রেজিস্টার করা
+        });
+
+
+        socket.on("private_message", (data) => {
+          console.log(data,"socket")
+            if (data.senderId === UserToMessage?.id) {
+                setMessage((prev) => [
+                    ...prev,
+                    { senderId: data.senderId, receiverId: data.receiverId, text: data.message }
+                ]);
+            }
+        });
+
+        return () => {
+            socket.off("private_message"); // শুধু ইভেন্ট আনবাইন্ড করো
+            socket.off("connect");
+        };
+    }, [Refetcher]);
+
 
 
 
@@ -64,12 +94,17 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
             e.preventDefault()
     }
     useEffect(() => {
-       const getMessageFunction=async()=>{
-        const Message:any=await GetMessage(UserToMessage?.id)
-        setMessage(Message.getMessage)
-       }
-       getMessageFunction()
-    }, [Refetcher,UserToMessage])
+        const getMessageFunction = async () => {
+            const Message: any = await GetMessage(UserToMessage?.id)
+            setMessage(Message.getMessage)
+        }
+        getMessageFunction()
+    }, [Refetcher, UserToMessage])
+
+
+    // useEffect(()=>{
+
+    // },[Refetcher])
 
     return (
         <div>
@@ -131,16 +166,16 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
                                 </div>
 
                                 <div className="w-[95%] mx-auto max-h-[50vh] ">
-                                    {message?.map((item,index:number) => (
+                                    {message?.map((item, index: number) => (
                                         <motion.div
-                                            key={item.id}
+                                            key={index}
                                             variants={messageVariants}
                                             initial="hidden"
                                             animate="visible"
                                             className={`flex ${item.senderId === currentUser?.id ? "justify-end" : "justify-start"} mb-4 `}
                                         >
                                             <div
-                                                className={`p-3 rounded-lg ${item.senderId === currentUser?.id ? "bg-blue-500 text-white" : "bg-[#262626] text-white mb-3"}`}
+                                                className={`px-3 py-1 rounded-md font-serif mb-4 ${item.senderId === currentUser?.id ? "bg-blue-500 text-white" : "bg-[#262626] text-white mb-3"}`}
                                             >
                                                 {item?.text}
                                             </div>
