@@ -18,7 +18,16 @@ export const GetUser = async () => {
         id: userId,
       },
       include: {
-        posts: true,
+        posts: {
+          include:{
+            comments:{
+              include:{
+                user:true
+              }
+            },
+          
+          }
+        },
         followers: true,
         following: true,
         comments: true,

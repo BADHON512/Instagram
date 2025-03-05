@@ -11,6 +11,8 @@ import { FiBookmark, } from 'react-icons/fi';
 import { LuSend } from 'react-icons/lu';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import EmojiPicker from 'emoji-picker-react';
+import { format } from 'timeago.js';
+import toast from 'react-hot-toast';
 
 
 
@@ -40,7 +42,7 @@ type Props = {
 }
 
 const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike ,user }: Props) => {
-   const badhon=0
+ 
     const [showPicker2, setShowPicker2] = useState(false);
     return (
         <div
@@ -89,17 +91,17 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike ,user }:
 
                     {/* Comments Section */}
                     <div className="flex-grow overflow-auto p-4 space-y-4 hidden md:block">
-                        {badhon === 0 ? (
+                        {post?.comments?.length === 0 ? (
                             <div className='h-full w-full flex justify-center items-center'>No Comments here</div>
                         ) : (
                             post?.comments?.map((comment: any, index: number) => (
                                 <div key={index} className="flex gap-3">
                                     <Image
-                                        src={comment.avatar}
+                                        src={comment?.user?.avatar?.url}
                                         height={40}
                                         width={40}
                                         alt="User Avatar"
-                                        className="rounded-full w-[40px] h-[40px]"
+                                        className="rounded-full w-[40px] h-[40px] object-cover"
                                     />
                                     <div>
                                         <p className="font-semibold">
@@ -107,8 +109,8 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike ,user }:
                                             <span className="text-sm text-gray-300"> {comment.text}</span>
                                         </p>
                                         <div className="flex gap-x-4 text-xs text-gray-400 cursor-pointer">
-                                            <p>18h</p>
-                                            <p>Reply</p>
+                                            <p>{format(comment?.createdAt)}</p>
+                                            <p onClick={()=>toast.error('Currently not available')}>Reply</p>
                                             <p>See translation</p>
                                         </div>
                                     </div>

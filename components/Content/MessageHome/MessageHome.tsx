@@ -26,8 +26,8 @@ type Props = {
 const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
     const socket = io('http://localhost:5000')
 
-     const [message, setMessage] = useState<any>([])
-     const [open, setOpen] = useState(false)
+    const [message, setMessage] = useState<any>([])
+    const [open, setOpen] = useState(false)
     const [showPicker, setShowPicker] = useState(false);
     const [input, setInput] = useState<string>('');
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -40,7 +40,7 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
         if (message?.success) {
             setRefetcher(!Refetcher)
             setShowPicker(false)
-            if(socket.connected){
+            if (socket.connected) {
                 socket.emit("private_message", {
                     senderId: currentUser?.id,
                     receiverId: UserToMessage?.id,
@@ -59,7 +59,7 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
 
 
         socket.on("private_message", (data) => {
-          console.log(data,"socket")
+            console.log(data, "socket")
             if (data.senderId === UserToMessage?.id) {
                 setMessage((prev) => [
                     ...prev,
@@ -92,8 +92,11 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
         visible: { opacity: 1, y: 0, },
     };
     const handelEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter")
+        if (e.key === "Enter") {
             e.preventDefault()
+            handleSend()
+        }
+
     }
     useEffect(() => {
         const getMessageFunction = async () => {
@@ -104,20 +107,18 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
     }, [Refetcher, UserToMessage])
 
 
-    // useEffect(()=>{
 
-    // },[Refetcher])
 
     return (
-        <div>
+        <div  className=''>
             {
                 TargetUser ? (
 
                     <div>
                         {/* Right Chat Area */}
-                        <div className="flex-1 flex flex-col  ">
+                        <div className="flex-1 flex flex-col   ">
                             {/* Chat Header */}
-                            <div className="flex justify-between items-center p-4 border-b border-[#262626]">
+                            <div className="flex justify-between items-center p-4 border-b  border-[#262626]">
                                 <div className="flex items-center gap-3">
                                     <Image
                                         src={currentUser?.avatar?.url || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
@@ -141,7 +142,7 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
                                 </div>
                             </div>
 
-                            <div className=" h-[82vh] flex flex-col justify-end overflow-y-scroll">
+                            <div className="h-[67vh] md:h-[82vh] flex flex-col justify-end overflow-y-scroll">
                                 {/* Chat Content */}
                                 <div className="flex-1 overflow-y-scroll scrollNone p-4">
                                     <div className="max-w-2xl mx-auto text-center">
@@ -168,7 +169,7 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
                                 </div>
 
                                 <div className="w-[95%] mx-auto max-h-[50vh] ">
-                                    {message?.map((item, index: number) => (
+                                    {message?.map((item: any, index: number) => (
                                         <motion.div
                                             key={index}
                                             variants={messageVariants}

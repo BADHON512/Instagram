@@ -82,10 +82,10 @@ const SingleProfile = ({ user, }: Props) => {
               <span className="font-semibold">{user?.posts?.length}</span> posts
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold">15k</span> followers
+              <span className="font-semibold">{user?.followers?.length}</span> followers
             </div>
             <div className="flex gap-1">
-              <span className="font-semibold">90k</span> following
+              <span className="font-semibold">{user?.following?.length}</span> following
             </div>
           </div>
 
@@ -145,16 +145,7 @@ const SingleProfile = ({ user, }: Props) => {
               POSTS
             </button>
 
-            {/* Saved Tab - Fixed color */}
-            <button
-              ref={el => tabsRef.current['saved'] = el}
-              onClick={() => setActiveTab('saved')}
-              className={`flex items-center gap-2 py-4 text-xs font-medium ${activeTab === 'saved' ? 'text-[#737373]' : 'text-gray-400'
-                }`}
-            >
-              <FiBookmark className="h-4 w-4" />
-              SAVED
-            </button>
+  
 
             {/* Tagged Tab - Fixed color */}
             <button
@@ -200,29 +191,11 @@ const SingleProfile = ({ user, }: Props) => {
           ))
         )}
 
-        {activeTab === 'saved' && (
-          <div className="h-[310px]  w-[288px] flex-shrink-0 relative group"> {/* Added 'group' here */}
-            <Link href={'/'} className='h-full w-full block'> {/* Make sure Link is block-level */}
-              <Image
-                src={'https://res.cloudinary.com/dfng3w9jm/image/upload/v1737221207/profile/d2a54a36-0025-4332-8339-c1eef1b5eb70.png'}
-                alt='img not found'
-                height={1000}
-                width={1000}
-                className='h-full w-full'
-              />
-            </Link>
-
-            {/* Overlay & Icons */}
-            <div className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100   flex  items-end gap-x-4 cursor-pointer">
-
-              <span className='font-semibold p-5 text-[18px]'>All post</span>
-            </div>
-          </div>
-        )}
+  
 
 
         {activeTab === 'tagged' && (
-          <div className="w-full h-full flex justify-center items-center flex-col  mt-8 space-y-2 p-5">
+          <div className="w-full min-h-[310px] flex justify-center items-center flex-col  mt-8 space-y-2 p-5">
 
 
             <svg aria-label="Photos of you" fill="currentColor" height="62" role="img" viewBox="0 0 96 96" width="62"><title>Photos of you</title><circle cx="48" cy="48" fill="none" r="47" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></circle><path d="M56.826 44.119a8.824 8.824 0 1 1-8.823-8.825 8.823 8.823 0 0 1 8.823 8.825Z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></path><path d="M63.69 67.999a9.038 9.038 0 0 0-9.25-8.998H41.56A9.038 9.038 0 0 0 32.31 68" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M48 20.215c-2.94 0-7.125 8.76-11.51 8.785h-4.705A8.785 8.785 0 0 0 23 37.784v22.428a8.785 8.785 0 0 0 8.785 8.785h32.43A8.785 8.785 0 0 0 73 60.212V37.784A8.785 8.785 0 0 0 64.215 29h-4.704c-4.385-.026-8.57-8.785-11.511-8.785Z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></path></svg>

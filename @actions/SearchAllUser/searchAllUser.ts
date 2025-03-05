@@ -20,6 +20,7 @@ export async function SearchUsers(query:string) {
             name:true,
             username:true,
             avatar:true,
+            followers:true
            
         },
         take:10

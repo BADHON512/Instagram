@@ -132,7 +132,7 @@ console.log(postData)
   return (
     <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
       <div 
-        className="bg-[#262626] rounded-xl w-full max-w-4xl overflow-hidden shadow-2xl"
+        className="bg-[#262626] rounded-xl w-[80%] max-w-4xl overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -150,7 +150,7 @@ console.log(postData)
         {/* Content Area */}
         <div className="flex flex-col md:flex-row min-h-[600px]">
           {/* Image Preview Section */}
-          <div className="md:w-[60%] bg-blue-200 flex items-center justify-center relative">
+          <div className="md:w-[60%] bg-[#071b12] flex items-center justify-center relative">
             {postData.image ? (
               <div className="relative w-full h-full">
          
