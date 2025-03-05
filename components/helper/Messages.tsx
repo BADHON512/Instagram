@@ -11,6 +11,7 @@ type Props = {
      follower: any
      currentUser: any
      setUniqueUser:(uniqueUser:string)=>void
+     setTargetUser:(TargetUser:any)=>void
 
 }
 

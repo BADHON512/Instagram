@@ -23,6 +23,7 @@ const MessagesHome = ({currentUser ,follower}: Props) => {
 
     
      const [active, setActive] = useState<number | null>(4);
+     console.log(active)
      const [uniqueUser, setUniqueUser] = useState<string>();
      const [UserToMessage, setUserToMessage] = useState()
      const [TargetUser, setTargetUser] = useState<string>()
@@ -30,7 +31,7 @@ const MessagesHome = ({currentUser ,follower}: Props) => {
 
      useEffect(() => {
           
-       const user= follower?.find((item,index)=>item?.id===uniqueUser)
+       const user= follower?.find((item:any,index:number)=>item?.id===uniqueUser)
        console.log(user)
        setUserToMessage(user?.follower)
        setTargetUser(uniqueUser)

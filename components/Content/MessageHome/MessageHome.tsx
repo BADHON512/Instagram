@@ -25,7 +25,7 @@ type Props = {
 
 const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
     const socket = io('http://localhost:5000')
-    
+
      const [message, setMessage] = useState<any>([])
      const [open, setOpen] = useState(false)
     const [showPicker, setShowPicker] = useState(false);
@@ -40,11 +40,13 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
         if (message?.success) {
             setRefetcher(!Refetcher)
             setShowPicker(false)
-            socket.emit("private_message", {
-                senderId: currentUser?.id,
-                receiverId: UserToMessage?.id,
-                message: input,
-            });
+            if(socket.connected){
+                socket.emit("private_message", {
+                    senderId: currentUser?.id,
+                    receiverId: UserToMessage?.id,
+                    message: input,
+                });
+            }
             setInput('')
         }
     }

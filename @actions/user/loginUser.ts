@@ -29,7 +29,7 @@ export async function loginUser(email: string, password: string) {
         cookieStore.set("session", user.id, {
             httpOnly: true,
             sameSite: "lax",
-            maxAge: 3600,
+            maxAge: 3600*24*7,
             path: "/",
         });
 

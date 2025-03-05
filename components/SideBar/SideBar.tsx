@@ -18,7 +18,8 @@ import { FaRegPlusSquare } from "react-icons/fa";
 import Image from 'next/image';
 import Link from 'next/link';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+
 
 
 
@@ -60,7 +61,7 @@ const SideBar = ({ active, setActive,currentUser }: Props) => {
   ];
   const [MoreOpen, setMoreOpen] = useState<boolean>(false)
 
-  const router = useRouter()
+
   const handleClose = (e: React.MouseEvent) => {
     const target = e.currentTarget as HTMLElement
     console.log(target)
@@ -77,9 +78,10 @@ const SideBar = ({ active, setActive,currentUser }: Props) => {
   };
   const handleLogOut = async () => {
     await axios.get('/api/log-out').then((res) => {
+        toast.success("Log out ")
       window.location.reload()
     }).catch((err) => {
-      alert(err)
+      toast.error('Some thing went wrong')
     })
   }
   return (
