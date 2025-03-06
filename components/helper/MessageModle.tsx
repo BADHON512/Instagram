@@ -12,6 +12,7 @@ import EmojiPicker from 'emoji-picker-react';
 
 import {format} from "timeago.js"
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 
 type Props = {
@@ -43,11 +44,16 @@ type Props = {
 const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike,comment,handleComment }: Props) => {
     const [showPicker2, setShowPicker2] = useState(false);
     console.log(post,"model")
+    const handlePost=(id:string)=>{
+        handleComment(id)
+        setShowPicker2(false)
+    }
     return (
         <div
             onClick={() => {
+              
                 setPupUp((prev) => ({ ...prev, message: !prev.message }))
-                setShowPicker2(!showPicker2)
+                setShowPicker2(false)
             }}
             className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-[99] p-4"
         >
@@ -81,9 +87,9 @@ const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike,comme
                                 alt="User Avatar"
                                 className="rounded-full border p-[2px] bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 w-[50px] h-[50px] object-cover"
                             />
-                            <p className="font-semibold  flex items-center gap-x-1 cursor-pointer">
+                            <Link href={`/profile/${post?.user?.username}`} className="font-semibold  flex items-center gap-x-1 cursor-pointer">
                                 {post?.user?.name} <MdVerified color="#0095F6" />
-                            </p>
+                            </Link>
                         </div>
                         <PiDotsThreeBold className="cursor-pointer" size={20} />
                     </div>
@@ -151,7 +157,7 @@ const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike,comme
                             className="w-full bg-transparent outline-none resize-none h-[25px] overflow-hidden"
                             placeholder="Add a comment..."
                         />
-                        <span onClick={()=>handleComment(post?.id)} className={`${input ? "text-[#33adff] hover:text-white cursor-pointer" : "text-gray-500 pointer-events-none opacity-50"}`}>Post</span>
+                        <span onClick={()=>handlePost(post?.id)} className={`${input ? "text-[#33adff] hover:text-white cursor-pointer" : "text-gray-500 pointer-events-none opacity-50"}`}>Post</span>
                     </div>
                 </div>
             </motion.div>

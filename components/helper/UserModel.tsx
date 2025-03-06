@@ -1,5 +1,5 @@
 "use client"
-import {  motion } from 'motion/react';
+import { motion } from 'motion/react';
 import Image from 'next/image';
 import { MdOutlineEmojiEmotions, MdVerified } from "react-icons/md";
 import { PiDotsThreeBold } from "react-icons/pi";
@@ -13,6 +13,8 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import EmojiPicker from 'emoji-picker-react';
 import { format } from 'timeago.js';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
+import { DeletePost } from '@/@actions/GetAllPost/deletePost';
 
 
 
@@ -37,20 +39,39 @@ type Props = {
     input?: string
     setInput?: ((input: string) => void)
     handelLike?: (() => void)
-    user:any
+    user: any
 
 }
 
-const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike ,user }: Props) => {
- 
+const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike, user }: Props) => {
+
     const [showPicker2, setShowPicker2] = useState(false);
+
+
+
+    const handleDeletePost = async (onTarget: string) => {
+        if (onTarget === "Delete") {
+            if (!post?.id) {
+                toast.error("Post ID not found!");
+                return;
+            }
+    
+            const deletePost = await DeletePost(post.id);
+    
+            if (deletePost?.success) {
+                toast.success(deletePost.message);
+            } else {
+                toast.error(deletePost?.message || "Failed to delete post.");
+            }
+        }
+    };
     return (
         <div
             onClick={() => {
                 setPupUp((prev) => ({ ...prev, message: !prev.message }))
                 setShowPicker2(!showPicker2)
             }}
-            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-[99] p-4"
+            className="fixed inset-0 flex items-center justify-center bg-[#000000e5] z-[99] p-4"
         >
             <motion.div
                 initial={{ opacity: 0, scale: 1.5, z: -500 }} // Starts from behind with reduced scale
@@ -86,7 +107,7 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike ,user }:
                                 {user?.name} <MdVerified color="#0095F6" />
                             </p>
                         </div>
-                        <PiDotsThreeBold className="cursor-pointer" size={20} />
+                        <PiDotsThreeBold onClick={() => setPupUp((pre) => ({ ...pre, postSetting: !pre.postSetting }))} className="cursor-pointer" size={20} />
                     </div>
 
                     {/* Comments Section */}
@@ -104,13 +125,13 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike ,user }:
                                         className="rounded-full w-[40px] h-[40px] object-cover"
                                     />
                                     <div>
-                                        <p className="font-semibold">
+                                        <Link href={`/profile/${comment?.user?.username}`} className="font-semibold ">
                                             {comment.name} <MdVerified color="#0095F6" className="inline" />
                                             <span className="text-sm text-gray-300"> {comment.text}</span>
-                                        </p>
+                                        </Link>
                                         <div className="flex gap-x-4 text-xs text-gray-400 cursor-pointer">
                                             <p>{format(comment?.createdAt)}</p>
-                                            <p onClick={()=>toast.error('Currently not available')}>Reply</p>
+                                            <p onClick={() => toast.error('Currently not available')}>Reply</p>
                                             <p>See translation</p>
                                         </div>
                                     </div>
@@ -133,7 +154,7 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike ,user }:
                             <FiBookmark size={25} className="cursor-pointer" />
                         </div>
                         <p className="text-sm text-gray-300 mt-2 font-semibold">{PupUp.likeCount.toLocaleString()} likes</p>
-                        <p className="text-xs text-gray-300">15 hours ago</p>
+                        <p className="text-xs text-gray-300">{format(post?.createdAt)}</p>
                     </div>
 
                     {/* Comment Input */}
@@ -157,7 +178,35 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike ,user }:
                 </div>
             </motion.div>
 
-          
+
+            {
+                PupUp.postSetting && (
+                    <div onClick={() => {
+                        setPupUp((prev) => ({ ...prev, postSetting: !prev.postSetting }))
+
+                    }} className="fixed inset-0  bg-black bg-opacity-80 flex justify-center items-center">
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 1.5, z: -500 }} // Starts from behind with reduced scale
+                            animate={{ opacity: 1, scale: 1, z: 0 }}
+
+
+
+
+                            onClick={(e) => e.stopPropagation()} className="min-h-[50vh] w-[50vw] xl:w-[20vw] bg-[#262626] rounded-md">
+                            {
+                                ["Delete", "Edit", "Hide like count to others", "Turn off commenting", "Go to post", "Share to", "Copy link", "Embed", "About this account", "Cancel"].map((item, index) => (
+                                    <h1 onClick={() => handleDeletePost(item)} key={index} className={`${index === 0 ? "text-red-600 " : "text-white"} ${index === 0 && "border-none"} text-sm text-center p-3  cursor-pointer font-semibold border-t mt-1 border-[#c4bfbf17]`}>{item}</h1>
+                                ))
+                            }
+
+
+                        </motion.div>
+                    </div>
+                )
+            }
+
+
         </div>
     )
 }

@@ -20,7 +20,7 @@ type Props = {
 
 const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
   console.log("user", user)
-
+  
   const [showMore, setShowMore] = useState(false);
   const [activeTab, setActiveTab] = useState<'posts' | 'saved' | 'tagged'>('posts');
   const [EditProfileShow, setEditProfileShow] = useState(false)
@@ -36,7 +36,7 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
   const [PupUp, setPupUp] = useState({
     like: false,
-    likeCount: 10032119,
+    likeCount: 8,
     message: false,
     share: false,
     save: false,
@@ -223,7 +223,7 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
       <div className="min-h-[30vh] flex w-full flex-wrap gap-2  justify-center md:justify-start p-3">
         {activeTab === 'posts' && (
           user?.posts?.map((item: any, index: number) => (
-            <div key={index} className="min-h-[310px] cursor-pointer w-[288px] flex-shrink-0 relative group "> {/* Added 'group' here */}
+            <div key={index} className="min-h-[310px]  w-[288px] flex-shrink-0 relative group "> {/* Added 'group' here */}
               <div className='h-full w-full block'> {/* Make sure Link is block-level */}
                 <Image
                   src={item?.image?.url}
@@ -239,11 +239,11 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
               <div onClick={() => setPupUp((pre) => ({ ...pre, message: !pre.message }))} className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100   flex justify-center items-center gap-x-4 cursor-pointer">
                 <div className="flex gap-x-2">
                   <GoHeartFill size={25} className="text-white" />
-                  <span className="text-white">15</span>
+                  <span className="text-white">{user?.likes?.length}</span>
                 </div>
                 <div className="flex gap-x-2">
                   <BiSolidMessageRounded size={25} className="scale-x-[-1] text-white" />
-                  <span className="text-white">10</span>
+                  <span className="text-white">{user?.comments?.length}</span>
                 </div>
               </div>
               {

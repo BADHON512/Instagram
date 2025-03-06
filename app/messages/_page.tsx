@@ -23,11 +23,11 @@ const MessagesHome = ({currentUser ,follower}: Props) => {
 
     
      const [active, setActive] = useState<number | null>(4);
-     console.log(active)
+   
      const [uniqueUser, setUniqueUser] = useState<string>();
      const [UserToMessage, setUserToMessage] = useState()
      const [TargetUser, setTargetUser] = useState<string>()
-     console.log(follower)
+    
 
      useEffect(() => {
           
@@ -35,10 +35,14 @@ const MessagesHome = ({currentUser ,follower}: Props) => {
        console.log(user)
        setUserToMessage(user?.follower)
        setTargetUser(uniqueUser)
-       setActive(null)
+       if (TargetUser) {
+          setActive(null);
+        }
      }, [uniqueUser])
      
-
+     useEffect(() => {
+     
+        }, [TargetUser]);
      return (
           <div className='md:flex '>
                <div className="  fixed z-50 bg-yellow-300 ">
@@ -69,8 +73,8 @@ const MessagesHome = ({currentUser ,follower}: Props) => {
                <div className=" fixed md:min-h-[60px] lg:h-0  z-[9999] top-0 bg-black w-full block md:hidden">
                     <Header />
                </div>
-               <div className="mt-[60px] md:mt-0 w-full md:ml-[79px] lg:ml-[280px]  h-screen  ">
-                <MessageHomeBody TargetUser={TargetUser} UserToMessage={UserToMessage} currentUser={currentUser} />
+               <div className="mt-[60px] md:mt-0 w-full md:ml-[79px] xl:ml-[280px]  h-screen  ">
+                <MessageHomeBody TargetUser={TargetUser} UserToMessage={UserToMessage} currentUser={currentUser} follower={follower} setUniqueUser={setUniqueUser} />
 
                </div>
                <div className="fixed bottom-0 bg-black w-full block md:hidden z-[99999]">

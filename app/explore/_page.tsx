@@ -12,9 +12,10 @@ import ExploreContent from '@/components/Explore/ExploreContent';
 
 type Props = {
      currentUser: any
+     Posts:any
 }
 
-const HomeExplore = ({currentUser}: Props) => {
+const HomeExplore = ({currentUser,Posts}: Props) => {
          const [active, setActive] = useState<number | null>(null);
   return (
     <div className='md:flex '>
@@ -47,7 +48,7 @@ const HomeExplore = ({currentUser}: Props) => {
          <Header />
     </div>
     <div className="mt-[60px] lg:mt-0  w-full md:ml-[79px] xl:ml-[300px]  h-screen  ">
-     <ExploreContent/>
+     <ExploreContent Posts={Posts}/>
 
     </div>
     <div className=" fixed bottom-0 bg-black w-full block md:hidden">

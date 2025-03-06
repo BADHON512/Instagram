@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FaRegEdit, FaRegHeart, FaRegImage } from 'react-icons/fa'
 import { IoMdInformationCircleOutline } from 'react-icons/io'
 import { LuSticker } from 'react-icons/lu'
@@ -9,23 +9,106 @@ import { HiOutlineEmojiHappy } from "react-icons/hi";
 import { TbVideo } from 'react-icons/tb'
 import { TiMicrophoneOutline } from 'react-icons/ti'
 import EmojiPicker from 'emoji-picker-react'
-
+import { format } from 'timeago.js'
+import { io } from 'socket.io-client'
+import { GetMessage } from '@/@actions/Message/getMessage'
+import { CreateMessage } from '@/@actions/Message/createMessage'
+import { motion } from "framer-motion";
 type Props = {
     user: any
-    LoginUser:any
+    LoginUser: any
+    followers: any
 }
 
 const messages = [
     { id: 1, text: "Hey, what's up?", senderId: "user1" },
     { id: 2, text: "All good! You?", senderId: "me" },
     { id: 3, text: "Same here!", senderId: "user1" },
-  ];
-  
-const MessageBodyById = ({ user,LoginUser }: Props) => {
+];
+
+const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
+    const socket = io('http://localhost:5000')
     const [open, setOpen] = useState(false)
+    console.log(followers)
     const [showPicker, setShowPicker] = useState(false);
     const [input, setInput] = useState<string>('');
+    const [message, setMessage] = useState<any>([])
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const [Refetcher, setRefetcher] = useState(false)
+    const [UserToMessage, setUserToMessage] = useState<string>(user?.id)
 
+    const Name = (name: string) => {
+        const trim = name?.split(' ')[1]
+
+        return trim?.length < 10 ? trim : trim + '...'
+    }
+    const handleSend = async () => {
+        if (input.trim() === '') return;
+        const message = await CreateMessage({ text: input, receiverId: UserToMessage })
+        console.log(message)
+        if (message?.success) {
+            setRefetcher(!Refetcher)
+            setShowPicker(false)
+            if (socket.connected) {
+                socket.emit("private_message", {
+                    senderId: LoginUser?.id,
+                    receiverId: UserToMessage,
+                    message: input,
+                });
+            }
+            setInput('')
+        }
+    }
+
+        useEffect(() => {
+            socket.on("connect", () => {
+                console.log("Connected to server:", socket.id);
+                socket.emit("register", LoginUser?.id); // 🔥 ইউজার রেজিস্টার করা
+            });
+    
+    
+            socket.on("private_message", (data) => {
+                console.log(data, "socket")
+                if (data.senderId === UserToMessage) {
+                    setMessage((prev) => [
+                        ...prev,
+                        { senderId: data.senderId, receiverId: data.receiverId, text: data.message }
+                    ]);
+                }
+            });
+    
+            return () => {
+                socket.off("private_message"); // শুধু ইভেন্ট আনবাইন্ড করো
+                socket.off("connect");
+            };
+        }, [Refetcher]);
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
+    useEffect(() => {
+        scrollToBottom();
+    }, [message]);
+    const handelEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            e.preventDefault()
+            handleSend()
+        }
+
+    }
+    useEffect(() => {
+        const getMessageFunction = async () => {
+            const Message: any = await GetMessage(UserToMessage)
+            setMessage(Message.getMessage)
+        }
+        getMessageFunction()
+    }, [Refetcher, UserToMessage])
+
+    const messageVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, },
+    };
     return (
         <div className='flex  h-screen bg-black'>
             {/* Left Sidebar */}
@@ -59,10 +142,10 @@ const MessageBodyById = ({ user,LoginUser }: Props) => {
 
                     {/* Conversation List */}
                     <div className="space-y-4 overflow-y-auto">
-                        {[1, 2, 3, 4].map((_, idx) => (
+                        {followers?.map((item, idx) => (
                             <div key={idx} className="flex items-center p-2 rounded-lg hover:bg-[#1a1a1a] transition-colors">
                                 <Image
-                                    src={user?.avatar?.url}
+                                    src={item?.follower?.avatar?.url}
                                     alt="User"
                                     width={500}
                                     height={500}
@@ -70,8 +153,8 @@ const MessageBodyById = ({ user,LoginUser }: Props) => {
                                 />
                                 <div className="ml-3 flex-1 min-w-0 hidden md:block">
                                     <div className="flex justify-between items-center">
-                                        <p className="font-medium truncate">Contact {idx + 1}</p>
-                                        <span className="text-xs text-gray-400">1h ago</span>
+                                        <p className="font-medium truncate">{Name(item?.follower?.name)}</p>
+                                        <span className="text-xs text-gray-400">{format(item?.follower?.createdAt)}</span>
                                     </div>
                                     <p className="text-sm text-gray-400 truncate">
                                         {idx % 2 === 0 ? 'Active now' : 'Away'}
@@ -131,24 +214,29 @@ const MessageBodyById = ({ user,LoginUser }: Props) => {
                             </Link>
                         </div>
                     </div>
-  
+
 
                 </div>
 
-                <div className="w-[95%] mx-auto">
-                {messages.map((message) => (
-                    <div
-                        key={message.id}
-                        className={`flex ${message.senderId === "me" ? "justify-end" : "justify-start"} mb-4`}
-                    >
-                        <div
-                            className={`p-3 rounded-lg ${message.senderId === "me" ? "bg-blue-500 text-white" : "bg-[#262626] text-white"}`}
-                        >
-                            {message.text}
-                        </div>
-                    </div>
-                ))}
-               </div>
+                <div className="w-[95%] mx-auto max-h-[50vh] ">
+                                    {message?.map((item: any, index: number) => (
+                                        <motion.div
+                                            key={index}
+                                            variants={messageVariants}
+                                            initial="hidden"
+                                            animate="visible"
+                                            className={`flex ${item.senderId === LoginUser.id ? "justify-end" : "justify-start"} mb-4 `}
+                                        >
+                                            <div
+                                                className={`px-3 py-1 rounded-md font-serif mb-4 ${item.senderId === LoginUser.id? "bg-blue-500 text-white" : "bg-[#262626] text-white mb-3"}`}
+                                            >
+                                                {item?.text}
+                                            </div>
+                                            
+                                        </motion.div>
+                                    ))}
+                                    <div className='' ref={messagesEndRef} />
+                                </div>
 
 
                 {/* Message Input */}
@@ -167,6 +255,7 @@ const MessageBodyById = ({ user,LoginUser }: Props) => {
                             size={24}
                         />
                         <div className="absolute right-4 top-2.5 flex gap-3">
+                        <button disabled={input === ""} onClick={handleSend} className=' bg-blue-500 text-white p-1 px-2 rounded-md text-sm cursor-pointer'>Send</button>
                             <TiMicrophoneOutline className="text-gray-400 hover:text-white cursor-pointer" size={24} />
                             <FaRegImage className="text-gray-400 hover:text-white cursor-pointer" size={24} />
                             <LuSticker className="text-gray-400 hover:text-white cursor-pointer" size={24} />

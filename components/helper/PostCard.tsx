@@ -94,7 +94,7 @@ const PostCard = ({ post }: Props) => {
     const handleComment = async (postId: string) => {
       const comment= await CreateComment({ postId, content: input })
         setReFetcher(!ReFetcher)
-        setShowPicker(!showPicker)
+        setShowPicker(false)
         if(comment.success ){
             setInput("")
         }

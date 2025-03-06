@@ -65,7 +65,7 @@ const Messages = ({ active, setActive,setUniqueUser, follower, currentUser }: Pr
                                    </div>
 
                                    {
-                                     follower.length===0?(<div className='h-[40vh] w-full flex justify-center items-center'>You have no followers yet </div>):(
+                                     follower?.length===0?(<div className='h-[40vh] w-full flex justify-center items-center'>You have no followers yet </div>):(
                                         follower?.map((item:any, index:any) => (
 
                                              <div onClick={()=>setUniqueUser(item.id)} key={index} className="mt-5 flex gap-x-3 items-center hover:bg-[#cfb8b817] p-1 cursor-pointer">

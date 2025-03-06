@@ -4,7 +4,7 @@ import { RxCross1 } from 'react-icons/rx'
 import Image from 'next/image'
 import Link from 'next/link'
 import { FaRegHeart, FaRegImage } from 'react-icons/fa'
-import { IoMdInformationCircleOutline } from 'react-icons/io'
+import { IoIosArrowBack, IoIosArrowForward, IoMdInformationCircleOutline } from 'react-icons/io'
 import { LuSticker } from 'react-icons/lu'
 import { MdCall, MdVerified } from 'react-icons/md'
 import { HiOutlineEmojiHappy } from "react-icons/hi";
@@ -16,14 +16,16 @@ import { motion } from "framer-motion";
 import { CreateMessage } from '@/@actions/Message/createMessage'
 import { GetMessage } from '@/@actions/Message/getMessage'
 import { io } from 'socket.io-client'
-
+import Slider from "react-slick";
 type Props = {
     TargetUser: any
     UserToMessage: any
     currentUser: any
+    follower: any
+    setUniqueUser: any
 }
 
-const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
+const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser, follower,setUniqueUser }: Props) => {
     const socket = io('http://localhost:5000')
 
     const [message, setMessage] = useState<any>([])
@@ -108,9 +110,94 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
 
 
 
+    const getShortName = (name: string) => {
+       
+        const words = name.split(" ");
+        return words.length > 5 ? words.slice(0, 5).join(" ") + "..." : name;
+    };
 
+    
+
+    const CustomPrevArrow = (props: any) => {
+      const { onClick } = props;
+      return (
+        <button
+          onClick={onClick}
+          className="absolute left-0 top-[50%] transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg z-10 "
+        >
+          <IoIosArrowBack />
+        </button>
+      );
+    };
+    
+    const CustomNextArrow = (props: any) => {
+      const { onClick } = props;
+      return (
+        <button
+          onClick={onClick}
+          className="absolute right-0 top-[50%] transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg z-10"
+        >
+          <IoIosArrowForward />
+        </button>
+      );
+    };
+    
+  const settings = {
+
+    infinite: true,
+    speed: 500,
+    slidesToShow: 5,
+    slidesToScroll: 5,
+    nextArrow: <CustomNextArrow />,
+    prevArrow: <CustomPrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
     return (
-        <div  className=''>
+        <div className=''>
+
+            {/* <Slider {...settings} className="w-[90%] hidden  mx-auto items-center justify-center flex gap-x-3 min-h-[10vh] ">
+                {follower?.map((item:any, index:number) => (
+                    <div onClick={() => setUniqueUser(item.id)} key={index} className=" py-2 flex gap-x-3 items-center flex-col hover:bg-[#cfb8b817] p-1 cursor-pointer mx-[30px]">
+
+                        <Image
+                            src={item?.follower?.avatar?.url || 'https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png'}
+                            alt='img not found'
+                            height={1000}
+                            width={1000}
+                            className='h-[50px] w-[50px] rounded-full '
+                        />
+                        <div className="text-sm">
+                        
+                         
+                        </div>
+                    </div>
+                ))}
+            </Slider> */}
             {
                 TargetUser ? (
 
@@ -121,7 +208,7 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
                             <div className="flex justify-between items-center p-4 border-b  border-[#262626]">
                                 <div className="flex items-center gap-3">
                                     <Image
-                                        src={currentUser?.avatar?.url || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
+                                        src={UserToMessage?.avatar?.url  || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
                                         alt="Profile"
                                         width={405}
                                         height={405}
@@ -129,10 +216,10 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
                                     />
                                     <div>
                                         <h2 className="flex items-center gap-1 font-semibold">
-                                            {currentUser?.name}
+                                            {UserToMessage?.name}
                                             <MdVerified className="text-blue-500" />
                                         </h2>
-                                        <p className="text-sm text-gray-400">@{currentUser?.username}</p>
+                                        <p className="text-sm text-gray-400">@{UserToMessage?.username}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-4 text-gray-400">
@@ -182,6 +269,7 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser }: Props) => {
                                             >
                                                 {item?.text}
                                             </div>
+                                            
                                         </motion.div>
                                     ))}
                                     <div className='' ref={messagesEndRef} />

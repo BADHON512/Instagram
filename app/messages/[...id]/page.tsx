@@ -19,12 +19,14 @@ import toast from 'react-hot-toast';
 import Loader from '@/components/Loader/Loader';
 import { GetSingleMessage } from '@/@actions/Message/GetSingleMessage';
 import { GetUser } from '@/@actions/user/getUser';
+import { GetFollower } from '@/@actions/Follow/getFollower';
 
 const Page = () => {
      const [active, setActive] = useState<number | null>(4);
      const [user, setUser] = useState<any>()
      const [LoginUser, setLoginUser] = useState()
-console.log(LoginUser,"xxxxxxxxxxxxxxxxxxxxxxxx")
+     const [followers, setFollowers] = useState()
+console.log(LoginUser)
      const [loader, setLoader] = useState<any>()
      const { id } = useParams()
   useEffect(() => {
@@ -36,13 +38,15 @@ console.log(LoginUser,"xxxxxxxxxxxxxxxxxxxxxxxx")
      const fetchData = async () => {
           try {
                // দুইটা API কল একসাথে চালানো
-               const [userData, currentUser] = await Promise.all([
+               const [userData, currentUser,Follower] = await Promise.all([
                     GetSingleMessage(id[0]),
-                    GetUser()
+                    GetUser(),
+                GetFollower()
                ]);
 
                setUser(userData.user);
                setLoginUser(currentUser?.user);
+               setFollowers(Follower?.follower?.followers)
 
                // statusCode যোগ করা
                setLoader(userData.statusCode + currentUser?.statusCode);
@@ -89,7 +93,7 @@ console.log(LoginUser,"xxxxxxxxxxxxxxxxxxxxxxxx")
                </div>
                <div className="mt-[60px]  md:mt-0 w-full md:ml-[79px]  h-screen  ">
 
-                    {loader === 400 ? <MessageBodyById user={user} LoginUser={LoginUser} /> : <Loader />}
+                    {loader === 400 ? <MessageBodyById user={user} LoginUser={LoginUser}  followers={followers}/> : <Loader />}
                </div>
                <div className="fixed bottom-0 bg-black w-full block md:hidden">
                     <HeaderDown active={active} setActive={setActive} currentUser={LoginUser} />
