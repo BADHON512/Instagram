@@ -26,7 +26,7 @@ type Props = {
 }
 
 const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser, follower, setUniqueUser }: Props) => {
-    const socket = io('http://localhost:5000')
+    const socket = io('https://instagram-clone-socket-server.vercel.app/')
 
     const [message, setMessage] = useState<any>([])
     const [open, setOpen] = useState(false)

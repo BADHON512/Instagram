@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import ReactPlayer from "react-player";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { PiSpeakerSlashFill } from "react-icons/pi";
-
 import { FaRegHeart } from "react-icons/fa";
 import { FiMessageCircle } from "react-icons/fi";
 import { LuSend } from "react-icons/lu";
@@ -13,21 +11,26 @@ import { PiDotsThreeBold } from "react-icons/pi";
 import { FaMusic } from "react-icons/fa6";
 import { IoPlay, } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa6";
-
-
-
 import Image from "next/image";
+import { motion } from "framer-motion";
+
 
 type Props = {
-    videoUrl: string
+    reel: {
+        id: number;
+        videoUrl: string;
+        likes: number;
+        comments: number;
+
+    }
 
     isMuted: boolean;
     setIsMuted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
-
-    const text = 'my music is the my name is badhon best music hello'
+const ReelPlayer = ({ reel, isMuted, setIsMuted }: Props) => {
+    const [Like, setLike] = useState<number>(reel.likes)
+    const text = 'Listen to millions of songs, watch music videos, and experience live performances all on Apple '
     const Words = text.split("");
     const isLongText = Words.length > 50;
 
@@ -68,6 +71,11 @@ const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
             }
         };
     }, []);
+
+    const handleLike = (like: number) => {
+        setHeartClick(!heartClick)
+        setLike((pre) => (!heartClick ? pre + 1 : pre - 1))
+    }
     return (
         <div className="h-screen  bg-black flex justify-center items-center relative overflow-y-auto">
             <motion.div
@@ -83,7 +91,7 @@ const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
                     <div className="flex relative h-full w-[350px] md:w-[450px]">
                         <div ref={playerRef} className="h-full w-full border border-[#80808081] rounded-sm">
                             <ReactPlayer
-                                url={videoUrl}
+                                url={reel.videoUrl}
                                 playing={isPlaying}
                                 loop
                                 muted={isMuted}
@@ -169,11 +177,11 @@ const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
                             </div>
 
                             <div className="  w-full mx-auto py-1">
-                                <div className="h-[30px] rounded-3xl w-[90%] bg-[#5a443c96] mx-auto">
+                                <div className="h-[30px] rounded-3xl w-[90%] bg-[#3e3c5a96] mx-auto">
 
                                     <div className=" relative flex items-center h-full px-1 overflow-hidden  ">
                                         {/* 🎵 Static Music Icon (Does NOT Animate) */}
-                                        <div className="absolute top-0 left-0 bottom-0 badhon-left bg-[#5a443c] z-20 h-[30px] px-2  -ml-[5px] flex items-center justify-center">
+                                        <div className="absolute top-0 left-0 bottom-0 badhon-left bg-[#3e3c5a] z-20 h-[30px] px-2  -ml-[5px] flex items-center justify-center">
                                             <FaMusic className="" />
                                         </div>
 
@@ -182,11 +190,16 @@ const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
                                             {isLongText ? (
                                                 // Animated Marquee Effect
                                                 <motion.div
-                                                    className="whitespace-nowrap "
+                                                    className="whitespace-nowrap overflow-hidden "
 
-                                                    initial={{ x: 0 }} // ডান দিক থেকে শুরু হবে
-                                                    animate={{ x: ["0%", "-100%"] }} // সম্পূর্ণ বাঁ দিকে যাব
-                                                    transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+                                                    animate={{
+                                                        x: ["100%", "-100%"], // ১০০% থেকে -১০০% পর্যন্ত অ্যানিমেশন হবে
+                                                    }}
+                                                    transition={{
+                                                        repeat: Infinity, // ইনফিনিটি লুপে চলবে
+                                                        duration: 20, // ৫ সেকেন্ডে একবার কমপ্লিট হবে
+                                                        ease: "linear", // স্মুথ মোশন
+                                                    }}
                                                 >
                                                     {text}
                                                 </motion.div>
@@ -203,11 +216,18 @@ const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
 
 
                     <div className=" flex gap-y-5 flex-col justify-end  py-3 relative">
-                        <div className=" flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a]" onClick={() => setHeartClick(!heartClick)}>
-                            {
-                                heartClick ? (<FaHeart size={30} className="text-red-500" />) : (<FaRegHeart size={30} />)
-                            }
-                            <span className="text-sm">33.2M</span>
+                        <div
+
+                            className=" flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a]" onClick={() => handleLike(reel.likes)}>
+                            <motion.div
+                                whileTap={{ scale: 0.8 }} // Adds a small pop effect
+                                animate={{ scale: heartClick ? 1.2 : 1 }} // Increases size slightly when liked
+                                transition={{ type: "spring", stiffness: 300, damping: 10 }} >
+                                {
+                                    heartClick ? (<FaHeart size={30} className="text-red-500" />) : (<FaRegHeart size={30} />)
+                                }
+                            </motion.div>
+                            <span className="text-sm">{Like} </span>
                         </div>
                         <div className="flex flex-col justify-center items-center w-[40px] cursor-pointer hover:text-[#a79a9a] relative" onClick={() => setPupUp((pre) => ({ ...pre, message: !pupUp.message }))}>
                             <FiMessageCircle size={30} className="scale-x-[-1]" />
@@ -232,14 +252,14 @@ const ReelPlayer = ({ videoUrl, isMuted, setIsMuted }: Props) => {
                             {
                                 ThreeDots && (
                                     <motion.div
-                                    initial={{scale:0}}
-                                    animate={{scale:1}}
-                                    transition={{ duration: 0.1 }}
-                                     className="absolute md:-left-10 md:bottom-32 xl:left-2 xl:bottom-24 bg-[#262626] min-h-[300px] md:w-[250px] bottom-32 w-[200px] rounded-lg">
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ duration: 0.1 }}
+                                        className="absolute md:-left-10 md:bottom-32 xl:left-2 xl:bottom-24 bg-[#262626] min-h-[300px] md:w-[250px] bottom-32 w-[200px] rounded-lg">
                                         <div className="flex flex-col gap-y-2 p-2 ">
                                             {
                                                 ["Report", "Follow", "Go to post", "Share to...", "Copy link", "Embed", "About this account"].map((item, index) => (
-                                                    <span key={index} className={` ${index === 0 && "!text-red-500" } ${index === 1 && "text-green-500"} text-sm hover:bg-[#3C3C3C] text-white py-2 px-3 rounded-md font-semibold`}>{item}</span>
+                                                    <span key={index} className={` ${index === 0 && "!text-red-500"} ${index === 1 && "text-green-500"} text-sm hover:bg-[#3C3C3C] text-white py-2 px-3 rounded-md font-semibold`}>{item}</span>
                                                 ))
                                             }
 

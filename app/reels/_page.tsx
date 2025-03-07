@@ -1,6 +1,6 @@
 "use client"
 import SideBar from '@/components/SideBar/SideBar'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 
 import { motion } from "framer-motion";
@@ -11,15 +11,25 @@ import Search from '@/components/helper/Search';
 import Messages from '@/components/helper/Messages';
 import NotificationSidebar from '@/components/helper/Notification';
 import Create from '@/components/Create/Create';
-import MessageHomeBody from '@/components/Content/MessageHome/MessageHome';
 import ReelsContent from '@/components/Reels/ReelsContent';
+import Loader from '@/components/Loader/Loader';
 
 type Props = {
      currentUser: any
+     reelsData:{
+          id: number;
+          videoUrl: string;
+          likes: number;
+          comments: number;
+     }[]
 }
 
-const HomeReels = ({currentUser}: Props) => {
+const HomeReels = ({currentUser ,reelsData}: Props) => {
          const [active, setActive] = useState<number | null>(null);
+    
+
+
+
   return (
     <div className='md:flex '>
     <div className=" w-[335px] fixed ">
@@ -51,7 +61,7 @@ const HomeReels = ({currentUser}: Props) => {
          <Header />
     </div>
     <div className="mt-[60px] lg:mt-0 w-full md:ml-[79px] xl:ml-[300px]  h-screen  ">
-     <ReelsContent/>
+    <ReelsContent reelsData={reelsData}/>
 
     </div>
     <div className=" fixed bottom-0 bg-black w-full block md:hidden">

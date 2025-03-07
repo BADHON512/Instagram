@@ -27,7 +27,7 @@ const messages = [
 ];
 
 const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
-    const socket = io('http://localhost:5000')
+    const socket = io('https://instagram-clone-socket-server.vercel.app/')
     const [open, setOpen] = useState(false)
     const [showPicker, setShowPicker] = useState(false);
     const [input, setInput] = useState<string>('');
