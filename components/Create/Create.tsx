@@ -14,52 +14,49 @@ type Props = {
   setReFetcher: (reFetcher: boolean) => void
 }
 
-
-
-const Create = ({ active ,reFetcher, setReFetcher, setActive }: Props) => {
+const Create = ({ active, reFetcher, setReFetcher, setActive }: Props) => {
   const [postData, setPostData] = useState({
     image: "",
     caption: ""
   })
-console.log(postData)
+
   const [isDragging, setIsDragging] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  
 
   const validateFile = (file: File) => {
     const validTypes = ['image/jpeg', 'image/png', 'image/gif']
     const maxSize = 5 * 1024 * 1024 // 5MB
-    
+
     if (!validTypes.includes(file.type)) {
       setError('Invalid file type. Please upload JPEG, PNG, or GIF.')
       return false
     }
-    
+
     if (file.size > maxSize) {
       setError('File size too large. Maximum 5MB allowed.')
       return false
     }
-    
+
     return true
   }
 
   const handleFile = useCallback((file: File) => {
     if (!validateFile(file)) return
-    
+
     setIsLoading(true)
     const reader = new FileReader()
-    
+
     reader.onload = () => {
-     setPostData((pre)=>({...pre,image: reader.result as string}))
+      setPostData((pre) => ({ ...pre, image: reader.result as string }))
       setIsLoading(false)
     }
-    
+
     reader.onerror = () => {
       setError('Error reading file')
       setIsLoading(false)
     }
-    
+
     reader.readAsDataURL(file)
   }, [])
 
@@ -87,26 +84,26 @@ console.log(postData)
 
   const handlePostSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-   const data={
-    caption:postData.caption,
-    image:postData.image,
-    
-   }
-    if(postData.caption==""|| postData.image==""){
+    const data = {
+      caption: postData.caption,
+      image: postData.image,
+
+    }
+    if (postData.caption == "" || postData.image == "") {
       toast.error("fill the all field")
-    }else{
+    } else {
       await axios.post("/api/user-post", data)
-      .then((res) => {
-           toast.success(res.data.message)
-        setActive(null)
-        setReFetcher(!reFetcher)
-      })
-      .catch((error) => {
-        console.error("API Error:", error); // Debugging-এর জন্য Console-এ Error দেখাবে
-        toast.error(error.response.data.error)
-      });
-    
-    
+        .then((res) => {
+          toast.success(res.data.message)
+          setActive(null)
+          setReFetcher(!reFetcher)
+        })
+        .catch((error) => {
+          console.error("API Error:", error); // Debugging-এর জন্য Console-এ Error দেখাবে
+          toast.error(error.response.data.error)
+        });
+
+
     }
   }
 
@@ -120,25 +117,25 @@ console.log(postData)
   }, [setActive])
 
   useEffect(() => {
-     
 
-     document.body.style.overflow = postData.image ? "hidden" : "auto";
 
-     return () => {
-         document.body.style.overflow = "auto"; // Cleanup on unmount
-     };
- }, [postData.image]);
+    document.body.style.overflow = postData.image ? "hidden" : "auto";
+
+    return () => {
+      document.body.style.overflow = "auto"; // Cleanup on unmount
+    };
+  }, [postData.image]);
 
   return (
     <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
-      <div 
+      <div
         className="bg-[#262626] rounded-xl w-[80%] max-w-4xl overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <h1 className="text-xl font-semibold text-white">Create New Post</h1>
-          <button 
+          <button
             onClick={() => setActive(null)}
             className="p-2 hover:bg-white/10 rounded-full transition-colors"
             aria-label="Close modal"
@@ -153,23 +150,23 @@ console.log(postData)
           <div className="md:w-[60%] bg-[#071b12] flex items-center justify-center relative">
             {postData.image ? (
               <div className="relative w-full h-full">
-         
-                  <Image
-                    src={postData.image}
-                    alt="Preview"
-                    width={800}
-                    height={800}
-                    className="object-contain "
-                  />
-                 <div className="w-full py-1 mb-2 text-center mt-3">
-                    <label htmlFor="change"  className='px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors'>
-                         Change image
-                         <input type="file" className='hidden' id='change' onChange={imageHandler} />
-                    </label>
-                 </div>
+
+                <Image
+                  src={postData.image}
+                  alt="Preview"
+                  width={800}
+                  height={800}
+                  className="object-contain "
+                />
+                <div className="w-full py-1 mb-2 text-center mt-3">
+                  <label htmlFor="change" className='px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors'>
+                    Change image
+                    <input type="file" className='hidden' id='change' onChange={imageHandler} />
+                  </label>
+                </div>
               </div>
             ) : (
-              <div 
+              <div
                 className={`p-8 w-full h-full flex flex-col items-center justify-center transition-all 
                   ${isDragging ? 'bg-white/5' : 'bg-transparent'}`}
                 onDragOver={handleDragOver}
@@ -186,9 +183,9 @@ console.log(postData)
                 </h2>
                 <label className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg cursor-pointer transition-colors">
                   Select from computer
-                  <input 
-                    type="file" 
-                    className="hidden" 
+                  <input
+                    type="file"
+                    className="hidden"
                     onChange={imageHandler}
                     accept="image/*"
                   />
@@ -204,7 +201,7 @@ console.log(postData)
               <div className="mb-6">
                 <textarea
                   value={postData.caption}
-                  onChange={(e) => setPostData({...postData, caption: e.target.value})}
+                  onChange={(e) => setPostData({ ...postData, caption: e.target.value })}
                   placeholder="Write a caption..."
                   className="w-full bg-transparent text-white placeholder-gray-400 resize-none 
                     focus:outline-none border-b border-white/10 pb-2"
@@ -223,9 +220,9 @@ console.log(postData)
                     <input type="checkbox" className="accent-blue-500" />
                     Advanced Settings
                   </label>
-                  
-                  <button 
-                    type="submit" 
+
+                  <button
+                    type="submit"
                     className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg 
                       disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     disabled={isLoading || !postData.image}

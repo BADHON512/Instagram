@@ -29,7 +29,6 @@ const messages = [
 const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
     const socket = io('http://localhost:5000')
     const [open, setOpen] = useState(false)
-    console.log(followers)
     const [showPicker, setShowPicker] = useState(false);
     const [input, setInput] = useState<string>('');
     const [message, setMessage] = useState<any>([])
@@ -45,7 +44,7 @@ const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
     const handleSend = async () => {
         if (input.trim() === '') return;
         const message = await CreateMessage({ text: input, receiverId: UserToMessage })
-        console.log(message)
+
         if (message?.success) {
             setRefetcher(!Refetcher)
             setShowPicker(false)
@@ -60,28 +59,27 @@ const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
         }
     }
 
-        useEffect(() => {
-            socket.on("connect", () => {
-                console.log("Connected to server:", socket.id);
-                socket.emit("register", LoginUser?.id); // 🔥 ইউজার রেজিস্টার করা
-            });
-    
-    
-            socket.on("private_message", (data) => {
-                console.log(data, "socket")
-                if (data.senderId === UserToMessage) {
-                    setMessage((prev) => [
-                        ...prev,
-                        { senderId: data.senderId, receiverId: data.receiverId, text: data.message }
-                    ]);
-                }
-            });
-    
-            return () => {
-                socket.off("private_message"); // শুধু ইভেন্ট আনবাইন্ড করো
-                socket.off("connect");
-            };
-        }, [Refetcher]);
+    useEffect(() => {
+        socket.on("connect", () => {
+            socket.emit("register", LoginUser?.id); // 🔥 ইউজার রেজিস্টার করা
+        });
+
+
+        socket.on("private_message", (data) => {
+            if (data.senderId === UserToMessage) {
+                setMessage((prev) => [
+                    ...prev,
+                    { senderId: data.senderId, receiverId: data.receiverId, text: data.message }
+                ]);
+            }
+        });
+
+        return () => {
+            socket.off("private_message"); // শুধু ইভেন্ট আনবাইন্ড করো
+            socket.off("connect");
+        };
+    }, [Refetcher]);
+
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -219,24 +217,24 @@ const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
                 </div>
 
                 <div className="w-[95%] mx-auto max-h-[50vh] ">
-                                    {message?.map((item: any, index: number) => (
-                                        <motion.div
-                                            key={index}
-                                            variants={messageVariants}
-                                            initial="hidden"
-                                            animate="visible"
-                                            className={`flex ${item.senderId === LoginUser.id ? "justify-end" : "justify-start"} mb-4 `}
-                                        >
-                                            <div
-                                                className={`px-3 py-1 rounded-md font-serif mb-4 ${item.senderId === LoginUser.id? "bg-blue-500 text-white" : "bg-[#262626] text-white mb-3"}`}
-                                            >
-                                                {item?.text}
-                                            </div>
-                                            
-                                        </motion.div>
-                                    ))}
-                                    <div className='' ref={messagesEndRef} />
-                                </div>
+                    {message?.map((item: any, index: number) => (
+                        <motion.div
+                            key={index}
+                            variants={messageVariants}
+                            initial="hidden"
+                            animate="visible"
+                            className={`flex ${item.senderId === LoginUser.id ? "justify-end" : "justify-start"} mb-4 `}
+                        >
+                            <div
+                                className={`px-3 py-1 rounded-md font-serif mb-4 ${item.senderId === LoginUser.id ? "bg-blue-500 text-white" : "bg-[#262626] text-white mb-3"}`}
+                            >
+                                {item?.text}
+                            </div>
+
+                        </motion.div>
+                    ))}
+                    <div className='' ref={messagesEndRef} />
+                </div>
 
 
                 {/* Message Input */}
@@ -246,6 +244,7 @@ const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
+                            onKeyUp={handelEnter}
                             placeholder="Message..."
                             className="w-full pl-12 pr-24 py-3 bg-[#1a1a1a] rounded-full focus:outline-none  bg-transparent focus:ring-2 focus:ring-[#1a1a52c5]"
                         />
@@ -255,7 +254,7 @@ const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
                             size={24}
                         />
                         <div className="absolute right-4 top-2.5 flex gap-3">
-                        <button disabled={input === ""} onClick={handleSend} className=' bg-blue-500 text-white p-1 px-2 rounded-md text-sm cursor-pointer'>Send</button>
+                            <button disabled={input === ""} onClick={handleSend} className=' bg-blue-500 text-white p-1 px-2 rounded-md text-sm cursor-pointer'>Send</button>
                             <TiMicrophoneOutline className="text-gray-400 hover:text-white cursor-pointer" size={24} />
                             <FaRegImage className="text-gray-400 hover:text-white cursor-pointer" size={24} />
                             <LuSticker className="text-gray-400 hover:text-white cursor-pointer" size={24} />

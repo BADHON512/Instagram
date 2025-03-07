@@ -20,9 +20,6 @@ import Link from 'next/link';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-
-
-
 type Props = {
   active?: number | null,
   setActive: (active: number) => void | undefined
@@ -30,9 +27,7 @@ type Props = {
 }
 
 
-
-
-const SideBar = ({ active, setActive,currentUser }: Props) => {
+const SideBar = ({ active, setActive, currentUser }: Props) => {
 
   const menuItems = [
     { id: 0, label: "Home", link: '/', icon: <GoHomeFill size={27} /> },
@@ -64,7 +59,7 @@ const SideBar = ({ active, setActive,currentUser }: Props) => {
 
   const handleClose = (e: React.MouseEvent) => {
     const target = e.currentTarget as HTMLElement
-    console.log(target)
+
     if (target.id === 'screen') {
       setMoreOpen(!MoreOpen)
     }
@@ -78,7 +73,7 @@ const SideBar = ({ active, setActive,currentUser }: Props) => {
   };
   const handleLogOut = async () => {
     await axios.get('/api/log-out').then((res) => {
-        toast.success("Log out ")
+      toast.success("Log out ")
       window.location.reload()
     }).catch((err) => {
       toast.error('Some thing went wrong')
@@ -91,7 +86,7 @@ const SideBar = ({ active, setActive,currentUser }: Props) => {
         {
           active === 1 || active === 5 || active === 4 ? (
             <div className="w-[27px] h-[27px] flex justify-center items-center">
-             <Link href={'/'}> <GrInstagram size={27} className='block cursor-pointer' /></Link>
+              <Link href={'/'}> <GrInstagram size={27} className='block cursor-pointer' /></Link>
             </div>
 
 

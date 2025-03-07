@@ -47,17 +47,15 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike, user }:
 
     const [showPicker2, setShowPicker2] = useState(false);
 
-
-
-    const handleDeletePost = async (onTarget: string) => {
+   const handleDeletePost = async (onTarget: string) => {
         if (onTarget === "Delete") {
             if (!post?.id) {
                 toast.error("Post ID not found!");
                 return;
             }
-    
+
             const deletePost = await DeletePost(post.id);
-    
+
             if (deletePost?.success) {
                 toast.success(deletePost.message);
             } else {

@@ -5,9 +5,7 @@ import React, { useEffect, useState } from 'react'
 import PostCard from '../helper/PostCard';
 import Link from 'next/link';
 import { BsPlusLg } from 'react-icons/bs';
-
 import Slider from "react-slick";
-
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { StoriesCreate } from '@/@actions/Stories/StoriesCreate';
 import { GetAllStories } from '@/@actions/Stories/getAllStories';
@@ -20,10 +18,6 @@ type Props = {
   users: any
   stories: any
 }
-
-
-
-
 
 const CustomPrevArrow = (props: any) => {
   const { onClick } = props;
@@ -49,17 +43,11 @@ const CustomNextArrow = (props: any) => {
   );
 };
 
-
-
-
 const HomeContent = ({ user, Posts, users, stories }: Props) => {
   const [selectedStory, setSelectedStory] = useState(null);
- const [ReFetcher, setReFetcher] = useState()
+  const [ReFetcher, setReFetcher] = useState(false)
   const [Stories, setStories] = useState<[]>(stories)
-  const [Follow, setFollow] = useState<{[key:string]:string}>({})
-
-  console.log(users,"usersfffffff")
-
+  const [Follow, setFollow] = useState<{ [key: string]: string }>({})
 
   const removeStories = (id: number) => {
     // if(visibleStories.length>6){
@@ -68,16 +56,14 @@ const HomeContent = ({ user, Posts, users, stories }: Props) => {
 
   }
 
-   useEffect(() => {
+  useEffect(() => {
     async function Fetcher() {
-      const stories:any=await GetAllStories()
+      const stories: any = await GetAllStories()
       setStories(stories.stories)
-      // console.log(stories.stories)
+
     }
     Fetcher()
-   }, [ReFetcher])
-
-
+  }, [ReFetcher])
 
   const settings = {
 
@@ -131,8 +117,6 @@ const HomeContent = ({ user, Posts, users, stories }: Props) => {
           if (stories.success) {
             toast.success(stories.message)
             setReFetcher(true)
-     
-
           }
 
         } catch (error) {
@@ -144,11 +128,11 @@ const HomeContent = ({ user, Posts, users, stories }: Props) => {
     reader.readAsDataURL(file);
   };
 
-  const handleFollow =async (followingId:string)=>{
-  
-    setFollow((pre)=>({...pre, [followingId]: pre[followingId]==="Following"?"Follow":"Following"}))
-    const follow=await CreateFollow(followingId)
-  
+  const handleFollow = async (followingId: string) => {
+
+    setFollow((pre) => ({ ...pre, [followingId]: pre[followingId] === "Following" ? "Follow" : "Following" }))
+    const follow = await CreateFollow(followingId)
+
   }
   return (
 
@@ -257,7 +241,7 @@ const HomeContent = ({ user, Posts, users, stories }: Props) => {
                       <p className="text-xs text-gray-500">{item?.username}</p>
                     </div>
                   </div>
-                  <span onClick={()=>handleFollow(item?.id)} className={`${Follow[item.id]?"text-white hover:text-[#e9e1e1] cursor-pointer text-sm":"text-[#33adff] hover:text-white cursor-pointer text-sm"}`}>  {Follow[item.id] || "Follow"}</span>
+                  <span onClick={() => handleFollow(item?.id)} className={`${Follow[item.id] ? "text-white hover:text-[#e9e1e1] cursor-pointer text-sm" : "text-[#33adff] hover:text-white cursor-pointer text-sm"}`}>  {Follow[item.id] || "Follow"}</span>
                 </div>
 
               ))

@@ -16,33 +16,31 @@ import MessageHomeBody from '@/components/Content/MessageHome/MessageHome';
 
 type Props = {
      currentUser: any
-     follower:any
+     follower: any
 }
 
-const MessagesHome = ({currentUser ,follower}: Props) => {
+const MessagesHome = ({ currentUser, follower }: Props) => {
 
-    
+
      const [active, setActive] = useState<number | null>(4);
-   
+
      const [uniqueUser, setUniqueUser] = useState<string>();
      const [UserToMessage, setUserToMessage] = useState()
      const [TargetUser, setTargetUser] = useState<string>()
-    
+
 
      useEffect(() => {
-          
-       const user= follower?.find((item:any,index:number)=>item?.id===uniqueUser)
-       console.log(user)
-       setUserToMessage(user?.follower)
-       setTargetUser(uniqueUser)
-       if (TargetUser) {
-          setActive(null);
-        }
+          const user = follower?.find((item: any, index: number) => item?.id === uniqueUser)
+          setUserToMessage(user?.follower)
+          setTargetUser(uniqueUser)
+          if (TargetUser) {
+               setActive(null);
+          }
      }, [uniqueUser])
-     
+
      useEffect(() => {
-     
-        }, [TargetUser]);
+
+     }, [TargetUser]);
      return (
           <div className='md:flex '>
                <div className="  fixed z-50 bg-yellow-300 ">
@@ -53,7 +51,7 @@ const MessagesHome = ({currentUser ,follower}: Props) => {
                          className="hidden md:block  h-screen relative "
 
                     >
-                         <SideBar active={active} setActive={setActive}  currentUser={currentUser}/>
+                         <SideBar active={active} setActive={setActive} currentUser={currentUser} />
 
 
 
@@ -64,7 +62,7 @@ const MessagesHome = ({currentUser ,follower}: Props) => {
 
                          <NotificationSidebar active={active} setActive={setActive} />
 
-                         <Messages active={active} setActive={setActive} follower={follower} currentUser={currentUser} setUniqueUser={setUniqueUser} setTargetUser={setTargetUser}/>
+                         <Messages active={active} setActive={setActive} follower={follower} currentUser={currentUser} setUniqueUser={setUniqueUser} setTargetUser={setTargetUser} />
 
 
 
@@ -74,11 +72,11 @@ const MessagesHome = ({currentUser ,follower}: Props) => {
                     <Header />
                </div>
                <div className="mt-[60px] md:mt-0 w-full md:ml-[79px] xl:ml-[280px]  h-screen  ">
-                <MessageHomeBody TargetUser={TargetUser} UserToMessage={UserToMessage} currentUser={currentUser} follower={follower} setUniqueUser={setUniqueUser} />
+                    <MessageHomeBody TargetUser={TargetUser} UserToMessage={UserToMessage} currentUser={currentUser} follower={follower} setUniqueUser={setUniqueUser} />
 
                </div>
                <div className="fixed bottom-0 bg-black w-full block md:hidden z-[99999]">
-               <HeaderDown active={active} setActive={setActive}  currentUser={currentUser} />
+                    <HeaderDown active={active} setActive={setActive} currentUser={currentUser} />
                </div>
 
                {

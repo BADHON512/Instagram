@@ -10,26 +10,17 @@ import { GoHeartFill } from "react-icons/go";
 
 type Props = {
   user: any
- 
+
 }
 
 const SingleProfile = ({ user, }: Props) => {
-  console.log("user", user)
-
   const [showMore, setShowMore] = useState(false);
   const [activeTab, setActiveTab] = useState<'posts' | 'saved' | 'tagged'>('posts');
-
   const [avatar, setAvatar] = useState<string>(user?.avatar?.url)
-
-  console.log(avatar)
   const words = user?.bio?.split(" ");
   const visibleText = showMore ? user?.bio : words?.slice(0, 10).join(" ");
   const tabsRef = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
-
-
-
-
 
   useEffect(() => {
     const activeButton = tabsRef.current[activeTab];
@@ -39,10 +30,7 @@ const SingleProfile = ({ user, }: Props) => {
         width: activeButton.offsetWidth
       });
     }
-
   }, [activeTab]);
-
-
 
   return (
     <div className='max-w-[940px] mx-auto pt-8 px-4'>
@@ -65,7 +53,7 @@ const SingleProfile = ({ user, }: Props) => {
           {/* Username and Actions */}
           <div className="flex items-center gap-4 mb-4">
             <h1 className="text-2xl font-light">{user?.name}</h1>
-            <button  className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
+            <button className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
               Following
             </button>
             <Link href={`/messages/${user?.id}`} className='px-4 py-1 text-sm font-medium bg-[#ccc9c985] rounded-lg hover:bg-[#262626]'>
@@ -104,24 +92,13 @@ const SingleProfile = ({ user, }: Props) => {
               )}
             </p>
           </div>
-
-
         </div>
       </div>
-
-
-
 
       <div className="mt-14 h-[80px] w-[80px] border flex justify-center items-center border-[#737373] rounded-full cursor-pointer">
         <BsPlusLg color="#737373" size={50} />
       </div>
       <p className='ml-6 mt-3'>New</p>
-
-
-
-
-
-
       <div className="mt-14">
         <div className="relative border-t border-[#737373] mt-4 z-[1]">
           <div className="flex justify-center gap-16 relative">
@@ -145,7 +122,7 @@ const SingleProfile = ({ user, }: Props) => {
               POSTS
             </button>
 
-  
+
 
             {/* Tagged Tab - Fixed color */}
             <button
@@ -191,7 +168,7 @@ const SingleProfile = ({ user, }: Props) => {
           ))
         )}
 
-  
+
 
 
         {activeTab === 'tagged' && (
@@ -229,7 +206,7 @@ const SingleProfile = ({ user, }: Props) => {
         <p>&copy; 2025 Instagram from Meta</p>
       </div>
 
-   
+
 
     </div >
   )

@@ -43,11 +43,13 @@ type Props = {
 
 const MessageModel = ({ PupUp, setPupUp, post, input, setInput, handelLike,comment,handleComment }: Props) => {
     const [showPicker2, setShowPicker2] = useState(false);
-    console.log(post,"model")
+   
     const handlePost=(id:string)=>{
         handleComment(id)
         setShowPicker2(false)
     }
+
+    
     return (
         <div
             onClick={() => {

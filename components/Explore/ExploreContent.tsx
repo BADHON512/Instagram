@@ -1,14 +1,12 @@
 "use client"
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { BiSolidMessageRounded } from 'react-icons/bi';
 import { GoHeartFill } from 'react-icons/go';
 import MessageModel from '../helper/MessageModle';
 import { GetComment } from '@/@actions/Comment/getCommet';
 import { CreateSavePost } from '@/@actions/SavePost/createSavePost';
 import toast from 'react-hot-toast';
-import { CreateComment } from '@/@actions/Comment/createComment';
-
 
 type Props = {
   Posts: any
@@ -16,7 +14,6 @@ type Props = {
 
 const ExploreContent = ({ Posts }: Props) => {
   const [input, setInput] = useState<string>()
-  console.log(Posts)
   const [PupUp, setPupUp] = useState({
     like: false,
     likeCount: 10032119,
@@ -26,7 +23,7 @@ const ExploreContent = ({ Posts }: Props) => {
     postSetting: false
 
   })
-  console.log(PupUp.message)
+
   const handelLike = () => {
     setPupUp((pre) => ({ ...pre, like: !pre.like }))
     if (PupUp.like) {
@@ -36,31 +33,14 @@ const ExploreContent = ({ Posts }: Props) => {
     }
   }
   const [comment, setComment] = useState<any>();
-  console.log(comment)
-
-
-
-  const handelSavePost = async (postId: string, UserId: string) => {
-    setPupUp((pre) => ({ ...pre, save: !pre.save }))
-    const savePost = await CreateSavePost({ postId, UserId })
-    if (savePost.success) {
-      toast.success(savePost?.message)
-    }
-    else {
-      toast.error(savePost?.message)
-    }
-  }
-
 
   async function Fetcher(postId: string) {
     const Comments = await GetComment(postId)
     setComment(Comments.comments)
   }
 
-
-
   const handleComment = async (postId: string) => {
-  toast.error('Currently not available')
+    toast.error('Currently not available')
   };
   const Send = (id: string) => {
     setPupUp((pre) => ({ ...pre, message: !pre.message }))
@@ -94,7 +74,7 @@ const ExploreContent = ({ Posts }: Props) => {
 
           {
             PupUp.message && (
-              <MessageModel PupUp={PupUp} setPupUp={setPupUp} post={post} input={input} setInput={setInput} handelLike={handelLike} comment={comment} handleComment={handleComment}/>
+              <MessageModel PupUp={PupUp} setPupUp={setPupUp} post={post} input={input} setInput={setInput} handelLike={handelLike} comment={comment} handleComment={handleComment} />
             )
           }
         </div>

@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
       },
     });
     if (findUser) {
-      console.log("⚠️ User already exists!"); // ✅ চেক করো
       return NextResponse.json(
         { error: "User already exists" },
         { status: 400 }
@@ -21,7 +20,7 @@ export async function POST(req: NextRequest) {
     }
 
     const hashPassword = await bcrypt.hash(userData.password, 10);
-  
+
     const user = await prisma.user.create({
       data: {
         name: userData.name,
@@ -33,8 +32,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ user }, { status: 200 });
   } catch (error) {
-   
     return NextResponse.json(error, { status: 500 });
-   
   }
 }

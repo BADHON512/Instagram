@@ -65,37 +65,35 @@ const PostCard = ({ post }: Props) => {
     const [ReFetcher, setReFetcher] = useState(false)
     const [inputClick, setInputClick] = useState(false)
     const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]); // Track multiple selections
-    const allText = "You're very welcome! 🎉 I'm so glad to hear you had a wonderful birthday with your loved ones. Wishing you even more amazing moments ahead! 🥳🎂 How did you celebrate?"
-    const word = allText.split(" ")
-    const visibleText = isExpanded ? allText : word.slice(0, 20).join(" ") + "..."
+
     const [comment, setComment] = useState<any>();
 
 
 
-    const handelSavePost=async(postId:string,UserId:string)=>{
-        setPupUp((pre)=>({...pre,save:!pre.save}))
-        const savePost=await CreateSavePost({postId,UserId})
-        if(savePost.success ){
+    const handelSavePost = async (postId: string, UserId: string) => {
+        setPupUp((pre) => ({ ...pre, save: !pre.save }))
+        const savePost = await CreateSavePost({ postId, UserId })
+        if (savePost.success) {
             toast.success(savePost?.message)
         }
-        else{
+        else {
             toast.error(savePost?.message)
         }
     }
 
     useEffect(() => {
         async function Fetcher(postId: string) {
-         const Comments = await GetComment(postId)
-         setComment(Comments.comments)
+            const Comments = await GetComment(postId)
+            setComment(Comments.comments)
         }
         Fetcher(post?.id)
     }, [ReFetcher])
 
     const handleComment = async (postId: string) => {
-      const comment= await CreateComment({ postId, content: input })
+        const comment = await CreateComment({ postId, content: input })
         setReFetcher(!ReFetcher)
         setShowPicker(false)
-        if(comment.success ){
+        if (comment.success) {
             setInput("")
         }
     };
@@ -116,9 +114,9 @@ const PostCard = ({ post }: Props) => {
         async function Fetcher(postId: string) {
 
             const likeCount = await GetLikeCount(postId)
-           console.log(likeCount)
+
             if (likeCount.likeExist) {
-             setPupUp((pre) => ({ ...pre, like: true }))
+                setPupUp((pre) => ({ ...pre, like: true }))
             }
             setPupUp((pre) => ({ ...pre, likeCount: likeCount.likeCount || 0 }));
         }
@@ -157,8 +155,14 @@ const PostCard = ({ post }: Props) => {
     const [heartVisible, setHeartVisible] = useState(false);
     const handleDoubleTap = () => {
         setHeartVisible(true);
-        setTimeout(() => setHeartVisible(false), 600); // Duration should match heart animation duration
+        setTimeout(() => setHeartVisible(false), 600);
     };
+
+    const TrimCaption = (allText: string) => {
+
+        const word = allText.split(" ")
+        return isExpanded ? allText : word.slice(0, 20).join(" ") + "..."
+    }
     return (
         <div className=" w-[95%]  md:w-[485px] mx-auto my-3 bg-black">
             <div className="flex justify-between w-full items-center ">
@@ -178,17 +182,17 @@ const PostCard = ({ post }: Props) => {
 
                             initial={{ scale: 0, opacity: 1 }}  // Start small and fully opaque
                             animate={{
-                                scale: 3,        // Grow the heart
-                                y: -100,         // Move it upwards (slowly)
-                                opacity: 1,      // Keep it fully opaque
+                                scale: 3,
+                                y: -100,
+                                opacity: 1,
                             }}
                             exit={{
                                 opacity: 0,
-                                y: -200,         // Move further up as it disappears
+                                y: -200,
                             }}
                             transition={{
-                                duration: 0.3,    // Duration for both the appearance and disappearance
-                                ease: "easeOut",  // Smooth easing
+                                duration: 0.3,
+                                ease: "easeOut",
                             }}
 
                             className="absolute top-0 left-0  w-full h-full flex  justify-center items-center">
@@ -208,17 +212,17 @@ const PostCard = ({ post }: Props) => {
                     <BiMessageRounded onClick={() => setPupUp((pre) => ({ ...pre, message: !pre.message }))} color='white' title='Comment' size={25} className="scale-x-[-1] cursor-pointer text-[#cacaca]" />
                     <LuSend title='Share' size={23} className="cursor-pointer  " onClick={() => setPupUp((pre) => ({ ...pre, share: !pre.share }))} />
                 </div>
-                <div onClick={()=>handelSavePost(post?.id,post?.user?.id)} className="cursor-pointer">
-                  {
-                    PupUp.save ? <FaBookmark  title='Unsave' color='white' size={25} className="cursor-pointer text-red-500" /> : <FiBookmark  title='Save' color='white' size={25} />
-                  }   
+                <div onClick={() => handelSavePost(post?.id, post?.user?.id)} className="cursor-pointer">
+                    {
+                        PupUp.save ? <FaBookmark title='Unsave' color='white' size={25} className="cursor-pointer text-red-500" /> : <FiBookmark title='Save' color='white' size={25} />
+                    }
                 </div>
-               
+
             </div>
 
             <span className='text-sm text-gray-300 font-semibold block'>❤️ {PupUp.likeCount} likes</span>
 
-            <span className='text-sm text-gray-300 font-semibold   gap-x-2 my-1'>{post.name} <MdVerified color='#0095F6' className='inline-block -mt-1' /> {visibleText} {!isExpanded && <span className='cursor-pointer'
+            <span className='text-sm text-gray-300 font-semibold   gap-x-2 my-1'>{post.name} <MdVerified color='#0095F6' className='inline-block -mt-1' /> {TrimCaption(post?.caption)} {!isExpanded && <span className='cursor-pointer'
                 onClick={() => setIsExpanded(!isExpanded)}> more</span>}</span>
 
             <div className="border-b border-[#928c8c71] flex w-full items-center relative

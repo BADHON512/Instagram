@@ -15,11 +15,10 @@ type Props = {
     currentUser: any
 }
 
-
-const RouteProfileHomePage = ({currentUser}:Props) => {
+const RouteProfileHomePage = ({ currentUser }: Props) => {
 
     const [user, setUser] = useState<any>()
-    console.log(user, "++++++++++")
+
     const [loader, setLoader] = useState<any>()
     const [reFetcher, setReFetcher] = useState(false);
     const [active, setActive] = useState<number | null>(null);
@@ -38,9 +37,6 @@ const RouteProfileHomePage = ({currentUser}:Props) => {
         fetcher();
     }, [reFetcher])
 
-
-
-    console.log(loader)
     return (
         <div className=' md:flex  '>
             <div className=" w-[335px] fixed z-[99999] ">
@@ -73,7 +69,7 @@ const RouteProfileHomePage = ({currentUser}:Props) => {
 
             </div>
             <div className=" fixed  bottom-0 bg-black w-full block md:hidden">
-                <HeaderDown active={active} setActive={setActive}  currentUser={currentUser}/>
+                <HeaderDown active={active} setActive={setActive} currentUser={currentUser} />
 
             </div>
 

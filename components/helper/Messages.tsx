@@ -10,13 +10,13 @@ type Props = {
      setActive: (active: number | null) => void | null
      follower: any
      currentUser: any
-     setUniqueUser:(uniqueUser:string)=>void
-     setTargetUser:(TargetUser:any)=>void
+     setUniqueUser: (uniqueUser: string) => void
+     setTargetUser: (TargetUser: any) => void
 
 }
 
-const Messages = ({ active, setActive,setUniqueUser, follower, currentUser }: Props) => {
-     console.log(follower)
+const Messages = ({ active, setActive, setUniqueUser, follower, currentUser }: Props) => {
+
      return (
 
           <AnimatePresence>
@@ -65,26 +65,26 @@ const Messages = ({ active, setActive,setUniqueUser, follower, currentUser }: Pr
                                    </div>
 
                                    {
-                                     follower?.length===0?(<div className='h-[40vh] w-full flex justify-center items-center'>You have no followers yet </div>):(
-                                        follower?.map((item:any, index:any) => (
+                                        follower?.length === 0 ? (<div className='h-[40vh] w-full flex justify-center items-center'>You have no followers yet </div>) : (
+                                             follower?.map((item: any, index: any) => (
 
-                                             <div onClick={()=>setUniqueUser(item.id)} key={index} className="mt-5 flex gap-x-3 items-center hover:bg-[#cfb8b817] p-1 cursor-pointer">
+                                                  <div onClick={() => setUniqueUser(item.id)} key={index} className="mt-5 flex gap-x-3 items-center hover:bg-[#cfb8b817] p-1 cursor-pointer">
 
-                                                  <Image
-                                                       src={item?.follower?.avatar?.url || 'https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png'}
-                                                       alt='img not found'
-                                                       height={1000}
-                                                       width={1000}
-                                                       className='h-[50px] w-[50px] rounded-full '
-                                                  />
-                                                  <div className="text-sm">
-                                                       <p>{item?.follower?.name}</p>
-                                                       <p className='text-gray-400 text-[12px]'>{format(item.createdAt
-                                                       )}</p>
+                                                       <Image
+                                                            src={item?.follower?.avatar?.url || 'https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png'}
+                                                            alt='img not found'
+                                                            height={1000}
+                                                            width={1000}
+                                                            className='h-[50px] w-[50px] rounded-full '
+                                                       />
+                                                       <div className="text-sm">
+                                                            <p>{item?.follower?.name}</p>
+                                                            <p className='text-gray-400 text-[12px]'>{format(item.createdAt
+                                                            )}</p>
+                                                       </div>
                                                   </div>
-                                             </div>
-                                        ))
-                                     )
+                                             ))
+                                        )
                                    }
 
 

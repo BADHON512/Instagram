@@ -6,16 +6,12 @@ import React, { use, useEffect, useState } from 'react'
 import { motion } from "framer-motion";
 import Header from '@/components/SideBar/Header'
 import HeaderDown from '@/components/SideBar/ForMobile'
-
 import Search from '@/components/helper/Search';
-import Messages from '@/components/helper/Messages';
 import NotificationSidebar from '@/components/helper/Notification';
 import Create from '@/components/Create/Create';
-
 import { useParams } from 'next/navigation';
 import MessageBodyById from '@/components/Content/MessageHome/MessageBodyById';
 import toast from 'react-hot-toast';
-
 import Loader from '@/components/Loader/Loader';
 import { GetSingleMessage } from '@/@actions/Message/GetSingleMessage';
 import { GetUser } from '@/@actions/user/getUser';
@@ -26,37 +22,37 @@ const Page = () => {
      const [user, setUser] = useState<any>()
      const [LoginUser, setLoginUser] = useState()
      const [followers, setFollowers] = useState()
-console.log(LoginUser)
+
      const [loader, setLoader] = useState<any>()
      const { id } = useParams()
-  useEffect(() => {
-     if (!id) {
-          toast.error("Something went wrong");
-          return;
-     }
-
-     const fetchData = async () => {
-          try {
-               // দুইটা API কল একসাথে চালানো
-               const [userData, currentUser,Follower] = await Promise.all([
-                    GetSingleMessage(id[0]),
-                    GetUser(),
-                GetFollower()
-               ]);
-
-               setUser(userData.user);
-               setLoginUser(currentUser?.user);
-               setFollowers(Follower?.follower?.followers)
-
-               // statusCode যোগ করা
-               setLoader(userData.statusCode + currentUser?.statusCode);
-          } catch (error) {
-               console.error("Error fetching data:", error);
+     useEffect(() => {
+          if (!id) {
+               toast.error("Something went wrong");
+               return;
           }
-     };
 
-     fetchData();
-}, []);
+          const fetchData = async () => {
+               try {
+                    // দুইটা API কল একসাথে চালানো
+                    const [userData, currentUser, Follower] = await Promise.all([
+                         GetSingleMessage(id[0]),
+                         GetUser(),
+                         GetFollower()
+                    ]);
+
+                    setUser(userData.user);
+                    setLoginUser(currentUser?.user);
+                    setFollowers(Follower?.follower?.followers)
+
+                    // statusCode যোগ করা
+                    setLoader(userData.statusCode + currentUser?.statusCode);
+               } catch (error) {
+                    console.error("Error fetching data:", error);
+               }
+          };
+
+          fetchData();
+     }, []);
 
 
 
@@ -93,7 +89,7 @@ console.log(LoginUser)
                </div>
                <div className="mt-[60px]  md:mt-0 w-full md:ml-[79px]  h-screen  ">
 
-                    {loader === 400 ? <MessageBodyById user={user} LoginUser={LoginUser}  followers={followers}/> : <Loader />}
+                    {loader === 400 ? <MessageBodyById user={user} LoginUser={LoginUser} followers={followers} /> : <Loader />}
                </div>
                <div className="fixed bottom-0 bg-black w-full block md:hidden">
                     <HeaderDown active={active} setActive={setActive} currentUser={LoginUser} />

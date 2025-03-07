@@ -9,7 +9,7 @@ type Props = {
 
 export async function CreateLike({ postId }: Props) {
   try {
-    console.log(postId);
+
     if (!postId) {
       return { error: "Post not found", statusCode: 404 };
     }
