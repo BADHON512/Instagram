@@ -53,9 +53,9 @@ export default function SignupPage() {
           <hr className="w-1/3 border-gray-600" />
         </div>
         <form onSubmit={handleSubmit} className="space-y-3">
-          <input type="email" name="email" placeholder="Mobile Number or Email" className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md" onChange={handleChange} required />
-          <input type="password" name="password" placeholder="Password" className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md" onChange={handleChange} required />
-          <input type="text" name="fullName" placeholder="Full Name" className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md" onChange={handleChange} required />
+          <input type="email" name="email" autoComplete="email" placeholder="Mobile Number or Email" className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md" onChange={handleChange} required />
+          <input type="password" name="password" autoComplete="password" placeholder="Password" className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md" onChange={handleChange} required />
+          <input type="text" name="fullName"  placeholder="Full Name" className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md" onChange={handleChange} required />
           <input type="text" name="username" placeholder="Username" className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md" onChange={handleChange} required />
           <p className="text-xs text-gray-400 text-center">By signing up, you agree to our <span className="text-blue-400">Terms</span>, <span className="text-blue-400">Privacy Policy</span> and <span className="text-blue-400">Cookies Policy</span>.</p>
           <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md">Sign up</button>
