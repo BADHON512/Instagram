@@ -100,7 +100,7 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
         <div className="flex-shrink-0">
           <div className="relative h-[150px] w-[150px] rounded-full overflow-hidden border-2 border-gray-300 z-[-1]">
             <Image
-              src={user?.avatar?.url || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1739805661/default-avatar-profile-icon-of-social-media-user-vector_ixtvqz.jpg"}
+              src={user?.avatar?.url || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
               layout="fill"
               objectFit="cover"
               alt='Profile picture'

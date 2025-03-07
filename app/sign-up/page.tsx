@@ -28,8 +28,8 @@ export default function SignupPage() {
 
       })
       .catch((error) => {
-
-        toast.error(error.response.data.error)
+          console.log(error)
+        toast.error(error.response.data.message)
       });
   };
 

@@ -19,6 +19,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const findUserName = await prisma.user.findUnique({
+      where: {
+        username: userData.username,
+      },
+    });
+    if (findUserName) {
+      return NextResponse.json(
+        { success: false, message: "Username already exists" },
+        { status: 400 }
+      );
+    }
     const hashPassword = await bcrypt.hash(userData.password, 10);
 
     const user = await prisma.user.create({
@@ -30,8 +41,8 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ user }, { status: 200 });
+    return NextResponse.json({ user , message:"User created successfully", status: 200 });
   } catch (error) {
-    return NextResponse.json(error, { status: 500 });
+    return NextResponse.json({error, message:"Some thing went wrong" ,status: 500 });
   }
 }

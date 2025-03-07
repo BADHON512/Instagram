@@ -29,7 +29,7 @@ export default function LoginPage() {
   
       if (loginResponse.success) {
         toast.success("Login successful");
-        router.push("/");
+        router.push("/profile-page");
       } else {
         toast.error(loginResponse.error || "Something went wrong");
 
@@ -53,7 +53,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <input type="email" name="email" placeholder="Mobile Number or Email" className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md" onChange={handleChange} required />
-          <input type="password" name="password" placeholder="Password" className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md" onChange={handleChange} required />
+          <input type="password"  placeholder="Password" className="w-full p-2 bg-gray-800 border border-gray-700 rounded-md" onChange={handleChange} required />
 
           <p className="text-xs text-gray-400 text-center">By signing up, you agree to our <span className="text-blue-400">Terms</span>, <span className="text-blue-400 cursor-pointer">Privacy Policy</span> and <span className="text-blue-400 cursor-pointer">Cookies Policy</span>.</p>
           <br />

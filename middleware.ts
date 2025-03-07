@@ -23,6 +23,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
+  // 🔹 লগিন করা থাকলে '/login' এবং '/sign-up' পেজে যেতে পারবে না
+  if (authToken && (pathname.startsWith('/login') || pathname.startsWith('/sign-up'))) {
+    return NextResponse.redirect(new URL('/', request.url)); // or redirect to any other page after login
+  }
+
   // ✅ লগিন করা থাকলে সব রুট অ্যাক্সেস করতে পারবে
   return NextResponse.next();
 }
