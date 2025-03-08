@@ -26,14 +26,26 @@ type Props = {
 }
 
 const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser, follower, setUniqueUser }: Props) => {
-    const socket = io("https://instagram-clone-socket-server-0p8b.onrender.com/", {
-        transports: ["websocket", "polling"], 
+    const socket = io("https://instagram-server-socket-production.up.railway.app/", {
+        transports: ["websocket", "polling"],
         withCredentials: true,
-        forceNew: true, 
-        reconnectionAttempts: 5, 
-        timeout: 10000, 
+        reconnection: true, // Auto reconnect on disconnect
+        reconnectionAttempts: 10, // ১০ বার চেষ্টা করবে
+        reconnectionDelay: 5000, // ৫ সেকেন্ড পর পর ট্রাই করবে
       });
-
+      
+      socket.on("connect", () => {
+        console.log("✅ WebSocket Connected:", socket.id);
+      });
+      
+      socket.on("connect_error", (err) => {
+        console.error("❌ Connection Error:", err);
+      });
+      
+      socket.on("disconnect", (reason) => {
+        console.warn("⚠️ Disconnected:", reason);
+      });
+      
     const [message, setMessage] = useState<any>([])
     const [open, setOpen] = useState(false)
     const [showPicker, setShowPicker] = useState(false);

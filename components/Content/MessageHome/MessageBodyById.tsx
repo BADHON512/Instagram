@@ -27,7 +27,7 @@ const messages = [
 ];
 
 const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
-     const socket = io("https://instagram-clone-socket-server-0p8b.onrender.com/", {
+     const socket = io("https://instagram-server-socket-production.up.railway.app/", {
          transports: ["websocket", "polling"], 
          withCredentials: true,
          forceNew: true, 
