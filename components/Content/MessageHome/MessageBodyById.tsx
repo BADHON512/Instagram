@@ -27,7 +27,15 @@ const messages = [
 ];
 
 const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
-    const socket = io('https://instagram-clone-socket-server.vercel.app/')
+     const socket = io("https://instagram-clone-socket-server-0p8b.onrender.com/", {
+         transports: ["websocket", "polling"], 
+         withCredentials: true,
+         forceNew: true, 
+         reconnectionAttempts: 5, 
+         timeout: 10000, 
+       });
+ 
+      
     const [open, setOpen] = useState(false)
     const [showPicker, setShowPicker] = useState(false);
     const [input, setInput] = useState<string>('');
@@ -120,7 +128,7 @@ const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
                     <div className="flex flex-col items-center mb-8">
                         <div className="relative mb-2  ">
                             <Image
-                                src={LoginUser?.avatar?.url}
+                                src={LoginUser?.avatar?.url||"https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
                                 alt="Profile"
                                 width={80}
                                 height={80}

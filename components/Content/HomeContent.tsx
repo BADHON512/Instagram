@@ -235,7 +235,7 @@ const HomeContent = ({ user, Posts, users, stories }: Props) => {
 
                 <div key={index} className="flex justify-between items-center  gap-x-12">
                   <div className="flex items-center w-full">
-                    <Image src={item?.avatar?.url} height={500} width={500} alt='img not found' className='w-[50px] h-[50px] rounded-full' />
+                    <Image src={item?.avatar?.url|| "https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"} height={500} width={500} alt='img not found' className='w-[50px] h-[50px] rounded-full' />
                     <div className="ml-3">
                       <Link href={`/profile/${item?.username}`} className="text-sm font-semibold cursor-pointer">{item?.name}</Link>
                       <p className="text-xs text-gray-500">{item?.username}</p>
