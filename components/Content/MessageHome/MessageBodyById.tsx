@@ -20,20 +20,10 @@ type Props = {
     followers: any
 }
 
-const messages = [
-    { id: 1, text: "Hey, what's up?", senderId: "user1" },
-    { id: 2, text: "All good! You?", senderId: "me" },
-    { id: 3, text: "Same here!", senderId: "user1" },
-];
+
 
 const MessageBodyById = ({ user, LoginUser, followers }: Props) => {
-     const socket = io("https://instagram-server-socket-production.up.railway.app/", {
-         transports: ["websocket", "polling"], 
-         withCredentials: true,
-         forceNew: true, 
-         reconnectionAttempts: 5, 
-         timeout: 10000, 
-       });
+     const socket = io("http://localhost:5000/");
  
       
     const [open, setOpen] = useState(false)

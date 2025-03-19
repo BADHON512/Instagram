@@ -84,7 +84,7 @@ const Search = ({ active, setActive }: Props) => {
 
                                                   <Link href={`/profile/${item?.username}`} key={index} className="flex justify-between items-center  gap-x-12">
                                                        <div className="flex items-center w-full">
-                                                            <Image src={item?.avatar?.url} height={500} width={500} alt='img not found' className='w-[50px] h-[50px] rounded-full object-cover'  />
+                                                            <Image src={item?.avatar?.url||"https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"} height={500} width={500} alt='img not found' className='w-[50px] h-[50px] rounded-full object-cover'  />
                                                             <div className="ml-3">
                                                                  <Link href={`/profile/${item?.username}`} className="text-sm font-semibold cursor-pointer">{item?.name}</Link>
                                                                <div className="flex gap-x-1 items-center">

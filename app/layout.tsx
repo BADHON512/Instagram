@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Provider from "@/Provider/Provider";
+
 import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
@@ -27,17 +27,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-   
-      <Provider>
-        <html lang="en">
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          >
-            <Toaster position="bottom-right" reverseOrder={false}/>
-            {children}
-          </body>
-        </html>
-      </Provider>
-     
+
+
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <Toaster position="bottom-right" reverseOrder={false} />
+        {children}
+      </body>
+    </html>
+
+
   );
 }

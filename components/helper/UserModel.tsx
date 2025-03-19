@@ -3,10 +3,8 @@ import { motion } from 'motion/react';
 import Image from 'next/image';
 import { MdOutlineEmojiEmotions, MdVerified } from "react-icons/md";
 import { PiDotsThreeBold } from "react-icons/pi";
-
 import React, { useState } from 'react'
 import { BiMessageRounded } from 'react-icons/bi';
-
 import { FiBookmark, } from 'react-icons/fi';
 import { LuSend } from 'react-icons/lu';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
@@ -44,10 +42,11 @@ type Props = {
 }
 
 const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike, user }: Props) => {
+    console.log(post)
 
     const [showPicker2, setShowPicker2] = useState(false);
 
-   const handleDeletePost = async (onTarget: string) => {
+    const handleDeletePost = async (onTarget: string) => {
         if (onTarget === "Delete") {
             if (!post?.id) {
                 toast.error("Post ID not found!");
@@ -80,7 +79,7 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike, user }:
                 {/* Image Section */}
                 <div className="w-full md:w-1/2 h-full ">
                     <Image
-                        src={post?.image?.url}
+                        src={post?.image.url}
                         alt="Post Image"
 
                         width={800}
@@ -95,7 +94,7 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike, user }:
                     <div className="flex justify-between items-center p-4 border-b border-gray-700">
                         <div className="flex items-center gap-3">
                             <Image
-                                src={user?.avatar?.url}
+                                src={user?.avatar?.url||"https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
                                 height={40}
                                 width={40}
                                 alt="User Avatar"
@@ -116,7 +115,7 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike, user }:
                             post?.comments?.map((comment: any, index: number) => (
                                 <div key={index} className="flex gap-3">
                                     <Image
-                                        src={comment?.user?.avatar?.url}
+                                        src={comment?.user?.avatar?.url || "https://res.cloudinary.com/dfng3w9jm/image/upload/v1740510861/instagram-clone-stories/Profile_y0cbxs.png"}
                                         height={40}
                                         width={40}
                                         alt="User Avatar"

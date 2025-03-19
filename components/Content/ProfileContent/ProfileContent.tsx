@@ -19,7 +19,7 @@ type Props = {
 }
 
 const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
-
+  const [selectedPost, setSelectedPost] = useState<any>(null);
   const [showMore, setShowMore] = useState(false);
   const [activeTab, setActiveTab] = useState<'posts' | 'saved' | 'tagged'>('posts');
   const [EditProfileShow, setEditProfileShow] = useState(false)
@@ -237,7 +237,10 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
                 </div>
 
                 {/* Overlay & Icons */}
-                <div onClick={() => setPupUp((pre) => ({ ...pre, message: !pre.message }))} className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100 flex justify-center items-center gap-x-4 cursor-pointer">
+                <div      onClick={() => {
+        setPupUp((pre) => ({ ...pre, message: !pre.message }));
+        setSelectedPost(item); // ✅ শুধুমাত্র ক্লিক করা পোস্ট সেট করো
+      }}className="absolute top-0 left-0 w-full h-full bg-[#0e0c0c5e] opacity-0 hover:opacity-100 flex justify-center items-center gap-x-4 cursor-pointer">
                   <div className="flex gap-x-2">
                     <GoHeartFill size={25} className="text-white" />
                     <span className="text-white">{user?.likes?.length}</span>
@@ -249,7 +252,7 @@ const ProfileContent = ({ user, reFetcher, setReFetcher }: Props) => {
                 </div>
 
                 {PupUp.message && (
-                  <UserModel PupUp={PupUp} setPupUp={setPupUp} post={item} user={user} input={input} setInput={setInput} handelLike={handelLike} />
+                  <UserModel PupUp={PupUp} setPupUp={setPupUp} post={selectedPost} user={user} input={input} setInput={setInput} handelLike={handelLike} />
                 )}
               </div>
             ))

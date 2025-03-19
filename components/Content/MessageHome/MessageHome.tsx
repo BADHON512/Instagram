@@ -25,14 +25,20 @@ type Props = {
     setUniqueUser: any
 }
 
-const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser, follower, setUniqueUser }: Props) => {
+const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser, }: Props) => {
+    const [message, setMessage] = useState<any>([])
+    const [open, setOpen] = useState(false)
+    const [showPicker, setShowPicker] = useState(false);
+    const [input, setInput] = useState<string>('');
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const [Refetcher, setRefetcher] = useState(false)
+
     const socket = io("https://instagram-server-socket-production.up.railway.app/", {
-        transports: ["websocket", "polling"],
-        withCredentials: true,
-        reconnection: true, // Auto reconnect on disconnect
-        reconnectionAttempts: 10, // ১০ বার চেষ্টা করবে
-        reconnectionDelay: 5000, // ৫ সেকেন্ড পর পর ট্রাই করবে
+        transports: ["polling"], // ✅ শুধুমাত্র Polling ব্যবহার করো
+        withCredentials: true
       });
+      
+      
       
       socket.on("connect", () => {
         console.log("✅ WebSocket Connected:", socket.id);
@@ -46,12 +52,7 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser, follower, set
         console.warn("⚠️ Disconnected:", reason);
       });
       
-    const [message, setMessage] = useState<any>([])
-    const [open, setOpen] = useState(false)
-    const [showPicker, setShowPicker] = useState(false);
-    const [input, setInput] = useState<string>('');
-    const messagesEndRef = useRef<HTMLDivElement | null>(null);
-    const [Refetcher, setRefetcher] = useState(false)
+
 
     const handleSend = async () => {
         if (input.trim() === '') return;
@@ -73,9 +74,8 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser, follower, set
 
     useEffect(() => {
         socket.on("connect", () => {
-            socket.emit("register", currentUser.id); // 🔥 ইউজার রেজিস্টার করা
+            socket.emit("register", currentUser.id); 
         });
-
         socket.on("private_message", (data) => {
 
             if (data.senderId === UserToMessage?.id) {
@@ -85,12 +85,10 @@ const MessageHomeBody = ({ TargetUser, UserToMessage, currentUser, follower, set
                 ]);
             }
         });
-
-        return () => {
-            socket.off("private_message"); // শুধু ইভেন্ট আনবাইন্ড করো
-            socket.off("connect");
-        };
+      
     }, [Refetcher]);
+
+
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
