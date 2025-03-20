@@ -57,6 +57,7 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike, user }:
 
             if (deletePost?.success) {
                 toast.success(deletePost.message);
+                window.location.reload();
             } else {
                 toast.error(deletePost?.message || "Failed to delete post.");
             }
@@ -123,7 +124,7 @@ const UserModel = ({ PupUp, setPupUp, post, input, setInput, handelLike, user }:
                                     />
                                     <div>
                                         <Link href={`/profile/${comment?.user?.username}`} className="font-semibold ">
-                                            {comment.name} <MdVerified color="#0095F6" className="inline" />
+                                            {comment.name} <MdVerified color="#0095F6" className="inline cursor-pointer" />
                                             <span className="text-sm text-gray-300"> {comment.text}</span>
                                         </Link>
                                         <div className="flex gap-x-4 text-xs text-gray-400 cursor-pointer">

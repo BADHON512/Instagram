@@ -12,6 +12,9 @@ export async function GetAllPost (){
                 SavePost:true,
 
             }
+            ,orderBy:{
+                createdAt:"desc"
+            }
         })
         return {posts,statusCode:200}
     } catch (error) {
